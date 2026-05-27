@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Master Audio Changelog: Android 14 → 17</title>
+  <style>
+    :root {
+      --bg: #09090f;
+      --surface: #13141e;
+      --surface2: #1c1f2e;
+      --surface3: #222637;
+      --border: #2a2e44;
+      --accent: #60a5fa;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+      --teal: #2dd4bf;
+      --text: #e2e8f0;
+      --text-muted: #7c88a3;
+      --code-bg: #0d1117;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(160deg, #0a0514 0%, #0d1640 35%, #0f1c3d 60%, #0a1a0f 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 64px 48px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 40%, rgba(96,165,250,0.08) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 70%, rgba(167,139,250,0.07) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; max-width: 1100px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .eyebrow-chip {
+      background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.3);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+    }
+    .version-span {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+
+    /* ===== NAV ===== */
+    .toc-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 14px 18px;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .toc-link:hover { color: var(--text); border-bottom-color: var(--border); }
+
+    /* ===== LAYOUT ===== */
+    .page-body { max-width: 1100px; margin: 0 auto; padding: 56px 48px 96px; }
+
+    /* ===== EXECUTIVE SUMMARY ===== */
+    .exec-summary {
+      background: linear-gradient(135deg, rgba(96,165,250,0.05) 0%, rgba(167,139,250,0.05) 100%);
+      border: 1px solid rgba(96,165,250,0.2);
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 56px;
+    }
+    .exec-summary .exec-header {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .exec-summary h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      border: none;
+      padding: 0;
+      margin: 0 0 24px;
+    }
+    .shift-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .shift-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .shift-card .shift-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .shift-card h3 { font-size: 1rem; font-weight: 700; color: #fff; margin: 0 0 8px; }
+    .shift-card p { font-size: 13.5px; color: var(--text-muted); margin: 0; }
+    .shift-card.a15 { border-top: 3px solid #6366f1; }
+    .shift-card.a15 .shift-num { color: #6366f1; }
+    .shift-card.a15-b { border-top: 3px solid var(--teal); }
+    .shift-card.a15-b .shift-num { color: var(--teal); }
+    .shift-card.a16 { border-top: 3px solid var(--green); }
+    .shift-card.a16 .shift-num { color: var(--green); }
+    .shift-card.a17 { border-top: 3px solid var(--red); }
+    .shift-card.a17 .shift-num { color: var(--red); }
+    .shift-card.a17b { border-top: 3px solid var(--orange); }
+    .shift-card.a17b .shift-num { color: var(--orange); }
+
+    /* ===== VERSION SECTION ===== */
+    .version-section { margin-bottom: 64px; }
+    .version-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .version-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+    .v-a15 { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.35); }
+    .v-a16 { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .v-a17 { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .version-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      border: none;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+    .version-header .release-label {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    /* ===== CONTENT ELEMENTS ===== */
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      border-left: 3px solid var(--accent2);
+      padding-left: 12px;
+      margin: 40px 0 16px;
+    }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 24px 0 10px; }
+    h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin: 18px 0 8px; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 22px; }
+    li { margin-bottom: 5px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.85rem;
+      background: var(--code-bg);
+      color: #7dd3fc;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      overflow-x: auto;
+      margin: 14px 0;
+      line-height: 1.5;
+    }
+    pre code { background: none; border: none; padding: 0; color: #c9d1d9; font-size: 0.83rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin: 18px 0; }
+    .card.critical { border-left: 4px solid var(--red); }
+    .card.major { border-left: 4px solid var(--orange); }
+    .card.new { border-left: 4px solid var(--green); }
+    .card.changed { border-left: 4px solid var(--yellow); }
+    .card.info { border-left: 4px solid var(--accent2); }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 5px;
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+    .badge-critical { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .badge-major { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+    .badge-new { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+    .badge-changed { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.25); }
+    .badge-breaking { background: rgba(248,113,113,0.2); color: var(--red); border: 1px solid rgba(248,113,113,0.4); }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+    thead tr { background: var(--surface2); }
+    th { text-align: left; padding: 9px 13px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.015); }
+    .flag-chip {
+      display: inline-block;
+      background: rgba(96,165,250,0.1);
+      border: 1px solid rgba(96,165,250,0.25);
+      color: var(--accent);
+      font-family: monospace;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin: 2px;
+    }
+    .absent { color: var(--text-muted); font-style: italic; }
+    blockquote {
+      border-left: 3px solid var(--accent2);
+      padding: 10px 16px;
+      margin: 14px 0;
+      background: rgba(167,139,250,0.06);
+      border-radius: 0 8px 8px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+    .footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .sources-list { columns: 2; gap: 24px; font-size: 13px; }
+    .sources-list li { margin-bottom: 8px; }
+    @media (max-width: 700px) {
+      .hero { padding: 40px 24px; }
+      .page-body { padding: 32px 24px 64px; }
+      .toc-bar { padding: 0 16px; }
+      .shift-grid { grid-template-columns: 1fr; }
+      .sources-list { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-chip">AAOS Audio Framework</span>
+      <span class="version-span">API Level 34 → 37 &nbsp;·&nbsp; Research completed May 2026</span>
+    </div>
+    <h1>Master Audio Changelog<br/><span class="highlight">Android 14 → 17</span></h1>
+    <p class="hero-sub">A complete lifecycle view of the Android Automotive OS audio stack — covering <code>CarAudioService</code>, <code>AudioControl HAL</code>, Volume Management, Audio Focus, Audio Zones, and Fade/Routing configurations across four major OS versions.</p>
+    <div class="tag-cloud">
+      <span class="tag">CarAudioService</span>
+      <span class="tag">AudioControl HAL</span>
+      <span class="tag">FadeManagerConfiguration</span>
+      <span class="tag">CAP Engine AIDL</span>
+      <span class="tag">Background Audio Hardening</span>
+      <span class="tag">USAGE_ASSISTANT</span>
+      <span class="tag">car_audio_configuration</span>
+      <span class="tag">OemCarAudioFocusService</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="toc-bar">
+  <a href="#exec-summary" class="toc-link">Executive Summary</a>
+  <a href="#a14-to-a15" class="toc-link">A14 → A15</a>
+  <a href="#a15-to-a16" class="toc-link">A15 → A16</a>
+  <a href="#a16-to-a17" class="toc-link">A16 → A17</a>
+  <a href="#reference-tables" class="toc-link">Reference Tables</a>
+  <a href="#sources" class="toc-link">Sources</a>
+</nav>
+
+<div class="page-body">
+
+  <!-- EXECUTIVE SUMMARY -->
+  <section id="exec-summary">
+    <div class="exec-summary">
+      <div class="exec-header">Executive Summary</div>
+      <h2>Five Architectural Shifts: Android 14 → 17</h2>
+      <div class="shift-grid">
+
+        <div class="shift-card a15">
+          <div class="shift-num">Shift 1 &nbsp;·&nbsp; Android 14 (Baseline)</div>
+          <h3>The OEM Programmability Revolution</h3>
+          <p>A single release introduced OEM Car Audio Plugin Services, Dynamic Zone Configurations, Audio Mirroring, Passenger Audio Cast, and CAP Engine flags — giving OEMs runtime control of every focus decision for the first time. Schema advanced to v3.</p>
+        </div>
+
+        <div class="shift-card a15-b">
+          <div class="shift-num">Shift 2 &nbsp;·&nbsp; Android 15</div>
+          <h3>System-Enforced Audio Fade</h3>
+          <p><code>FadeManagerConfiguration</code> and <code>car_audio_fade_configuration.xml</code> closed the compliance gap: <code>CarAudioService</code> can now fade-out non-compliant apps via <code>VolumeShaper</code> without app cooperation. Min/max activation volume added. Schema advanced to v4.</p>
+        </div>
+
+        <div class="shift-card a16">
+          <div class="shift-num">Shift 3 &nbsp;·&nbsp; Android 16</div>
+          <h3>CAP Engine Goes AIDL-Native</h3>
+          <p>CAP config migrates from vendor partition XML to live <code>getEngineConfig()</code> AIDL calls. New <code>AudioHalCap*</code> parcelables deliver structured configuration. Breaking: all strategies require <code>STRATEGY_</code> prefix. Fade/balance getters added; values persist across ignition.</p>
+        </div>
+
+        <div class="shift-card a17">
+          <div class="shift-num">Shift 4 &nbsp;·&nbsp; Android 17</div>
+          <h3>Background Audio Hardening</h3>
+          <p>All background audio APIs fail silently without an active FGS. <code>requestAudioFocus()</code> returns <code>AUDIOFOCUS_REQUEST_FAILED</code>. API 37 targets additionally require WIU capability. Every AAOS app playing audio with the screen off must migrate to <code>MediaSessionService</code> or <code>mediaPlayback</code> FGS.</p>
+        </div>
+
+        <div class="shift-card a17b">
+          <div class="shift-num">Shift 5 &nbsp;·&nbsp; Android 17</div>
+          <h3>USAGE_ASSISTANT Volume Independence</h3>
+          <p>New <code>MODE_ASSISTANT_CONVERSATION</code> and an isolated <code>USAGE_ASSISTANT</code> volume stream break the coupling to <code>STREAM_MUSIC</code>. AAOS OEMs must add a volume group mapping in <code>car_audio_configuration.xml</code> and expose independent controls in Settings UI.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== A14 TO A15 ===== -->
+  <section id="a14-to-a15" class="version-section">
+    <div class="version-header">
+      <span class="version-pill v-a15">Android 14 → 15</span>
+      <h2>System-Enforced Fade &amp; Activation Volume</h2>
+      <span class="release-label">AAOS 24Q3 &nbsp;·&nbsp; API 34 → 35</span>
+    </div>
+
+    <h2>1.1 System-Enforced Audio Fade</h2>
+    <div class="card new">
+      <span class="badge badge-new">New Feature</span>
+      <span class="flag-chip">audioUseFadeManagerConfiguration = false</span>
+      <p style="margin-top:10px">When enabled, <code>CarAudioService</code> automatically applies <code>VolumeShaper</code>-based fade-out to apps losing audio focus — without app cooperation.</p>
+    </div>
+
+    <h3>New Class: <code>FadeManagerConfiguration</code></h3>
+    <pre><code class="language-java">public final class FadeManagerConfiguration {
+    public static final class Builder {
+        public Builder setFadeOutDurationForUsage(int usage, long durationMs);
+        public Builder setFadeInDurationForUsage(int usage, long durationMs);
+        public Builder setFadeableUsages(List&lt;Integer&gt; usages);
+        public Builder setUnfadeableContentTypes(List&lt;Integer&gt; contentTypes);
+        public Builder setUnfadeableAudioAttributes(List&lt;AudioAttributes&gt; attrs);
+        public FadeManagerConfiguration build();
+    }
+}</code></pre>
+
+    <h3>New Class: <code>CarAudioFadeConfiguration</code></h3>
+    <p>Runtime analog for OEM focus service. Used via <code>OemCarAudioFocusResult.Builder#setAudioAttributesToCarAudioFadeConfigurationMap()</code> to return per-attribute fade configs alongside each focus decision.</p>
+
+    <h3>New XML: <code>car_audio_fade_configuration.xml</code></h3>
+    <pre><code class="language-xml">&lt;carAudioFadeConfiguration&gt;
+  &lt;fadeConfiguration name="default_fade"
+      defaultFadeOutDurationInMillis="500"
+      defaultFadeInDurationInMillis="2000"&gt;
+    &lt;fadeableUsages&gt;
+      &lt;usage value="AUDIO_USAGE_MEDIA"/&gt;
+    &lt;/fadeableUsages&gt;
+    &lt;unfadeableContentTypes&gt;
+      &lt;contentType value="AUDIO_CONTENT_TYPE_SPEECH"/&gt;
+    &lt;/unfadeableContentTypes&gt;
+    &lt;fadeOutConfigurations&gt;
+      &lt;fadeConfiguration usage="AUDIO_USAGE_MEDIA" durationInMillis="300"/&gt;
+    &lt;/fadeOutConfigurations&gt;
+  &lt;/fadeConfiguration&gt;
+&lt;/carAudioFadeConfiguration&gt;</code></pre>
+
+    <h3><code>car_audio_configuration.xml</code> → Version 4</h3>
+    <pre><code class="language-xml">&lt;!-- New in version 4: applyFadeConfigs block inside zoneConfig --&gt;
+&lt;applyFadeConfigs&gt;
+  &lt;fadeConfig name="default_fade" isDefault="true"/&gt;
+&lt;/applyFadeConfigs&gt;</code></pre>
+
+    <h2>1.2 Min/Max Activation Volume</h2>
+    <div class="card new">
+      <span class="badge badge-new">New Feature</span>
+      <span class="flag-chip">audioUseMinMaxActivationVolume = false</span>
+    </div>
+
+    <pre><code class="language-xml">&lt;volumeGroup name="music_group"&gt;
+  &lt;activationVolumeConfig name="media_activation"&gt;
+    &lt;activationVolumeConfigEntry
+        minActivationVolumePercentage="10"
+        maxActivationVolumePercentage="80"
+        invocationType="onPlaybackChanged"/&gt;
+  &lt;/activationVolumeConfig&gt;
+&lt;/volumeGroup&gt;</code></pre>
+
+    <table>
+      <thead><tr><th>invocationType</th><th>Trigger</th></tr></thead>
+      <tbody>
+        <tr><td><code>onBoot</code></td><td>First activation after system boot</td></tr>
+        <tr><td><code>onSourceChanged</code></td><td>New app/UID starts playback</td></tr>
+        <tr><td><code>onPlaybackChanged</code></td><td>Every newly active playback event</td></tr>
+      </tbody>
+    </table>
+
+    <h2>1.3 Bluetooth Headset as Audio Output Device</h2>
+    <p>Users can designate a connected BT headset as primary Audio Output Device in <em>Settings &gt; Sound &amp; Vibration &gt; Audio output</em>. Single media stream constraint applies.</p>
+  </section>
+
+  <!-- ===== A15 TO A16 ===== -->
+  <section id="a15-to-a16" class="version-section">
+    <div class="version-header">
+      <span class="version-pill v-a16">Android 15 → 16</span>
+      <h2>CAP AIDL Migration &amp; Fade/Balance Getters</h2>
+      <span class="release-label">AAOS 25Q2 + 25Q4 &nbsp;·&nbsp; API 35 → 36</span>
+    </div>
+
+    <h2>2.1 CAP Engine — AIDL Migration</h2>
+    <div class="card major">
+      <span class="badge badge-major">Major Architecture Change</span>
+      <p>CAP configuration migrates from static vendor partition XML to live AIDL API calls. New devices with Android 16 vendor HAL must expose CAP config via <code>getEngineConfig()</code>.</p>
+    </div>
+
+    <h3>New AIDL Parcelables (<code>android.hardware.audio.core</code>)</h3>
+    <ul>
+      <li><code>AudioHalCapConfiguration</code> — top-level config container</li>
+      <li><code>AudioHalCapCriterionV2</code> — criterion definitions (e.g., available output devices)</li>
+      <li><code>AudioHalCapDomain</code> — parameter domain with routing rules</li>
+      <li><code>AudioHalCapParameter</code> — individual configurable parameter (path + value)</li>
+      <li><code>AudioHalCapRule</code> — routing and volume decision rules</li>
+      <li><code>AudioHalEngineConfig.CapSpecificConfig</code> — integration point</li>
+    </ul>
+
+    <h3>Breaking Change: <code>STRATEGY_</code> Prefix Required</h3>
+    <div class="card critical" style="padding:16px 20px">
+      <span class="badge badge-breaking">Breaking for OEM CAP Migration</span>
+      <p>All product strategy names now require the <code>STRATEGY_</code> prefix in parameter paths.</p>
+    </div>
+    <table>
+      <thead><tr><th>Old (Android 15)</th><th>New (Android 16+)</th></tr></thead>
+      <tbody>
+        <tr><td><code>media</code></td><td><code>STRATEGY_MEDIA</code></td></tr>
+        <tr><td><code>phone</code></td><td><code>STRATEGY_PHONE</code></td></tr>
+        <tr><td><code>dtmf</code></td><td><code>STRATEGY_DTMF</code></td></tr>
+        <tr><td><code>sonification</code></td><td><code>STRATEGY_SONIFICATION</code></td></tr>
+        <tr><td><code>ring</code></td><td><code>STRATEGY_RING</code></td></tr>
+        <tr><td><code>accessibility</code></td><td><code>STRATEGY_ACCESSIBILITY</code></td></tr>
+        <tr><td><code>vx_1000 … vx_1039</code></td><td class="absent">Unchanged (OEM extension slots)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>HAL Compatibility Matrix</h3>
+    <table>
+      <thead><tr><th>System</th><th>Vendor HAL</th><th>CAP Config Source</th></tr></thead>
+      <tbody>
+        <tr><td>Android 16</td><td>Android 16 AIDL</td><td>System partition via <code>getEngineConfig()</code></td></tr>
+        <tr><td>Android 16</td><td>Android 15 AIDL</td><td>Vendor partition XML (legacy fallback)</td></tr>
+        <tr><td>Android 16</td><td>Android 14 HIDL</td><td>Vendor partition XML (legacy fallback)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>2.2 AAudio OEM-Defined Audio Attribute Tags</h2>
+    <p>AAudio streams now support OEM-defined tags. Tags integrate with <code>&lt;oemContext&gt;</code> in <code>car_audio_configuration.xml</code> v3+ and must match a CAP strategy when CAP is active.</p>
+
+    <h2>2.3 Fade and Balance Getter APIs (AAOS 25Q4)</h2>
+    <pre><code class="language-java">@SystemApi
+float getFadeTowardFront();    // [-1.0 rear ... +1.0 front]
+
+@SystemApi
+float getBalanceTowardRight(); // [-1.0 left ... +1.0 right]</code></pre>
+    <p>Values <strong>persist per user across ignition cycles</strong>. Enables Settings UI to display current state without re-querying HAL.</p>
+
+    <h2>2.4 HD Radio EAS API (AAOS 25Q2)</h2>
+    <p>Structured API for Emergency Alert System data delivery to radio apps. Supports HD Radio (North America) and DAB EWS (EU).</p>
+
+    <h2>2.5 AudioControl HAL — Status</h2>
+    <p class="absent">Remains at AIDL v3. No v4 confirmed. Architectural changes in Android 16 affect the core Audio HAL, not the automotive AudioControl HAL.</p>
+  </section>
+
+  <!-- ===== A16 TO A17 ===== -->
+  <section id="a16-to-a17" class="version-section">
+    <div class="version-header">
+      <span class="version-pill v-a17">Android 16 → 17</span>
+      <h2>Background Hardening &amp; Assistant Volume</h2>
+      <span class="release-label">API 36 → 37 &nbsp;·&nbsp; Beta May 2026</span>
+    </div>
+
+    <blockquote>AAOS-specific <code>CarAudioService</code> API changes and <code>AudioControl HAL</code> v4 have not been confirmed in public documentation as of this document's research date.</blockquote>
+
+    <h2>3.1 Background Audio Hardening</h2>
+    <div class="card critical">
+      <span class="badge badge-critical">Critical — All Apps on Android 17</span>
+      <p>All background audio interactions require a visible Activity or active FGS. APIs fail silently when requirements are not met.</p>
+    </div>
+
+    <table>
+      <thead><tr><th>Tier</th><th>Scope</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>Tier 1</td><td>All apps on Android 17</td><td>Visible Activity OR FGS (not <code>SHORT_SERVICE</code>)</td></tr>
+        <tr><td>Tier 2</td><td>Apps targeting API 37</td><td>FGS with while-in-use capability (e.g., <code>mediaPlayback</code>)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Affected APIs</h3>
+    <table>
+      <thead><tr><th>API</th><th>Failure</th></tr></thead>
+      <tbody>
+        <tr><td><code>AudioTrack.write()</code>, <code>AAudioStream_write()</code>, OpenSL ES, ExoPlayer</td><td>Silent stop</td></tr>
+        <tr><td><code>AudioManager.requestAudioFocus()</code></td><td><code>AUDIOFOCUS_REQUEST_FAILED</code></td></tr>
+        <tr><td><code>setStreamVolume()</code>, <code>adjustVolume()</code>, <code>setStreamMute()</code></td><td>Silent failure</td></tr>
+      </tbody>
+    </table>
+
+    <h3>AAOS Patterns Affected</h3>
+    <table>
+      <thead><tr><th>Pattern</th><th>Impact</th></tr></thead>
+      <tbody>
+        <tr><td>Background music with display off</td><td>Needs <code>mediaPlayback</code> FGS</td></tr>
+        <tr><td>Navigation audio with nav app backgrounded</td><td>Needs <code>navigation</code> FGS</td></tr>
+        <tr><td>Boot-triggered audio via <code>BOOT_COMPLETE</code></td><td>Must start FGS before audio</td></tr>
+        <tr><td>VoIP from background process</td><td>Needs <code>phoneCall</code> FGS</td></tr>
+        <tr><td>Alarm/reminder audio</td><td><code>SCHEDULE_EXACT_ALARM</code> exempt for <code>USAGE_ALARM</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Debug Tools</h3>
+    <pre><code class="language-bash">adb shell cmd audio set-enable-hardening enable   # Enforce
+adb shell cmd audio set-enable-hardening throw    # Enforce + throw exceptions
+adb shell cmd audio set-enable-hardening disable  # Disable
+adb logcat | grep AudioHardening                  # Monitor violations</code></pre>
+
+    <h2>3.2 Dedicated Assistant Volume Stream</h2>
+    <div class="card new">
+      <span class="badge badge-new">New</span>
+      <p><code>AudioManager.MODE_ASSISTANT_CONVERSATION</code> + isolated <code>USAGE_ASSISTANT</code> volume stream. Media and Assistant can now be muted/adjusted independently.</p>
+    </div>
+
+    <pre><code class="language-java">audioManager.setMode(AudioManager.MODE_ASSISTANT_CONVERSATION); // Start assistant
+audioManager.setMode(AudioManager.MODE_NORMAL);                 // End assistant</code></pre>
+
+    <p><strong>AAOS action required:</strong> Map <code>USAGE_ASSISTANT</code> to a volume group in <code>car_audio_configuration.xml</code> and expose independent volume control in Settings.</p>
+
+    <h2>3.3 Confirmed Absence of AAOS-Specific API Changes</h2>
+    <table>
+      <thead><tr><th>Component</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>CarAudioService</code> architecture</td><td class="absent">No confirmed changes</td></tr>
+        <tr><td><code>AudioControl HAL</code></td><td class="absent">AIDL v3 — no v4 confirmed</td></tr>
+        <tr><td><code>car_audio_configuration.xml</code></td><td class="absent">v4 — no v5 confirmed</td></tr>
+        <tr><td>Audio zone management APIs</td><td class="absent">No new APIs confirmed</td></tr>
+        <tr><td>Volume group management APIs</td><td class="absent">No new APIs confirmed</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr/>
+
+  <!-- REFERENCE TABLES -->
+  <section id="reference-tables">
+    <h2 style="border-left-color: var(--teal)">Reference Tables</h2>
+
+    <h3>AudioControl HAL Version History</h3>
+    <table>
+      <thead><tr><th>Version</th><th>Android</th><th>Key Additions</th></tr></thead>
+      <tbody>
+        <tr><td>HIDL 1.0</td><td>Android 9</td><td><code>setFadeTowardFront</code>, <code>setBalanceTowardRight</code></td></tr>
+        <tr><td>HIDL 2.0</td><td>Android 12</td><td>Focus listener, HAL focus requests, muting, ducking</td></tr>
+        <tr><td>AIDL 1.0</td><td>Android 12L</td><td>HIDL→AIDL migration (same APIs)</td></tr>
+        <tr><td>AIDL 2.0</td><td>Android 13</td><td><code>onAudioFocusChangeWithMetaData</code>, <code>registerGainCallback</code></td></tr>
+        <tr><td>AIDL 3.0</td><td>Android 14</td><td><code>setModuleChangeCallback</code>, <code>onAudioPortsChanged</code></td></tr>
+        <tr><td class="absent">(none)</td><td class="absent">Android 15/16/17</td><td class="absent">No new AudioControl HAL version; CAP migrated to core Audio HAL</td></tr>
+      </tbody>
+    </table>
+
+    <h3><code>car_audio_configuration.xml</code> Version History</h3>
+    <table>
+      <thead><tr><th>Version</th><th>Android</th><th>New Schema Elements</th></tr></thead>
+      <tbody>
+        <tr><td>v1</td><td>Android 10</td><td>Zones, volume groups (replaced <code>car_volumes_groups.xml</code>)</td></tr>
+        <tr><td>v2</td><td>Android 11</td><td><code>audioZoneId</code>, <code>occupantZoneId</code></td></tr>
+        <tr><td>v3</td><td>Android 14</td><td><code>&lt;oemContext&gt;</code>, <code>&lt;zoneConfigs&gt;</code>, <code>&lt;zoneConfig&gt;</code></td></tr>
+        <tr><td>v4</td><td>Android 15</td><td><code>&lt;activationVolumeConfig&gt;</code>, <code>&lt;applyFadeConfigs&gt;</code>, <code>&lt;fadeConfig&gt;</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Configuration Flags — Complete History</h3>
+    <table>
+      <thead><tr><th>Flag</th><th>Introduced</th><th>Default</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>audioUseDynamicRouting</code></td><td>Android 9</td><td>Required <code>true</code></td><td>AAOS bus-based audio routing</td></tr>
+        <tr><td><code>audioUseHalDuckingSignals</code></td><td>Android 12</td><td><code>true</code></td><td>Ducking signals to AudioControl HAL</td></tr>
+        <tr><td><code>audioUseCarVolumeGroupMuting</code></td><td>Android 12</td><td><code>false</code></td><td>Per-group muting via HAL</td></tr>
+        <tr><td><code>audioUseCarVolumeGroupEvent</code></td><td>Android 14</td><td><code>false</code></td><td>Enable <code>CarVolumeGroupEventCallback</code></td></tr>
+        <tr><td><code>useCoreAudioVolume</code></td><td>Android 14</td><td><code>false</code></td><td>CAP-based volume management</td></tr>
+        <tr><td><code>useCoreAudioRouting</code></td><td>Android 14</td><td><code>false</code></td><td>CAP-based audio routing</td></tr>
+        <tr style="background:rgba(99,102,241,0.06)"><td><code>audioUseFadeManagerConfiguration</code></td><td><strong>Android 15</strong></td><td><code>false</code></td><td>System-enforced fade on focus loss</td></tr>
+        <tr style="background:rgba(99,102,241,0.06)"><td><code>audioUseMinMaxActivationVolume</code></td><td><strong>Android 15</strong></td><td><code>false</code></td><td>Enforce min/max volume at activation</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Deprecated APIs</h3>
+    <table>
+      <thead><tr><th>API</th><th>Deprecated In</th></tr></thead>
+      <tbody>
+        <tr><td><code>CarAudioManager#isDynamicRoutingEnabled()</code></td><td>Android 14</td></tr>
+        <tr><td><code>CarAudioManager#getExternalSources()</code></td><td>Android 14</td></tr>
+        <tr><td><code>CarAudioManager#createAudioPatch(String, int, int)</code></td><td>Android 14</td></tr>
+        <tr><td><code>CarAudioManager#releaseAudioPatch(CarAudioPatchHandle)</code></td><td>Android 14</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr/>
+
+  <!-- SOURCES -->
+  <section id="sources">
+    <h2 style="border-left-color: var(--text-muted)">Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-24q3">AAOS 24Q3 Release Notes</a></li>
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-25q2">AAOS 25Q2 Release Notes</a></li>
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-25q4">AAOS 25Q4 Release Notes</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/audio-control-hal">Audio Control HAL — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/volume-management">Volume Management — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/audio-focus">Audio Focus — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/car-audio-plugin">Car Audio Plugin Service — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/core/audio/aidl-cap">CAP AIDL HAL — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/configurable-audio-policy-engine">CAP Engine — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/audio-policy-configuration">Car Audio Configuration — AOSP</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/config-flags">Audio Config Flags — AOSP</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/changes/bg-audio">Background Audio Hardening — Android 17</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/features">Android 17 Features &amp; APIs</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/behavior-changes-all">Android 17 Behavior Changes: All Apps</a></li>
+      <li><a href="https://developer.android.com/reference/android/car/media/CarAudioManager">CarAudioManager API Reference</a></li>
+    </ul>
+  </section>
+
+</div>
+
+<div class="footer">
+  Master Audio Framework Changelog &nbsp;·&nbsp; Android 14 → 17 &nbsp;·&nbsp; Generated from AOSP documentation &nbsp;·&nbsp; May 2026
+</div>
+
+</body>
+</html>

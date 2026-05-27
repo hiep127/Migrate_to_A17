@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Framework Changelog: Android 16 → Android 17</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #1a1a2e; background: #f5f7fa; }
+    .page-header { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #7c3aed 100%); color: #fff; padding: 48px 40px 36px; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .page-header .subtitle { font-size: 1rem; opacity: 0.82; margin-bottom: 4px; }
+    .page-header .meta { font-size: 0.85rem; opacity: 0.65; }
+    .beta-badge { display: inline-block; background: #f59e0b; color: #1a1a2e; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase; vertical-align: middle; margin-left: 12px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 32px 24px 64px; }
+    .notice { background: #fff8e1; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 6px 6px 0; font-size: 0.88rem; margin-bottom: 32px; color: #78350f; }
+    .notice strong { display: block; margin-bottom: 4px; }
+    .layer-section { background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 36px; overflow: hidden; }
+    .layer-header { padding: 16px 24px; font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 12px; }
+    .layer-header .badge { font-size: 0.7rem; font-weight: 600; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 10px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .layer-caraudio .layer-header { background: #0f3460; }
+    .layer-audiocontrol .layer-header { background: #1a6b3c; }
+    .layer-hal .layer-header { background: #7c3aed; }
+    .layer-body { padding: 24px 28px; }
+    h3 { font-size: 1.05rem; font-weight: 700; color: #0f3460; margin: 28px 0 10px; padding-bottom: 4px; border-bottom: 2px solid #e2e8f0; }
+    .layer-audiocontrol h3 { color: #1a6b3c; }
+    .layer-hal h3 { color: #7c3aed; }
+    h3:first-child { margin-top: 0; }
+    p { margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 5px; }
+    code { font-family: 'Fira Mono', 'Consolas', monospace; font-size: 0.83em; background: #f0f4ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+    pre { background: #1e1e2e; color: #cdd6f4; border-radius: 8px; padding: 18px 20px; overflow-x: auto; margin: 14px 0 18px; font-size: 0.82em; line-height: 1.6; }
+    pre code { background: transparent; color: inherit; padding: 0; white-space: pre; }
+    .table-wrap { overflow-x: auto; margin: 14px 0 18px; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.88em; }
+    th { background: #f1f5f9; color: #374151; font-weight: 600; text-align: left; padding: 9px 14px; border: 1px solid #e2e8f0; }
+    td { padding: 8px 14px; border: 1px solid #e2e8f0; vertical-align: top; }
+    tr:nth-child(even) td { background: #fafbff; }
+    .callout { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 14px 0; font-size: 0.9em; }
+    .callout.success { background: #f0fdf4; border-color: #22c55e; }
+    .callout.critical { background: #fef2f2; border-color: #ef4444; color: #7f1d1d; }
+    .callout.warn { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+    .deprecated { color: #dc2626; font-weight: 600; }
+    .new-label { color: #16a34a; font-weight: 600; }
+    .sources { background: #f8fafc; border-radius: 8px; padding: 20px 24px; margin-top: 36px; border: 1px solid #e2e8f0; }
+    .sources h2 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; color: #374151; }
+    .sources a { color: #2563eb; text-decoration: none; }
+    .sources a:hover { text-decoration: underline; }
+    .sources li { font-size: 0.88em; margin-bottom: 6px; }
+    footer { text-align: center; font-size: 0.8rem; color: #94a3b8; margin-top: 48px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Audio Framework Changelog: Android 16 → Android 17 <span class="beta-badge">Beta</span></h1>
+  <p class="subtitle">AAOS Audio Framework — Layered Architectural Analysis &nbsp;|&nbsp; API Level 36 → 37</p>
+  <p class="meta">CarAudioService &nbsp;|&nbsp; AudioControlService &nbsp;|&nbsp; AudioControlHAL &nbsp;|&nbsp; Android 17 Beta as of May 2026</p>
+</div>
+<div class="container">
+  <div class="notice">
+    <strong>Beta / Availability Notice</strong>
+    Android 17 (API Level 37) was in Beta as of the research date. AAOS-specific <code>CarAudioService</code> architecture changes and <code>AudioControl HAL</code> v4 have <strong>not been confirmed</strong> in public AOSP documentation. Platform-wide audio behavioral changes that directly affect AAOS apps are documented in full below. No local AOSP git repository was available; git commands for patch generation are in the appendix.
+  </div>
+
+  <!-- LAYER 1 -->
+  <div class="layer-section layer-caraudio">
+    <div class="layer-header">CarAudioService Updates <span class="badge">Java Service Layer</span></div>
+    <div class="layer-body">
+
+      <h3>Background Audio Hardening (Critical — All Apps)</h3>
+      <div class="callout critical">
+        <strong>This is the most impactful audio framework change in Android 17 for AAOS apps.</strong><br>
+        This change applies to <em>all apps running on Android 17 devices</em> regardless of target SDK version.
+      </div>
+      <p>The platform audio stack enforces that any app interacting with audio APIs from the background must hold a visible Activity or an active FGS.</p>
+
+      <div class="table-wrap"><table>
+        <tr><th>Tier</th><th>Scope</th><th>Requirement</th></tr>
+        <tr><td>Tier 1</td><td>All apps on Android 17 devices</td><td>Visible Activity OR FGS (not <code>SHORT_SERVICE</code>)</td></tr>
+        <tr><td>Tier 2</td><td>Apps targeting API Level 37 only</td><td>FGS must have while-in-use (WIU) capability (e.g., <code>mediaPlayback</code>)</td></tr>
+      </table></div>
+      <p><strong>Exception:</strong> WIU waived when app holds <code>SCHEDULE_EXACT_ALARM</code> AND only uses <code>USAGE_ALARM</code> streams.</p>
+
+      <p><strong>Affected APIs and failure behavior:</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>API</th><th>Failure</th></tr>
+        <tr><td><code>AudioTrack.write()</code></td><td>Silent stop — no exception</td></tr>
+        <tr><td><code>AAudioStream_write()</code> (native)</td><td>Silent stop</td></tr>
+        <tr><td><code>ExoPlayer</code> / media3</td><td>Silent stop</td></tr>
+        <tr><td><code>AudioManager.requestAudioFocus()</code></td><td>Returns <code>AUDIOFOCUS_REQUEST_FAILED</code></td></tr>
+        <tr><td><code>setStreamVolume()</code>, <code>adjustVolume()</code></td><td>Silent failure</td></tr>
+        <tr><td><code>setStreamMute()</code>, <code>setRingerMode()</code></td><td>Silent failure</td></tr>
+      </table></div>
+
+      <p><strong>AAOS patterns most affected:</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>AAOS Pattern</th><th>Impact</th></tr>
+        <tr><td>Background music when display sleeps</td><td>Audio stops unless <code>mediaPlayback</code> FGS is active</td></tr>
+        <tr><td>Navigation audio with nav app backgrounded</td><td>Audio stops unless nav app holds <code>navigation</code> FGS type</td></tr>
+        <tr><td>Boot-triggered audio via <code>BOOT_COMPLETE</code></td><td>Service must start FGS before any audio interaction</td></tr>
+        <tr><td>VoIP / communication audio from background</td><td>Must use <code>phoneCall</code> FGS type</td></tr>
+        <tr><td>HAL-initiated focus requests (<code>IFocusListener</code>)</td><td>Requester process must hold appropriate FGS</td></tr>
+      </table></div>
+
+      <p><strong>Required manifest declaration (apps targeting API 37):</strong></p>
+<pre><code>&lt;service
+    android:name=".AudioPlaybackService"
+    android:foregroundServiceType="mediaPlayback"
+    android:exported="false"/&gt;</code></pre>
+
+      <p><strong>Recommended migration — Option A (preferred):</strong> Adopt <code>MediaSessionService</code> (media3):</p>
+<pre><code>public class CarMediaService extends MediaSessionService {
+    @Override
+    public MediaSession onGetSession(MediaSession.ControllerInfo controllerInfo) {
+        return mediaSession;
+    }
+    // MediaSessionService manages FGS lifecycle automatically
+}</code></pre>
+
+      <p><strong>Debug tools:</strong></p>
+<pre><code>adb shell cmd audio set-enable-hardening enable   # Enforce
+adb shell cmd audio set-enable-hardening throw    # Enforce + exceptions (for tests)
+adb shell cmd audio set-enable-hardening disable  # Disable
+adb logcat | grep AudioHardening                  # Monitor violations</code></pre>
+
+      <h3>Dedicated Assistant Volume Stream</h3>
+      <p><span class="new-label">New constant: <code>AudioManager.MODE_ASSISTANT_CONVERSATION</code></span></p>
+      <ul>
+        <li><code>USAGE_ASSISTANT</code> audio is now isolated into its own volume stream, separate from <code>STREAM_MUSIC</code></li>
+        <li>Users can independently mute media while keeping Assistant responses audible, and vice versa</li>
+        <li>Volume panel in Quick Settings exposes the Assistant stream as a separate slider</li>
+      </ul>
+
+<pre><code>// Signal active voice assistant conversation
+audioManager.setMode(AudioManager.MODE_ASSISTANT_CONVERSATION);
+
+// When conversation ends
+audioManager.setMode(AudioManager.MODE_NORMAL);</code></pre>
+
+      <div class="table-wrap"><table>
+        <tr><th>Aspect</th><th>Android 16</th><th>Android 17</th></tr>
+        <tr><td><code>USAGE_ASSISTANT</code> volume</td><td>Shared with <code>STREAM_MUSIC</code></td><td>Isolated independent volume stream</td></tr>
+        <tr><td>Media mute affects assistant</td><td>Yes</td><td>No — streams are independent</td></tr>
+        <tr><td>Volume panel</td><td>Single media slider</td><td>Separate assistant slider</td></tr>
+      </table></div>
+
+      <p><strong>AAOS OEM action required:</strong> Map the new stream to a volume group in <code>car_audio_configuration.xml</code>:</p>
+<pre><code>&lt;group name="assistant_group"&gt;
+  &lt;context&gt;
+    &lt;usage value="AUDIO_USAGE_ASSISTANT"/&gt;
+  &lt;/context&gt;
+&lt;/group&gt;</code></pre>
+
+      <h3>Confirmed Absence of AAOS-Specific CarAudioService API Changes</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Component</th><th>Status</th></tr>
+        <tr><td><code>CarAudioService</code> internal architecture</td><td>No confirmed changes</td></tr>
+        <tr><td><code>car_audio_configuration.xml</code> schema</td><td>v4 — no v5 confirmed</td></tr>
+        <tr><td>Audio zone management (<code>CarAudioZoneConfigInfo</code>)</td><td>No new APIs confirmed</td></tr>
+        <tr><td>Volume group management (<code>CarVolumeGroupInfo</code>)</td><td>No new APIs confirmed</td></tr>
+        <tr><td>OEM Car Audio Plugin Services</td><td>No new interfaces confirmed</td></tr>
+        <tr><td><code>car_audio_fade_configuration.xml</code></td><td>No changes confirmed</td></tr>
+      </table></div>
+
+      <h3>Deprecated APIs (Inherited — No New Deprecations in Android 17)</h3>
+      <div class="table-wrap"><table>
+        <tr><th>API</th><th>Class</th><th>Deprecated In</th></tr>
+        <tr><td><code class="deprecated">isDynamicRoutingEnabled()</code></td><td><code>CarAudioManager</code></td><td>Android 14</td></tr>
+        <tr><td><code class="deprecated">getExternalSources()</code></td><td><code>CarAudioManager</code></td><td>Android 14</td></tr>
+        <tr><td><code class="deprecated">createAudioPatch(String, int, int)</code></td><td><code>CarAudioManager</code></td><td>Android 14</td></tr>
+        <tr><td><code class="deprecated">releaseAudioPatch(CarAudioPatchHandle)</code></td><td><code>CarAudioManager</code></td><td>Android 14</td></tr>
+      </table></div>
+
+    </div>
+  </div>
+
+  <!-- LAYER 2 -->
+  <div class="layer-section layer-audiocontrol">
+    <div class="layer-header">AudioControlService Updates <span class="badge">C++ Proxy Layer</span></div>
+    <div class="layer-body">
+      <div class="callout success">
+        No changes to the <code>AudioControlService</code> C++ proxy layer in Android 17. AIDL v3 <code>IAudioControl</code> remains current.
+      </div>
+      <p>Background audio hardening enforcement occurs at the platform audio framework level (Java <code>AudioManager</code> and <code>AudioTrack</code> enforcement in <code>audioserver</code>). No AIDL changes to the automotive <code>IAudioControl</code> proxy are required.</p>
+    </div>
+  </div>
+
+  <!-- LAYER 3 -->
+  <div class="layer-section layer-hal">
+    <div class="layer-header">AudioControlHAL Updates <span class="badge">HAL Layer</span></div>
+    <div class="layer-body">
+      <div class="callout">
+        <code>AudioControl HAL</code> remains at <strong>AIDL v3</strong> — no AIDL v4 confirmed in public AOSP documentation for Android 17.
+      </div>
+
+      <h3>AudioControl HAL Version History</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Version</th><th>Android</th><th>Key Capabilities</th></tr>
+        <tr><td>HIDL 1.0</td><td>Android 9</td><td><code>setFadeTowardFront</code>, <code>setBalanceTowardRight</code></td></tr>
+        <tr><td>HIDL 2.0</td><td>Android 12</td><td>Focus listener, HAL focus requests, muting, ducking</td></tr>
+        <tr><td>AIDL 1.0</td><td>Android 12L</td><td>HIDL→AIDL migration (same APIs)</td></tr>
+        <tr><td>AIDL 2.0</td><td>Android 13</td><td><code>onAudioFocusChangeWithMetaData</code>, <code>registerGainCallback</code></td></tr>
+        <tr><td>AIDL 3.0</td><td>Android 14</td><td><code>setModuleChangeCallback</code>, <code>IModuleChangeCallback#onAudioPortsChanged</code></td></tr>
+        <tr><td><em>(none)</em></td><td>Android 15/16/17</td><td><em>No new HAL version; CAP migrated to core Audio HAL in Android 16</em></td></tr>
+      </table></div>
+
+      <h3>Other Platform Audio Changes with AAOS Relevance</h3>
+      <p><span class="new-label">BLE Hearing Aid Device Type:</span> New constant <code>AudioDeviceInfo.TYPE_BLE_HEARING_AID</code> distinguishes BLE hearing aids from <code>TYPE_BLE_HEADSET</code>. OEMs supporting accessible audio should update device-picker UIs.</p>
+      <p><span class="new-label">xHE-AAC Software Encoder:</span> New system-provided encoder <code>c2.android.xheaac.encoder</code> with mandatory loudness metadata. Relevant for in-vehicle streaming and voice call recording pipelines.</p>
+
+      <h3>Appendix: Git Command to Generate This Patch</h3>
+<pre><code>cd &lt;AOSP_ROOT&gt;/packages/services/Car
+git fetch --tags
+
+# Use 'main' until the Android 17 release tag is published
+git diff android-16.0.0_r1..main \
+  -- service/src/com/android/car/audio/ cpp/audiocontrol/ \
+  &gt; a16_to_a17_audio.patch
+# Replace 'main' with android-17.0.0_r1 once the tag is available</code></pre>
+    </div>
+  </div>
+
+  <div class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://developer.android.com/about/versions/17/changes/bg-audio">Background Audio Hardening — Android 17</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/features">Android 17 Features and APIs</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/behavior-changes-all">Android 17 Behavior Changes: All Apps</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/behavior-changes-17">Android 17 Behavior Changes: Apps Targeting API 37</a></li>
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-25q4">AAOS 25Q4 Release Notes</a></li>
+      <li><a href="https://developer.android.com/reference/android/car/media/CarAudioManager">CarAudioManager API Reference</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/audio-control-hal">Audio Control HAL — AOSP</a></li>
+    </ul>
+  </div>
+
+  <footer>Generated for AAOS Audio Framework Migration Project &nbsp;|&nbsp; Android 16 → Android 17</footer>
+</div>
+</body>
+</html>
