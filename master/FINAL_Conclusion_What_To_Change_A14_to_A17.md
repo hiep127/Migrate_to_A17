@@ -29,7 +29,7 @@
 2. **Convert `CarAudioZonesHelper` from a class to an interface**, and move its 1,000-line XML body into a new `CarAudioZonesHelperImpl`.
 3. **Rewrite volume-group mapping** from *address-based* (`String`) to *device-based* (`CarAudioDeviceInfo`), and **split mute** into apply-vs-persist.
 4. **Split `CarAudioService`'s single `AudioPolicy` into four**, and make init async + audioserver-crash-tolerant.
-5. **Move all audio policies and callbacks to the main looper**; the dedicated `HandlerThread` is gone.
+5. **Audio policies and framework callbacks run on the main looper** — but the A14 baseline is *already* there, so this nets to no change (see §9). The `HandlerThread` is **not** removed; it survives for internal posted work.
 6. **Two new optional features** to accept or decline: system-enforced fade on focus loss, and min/max activation volume.
 7. **XML config stays valid at v3** unless you adopt those two features — then bump to **v4** and add `car_audio_fade_configuration.xml`.
 8. **No `IAudioControl` version bump is required** unless you choose HAL-delivered zones. Recommendation: don't — keep XML, `supportsAudioZones()` = false.
@@ -105,8 +105,8 @@ Grouped by whether the fork already touched them. **"Net A17"** means: apply thi
 | `CarVolumeGroupFactory.java` | `AudioManager` → `AudioManagerWrapper`; internal map `SparseArray<String>` + `ArrayMap<String,…>` → `SparseArray<CarAudioDeviceInfo>`; passes the new `CarActivationVolumeConfig`. |
 | `CarAudioZone.java` | `getCurrentAudioDeviceInfos()` → `getCurrentAudioDevices()` returning `AudioDeviceAttributes`. Add `getDefaultAudioZoneConfigInfo()`, `getVolumeGroupForAudioAttributes()`, `audioDevicesAdded/Removed()`. `init()` selects the default config + `setIsSelected(true)` + `updateVolumeDevices()`. **Net A17:** call sites read the flag from `mCarAudioContext.useCoreAudioRouting()` rather than taking it as a parameter. |
 | `CarAudioUtils.java` | Absorbs `generateCarAudioDeviceInfos()`, `generateAddressToCarAudioDeviceInfoMap()`, `generateAddressToInputAudioDeviceInfoMap()` from the zones helper. Add `isMicrophoneInputDevice()`, `isInvalidActivationPercentage()`. |
-| `ContentObserverFactory.java` | **Net A17:** `createObserver(ContentChangeCallback)` — *no* `Handler` parameter; binds `Looper.getMainLooper()` internally. (Do **not** implement the A16 explicit-`Handler` form.) |
-| `CoreAudioVolumeGroupCallback.java` | `AudioManagerWrapper`. **Net A17:** executor injected at `init(Executor)`, **not** stored in the constructor. (Do **not** implement the A16 ctor-executor form.) |
+| `ContentObserverFactory.java` | **Already at the A17 form — leave it alone.** `createObserver(ContentChangeCallback)` with no `Handler` parameter, binding `Looper.getMainLooper()` internally, is what the fork has today (`ContentObserverFactory.java:37`). Do **not** implement the A16 explicit-`Handler` form. |
+| `CoreAudioVolumeGroupCallback.java` | `AudioManager` → `AudioManagerWrapper` is the only change. The executor plumbing is **already at the A17 form**: `init(Executor)` (`CoreAudioVolumeGroupCallback.java:43`), called as `init(mContext.getMainExecutor())` (`CarAudioService.java:1692`). Do **not** implement the A16 ctor-executor form. |
 | `hal/AudioControlWrapper.java` | Add `supportsAudioZones()`, `getAudioZones()`, `getAudioDeviceConfiguration()`. |
 | `hal/AudioControlWrapperAidl.java` | Implement `getAudioZones()`; the rest of the A15 HAL-capability updates. |
 | `hal/AudioControlWrapperV1.java`, `hal/AudioControlWrapperV2.java` | Stub the new zone API as unsupported. |
@@ -161,17 +161,17 @@ Grouped by whether the fork already touched them. **"Net A17"** means: apply thi
 | B5 | **Zone layout can come from the AudioControl HAL** (`getAudioZones()`) instead of XML | Runtime choice | **Recommendation: keep XML.** `supportsAudioZones()` = false → `CarAudioZonesHelperImpl` is selected. Cost of the HAL path is a v3→v5 AIDL upgrade plus a new vendor HAL implementation, for a stable single-zone topology. |
 | B6 | **XML v4 elements** for fade + activation volume | v4 available | Bump **only if** B1 or B2 is adopted. |
 | B7 | **`CoreAudioVolumeGroup.updateDevices()` skips work under core routing** | Early return when `useCoreAudioRouting` | Take it — lands directly in a forked file. |
-| B8 | **Audio work moved to the main thread** — all policies and callbacks on `Looper.getMainLooper()` / `getMainExecutor()`; the dedicated `HandlerThread` is gone | Main looper | **Re-test callback timing**: OEM gain callback, master-mute callback, volume-group callback, content observers. |
+| B8 | **Audio policies and framework callbacks on the main looper** — `Looper.getMainLooper()` for the policy builders, `getMainExecutor()` for the audioserver-state and volume-group callbacks | Main looper | **No work — the A14 baseline is already here.** Verified in-tree: `CarAudioService.java:1612` already sets `Looper.getMainLooper()` (AOSP, 2019), `:1692` already calls `init(mContext.getMainExecutor())` (AOSP, 2022), `ContentObserverFactory.java:37` already binds the main looper. AOSP moved these *onto* a `HandlerThread` in A15/A16 and back off in A17 — a round trip. **`mHandlerThread` is not deleted**; it survives in A17 for internal posted work (mirror enable/disable, zone-config switch). The only genuinely new main-looper code is the A15 `CarAudioServerStateCallback`. |
 | B9 | **Added-then-removed intermediates** — persist-fade-balance, `CarVolumeGroup` event logger, `TimingsTraceLog` in focus | All gone by A17 | **Do not port them.** |
 | B10 | **Config-switch device-affinity fix** — `changeAudioPolicyForConfigChangeLocked()` replaced by an explicit 3-step sequence | Always on | Take it — fixes a latent bug where user device affinities were not updated on config switch under core audio routing. |
 
-**Six decisions to close before merging:**
+**Five open decisions to close before merging** (a sixth, listed below, is closed with no action):
 
 1. Enable Google's system fade (B1)? — yes/no
 2. MaxVolumeStartup **or** activation volume (B2)? — pick exactly one
 3. Zone source: XML **or** HAL (B5)? — recommendation: XML
 4. Bump `car_audio_configuration.xml` to v4 (B6)? — follows from 1 and 2
-5. Re-validate OEM gain callback + master-mute timing after the main-thread move (B8)
+5. ~~Re-validate OEM gain callback + master-mute timing after the main-thread move (B8)~~ — **CLOSED, no action.** Those paths already run on the main looper at A14, so the migration does not change their timing. (The standing fact that focus callbacks execute on the watchdog-monitored CarService main thread — including the synchronous call out to the Alliance OEM plugin — is pre-existing behavior, not something A17 introduces.)
 6. Confirm the "skip intermediates" rule (B9) with anyone reading the per-version docs
 
 ---
@@ -232,19 +232,29 @@ Only files that **both** sides changed are dangerous.
 
 ## §9. Do-not-replay list (the oscillations)
 
-These changed direction across the three releases. Jumping A14→A17 means implementing **only the right-hand column**.
+These changed direction across the three releases. Jumping A14→A17 means implementing **only the net A17 form**.
 
-| API / field | A15 | A16 | **Net A17 — implement this** |
-|---|---|---|---|
-| `ContentObserverFactory.createObserver` | no `Handler` | explicit `Handler` | **no `Handler`** (main looper internally) |
-| `CoreAudioVolumeGroupCallback.init()` | takes `Executor` | no-param (executor in ctor) | **takes `Executor`** |
-| `CarVolumeGroup.updateDevices()` | `(boolean)` | no-param | **`(boolean)`** |
-| `CoreAudioVolumeGroup.updateDevices()` | `(boolean)` | no-param | **`(boolean useCoreAudioRouting)` with early-return guard** |
-| `CarAudioZoneConfig.updateVolumeDevices()` | — | no-param | **`(boolean useCoreAudioRouting)`** |
-| `TimingsTraceLog` in `CarAudioFocus` / `FocusInteraction` | absent | added | **absent** |
-| `mPersistFadeBalanceLevels` / `AUDIO_FEATURE_PERSIST_FADE_BALANCE_VALUES` | absent | added | **absent** |
-| `mEventLogger` (LocalLog) in `CarVolumeGroup` | absent | added | **absent** |
-| `AudioPolicy` looper | handler thread | main looper | **main looper** |
+> **Verified against the tree:** the A14 baseline column below was read from the actual fork, not inferred.
+> **Six of the nine rows require no work at all** — the A14 form already *is* the A17 form, and AOSP simply
+> made a round trip in between. Only the three `updateDevices` / `updateVolumeDevices` rows are real work,
+> and those arrive as part of the A15 device-mapping rewrite (§3) rather than as standalone changes.
+
+| API / field | **A14 baseline (your tree)** | A15 | A16 | **Net A17 — implement this** | Work |
+|---|---|---|---|---|---|
+| `ContentObserverFactory.createObserver` | no `Handler` (main looper) | no `Handler` | explicit `Handler` | **no `Handler`** (main looper internally) | **none** |
+| `CoreAudioVolumeGroupCallback.init()` | takes `Executor` | takes `Executor` | no-param (executor in ctor) | **takes `Executor`** | **none** |
+| `AudioPolicy` looper | `Looper.getMainLooper()` | handler thread | main looper | **main looper** | **none** |
+| `TimingsTraceLog` in `CarAudioFocus` / `FocusInteraction` | absent | absent | added | **absent** | **none** |
+| `mPersistFadeBalanceLevels` / `AUDIO_FEATURE_PERSIST_FADE_BALANCE_VALUES` | absent | absent | added | **absent** | **none** |
+| `mEventLogger` (LocalLog) in `CarVolumeGroup` | absent | absent | added | **absent** | **none** |
+| `CarVolumeGroup.updateDevices()` | absent | `(boolean)` | no-param | **`(boolean)`** | new |
+| `CoreAudioVolumeGroup.updateDevices()` | absent | `(boolean)` | no-param | **`(boolean useCoreAudioRouting)` with early-return guard** | new |
+| `CarAudioZoneConfig.updateVolumeDevices()` | absent | — | no-param | **`(boolean useCoreAudioRouting)`** | new |
+
+**Why this matters:** read version-by-version, these nine look like nine things to get right. Against the
+A14 baseline, six are already correct and must simply be *left alone* — the risk is a well-meaning engineer
+following the A15→A16 docs and actively introducing the `HandlerThread` / `mEventLogger` / `TimingsTraceLog`
+forms that A17 then removes.
 
 ---
 
@@ -288,6 +298,38 @@ git fetch aosp --tags
 git diff --name-status aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/car/audio/
 git log --oneline aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/car/audio/
 ```
+
+---
+
+## §12. Verification record
+
+Every claim below was re-checked directly against `/a14full` on **2026-07-31**, not carried over from the
+source documents. Line numbers are as of branch `nissan_u_ccs2_release`.
+
+| Claim | Evidence | Result |
+|---|---|---|
+| None of the 13 new files exist | directory listing of `car/audio/` | ✅ confirmed |
+| `CarAudioZonesHelper` is a class, not an interface | `CarAudioZonesHelper.java:61` — `/* package */ final class` | ✅ confirmed |
+| XML schema v1–v3 only | `CarAudioZonesHelper.java:98–107` — `SUPPORTED_VERSION_1/2/3` | ✅ confirmed |
+| Single `AudioPolicy` | `CarAudioService.java:331` — `private AudioPolicy mAudioPolicy` | ✅ confirmed |
+| `hal/` subfolder still present | listing — 10 files under `car/audio/hal/` | ✅ confirmed |
+| Address-based volume mapping | `CarVolumeGroup.java:80–81` — `SparseArray<String>` + `ArrayMap<String, CarAudioDeviceInfo>` | ✅ confirmed |
+| `CarAudioDeviceInfo` old ctor | `CarAudioDeviceInfo.java:71` — `(AudioManager, AudioDeviceInfo)` | ✅ confirmed |
+| `sendFocusLossLocked` 2-arg, no fade | `CarAudioFocus.java:187`; raw `AudioManager` at `:72` | ✅ confirmed |
+| `FocusInteraction` takes `CarAudioContext`; `evaluateRequest` is `public` + `@AudioContext` | `FocusInteraction.java:343–345`, `:424` | ✅ confirmed |
+| `CoreAudioVolumeGroup` has platform guards to remove | 4 × `isPlatformVersionAtLeastU` | ✅ confirmed |
+| `updateDevices` / `updateVolumeDevices` absent | tree-wide grep — no hits | ✅ confirmed |
+| Forked-file list (§7) | `[Audio]`-tagged commits per file: all 12 listed files have them; all files listed as stock have none | ✅ confirmed |
+| XML config versions | `aivi2_n_full` v3 · `aivi2_n_da2` v2 · `aasp_n` emulator v3 | ✅ confirmed |
+| Fade / activation-volume flags absent | tree-wide grep — no hits | ✅ confirmed |
+| AudioControl AIDL tops out at v3 | `aidl_api/…/` contains `1 2 3 current` | ✅ confirmed |
+| `getAudioZones()` absent tree-wide | grep across `hardware/interfaces/automotive/audiocontrol/` — no hits | ✅ confirmed |
+| AudioControl version three-way mismatch | manifests `<version>1</version>` (`aivi2_n_full/manifest.xml:239`, `aivi2_n_da2/manifest.xml:339`) · VINTF fragment `<version>3</version>` (`vendor/alliance/…/audiocontrol/default/audiocontrol.xml`) · build links `audiocontrol-V2-ndk` (`Android.bp:26`) | ✅ confirmed — all three differ |
+| ~~"Main-thread move" is a migration change~~ | `CarAudioService.java:1612` (`Looper.getMainLooper()`, AOSP 2019) · `:1692` (`getMainExecutor()`, AOSP 2022) · `ContentObserverFactory.java:37` — all already at the A17 form | ❌ **corrected** — nets to zero |
+| ~~"The dedicated `HandlerThread` is gone"~~ | `mHandlerThread`/`mHandler` still used at `CarAudioService.java:1061, 1077, 1096, 1117, 2562` for mirroring and zone-config switch | ❌ **corrected** — not removed |
+
+**Net effect of the two corrections:** decision 5 is closed with no action, and six of the nine §9
+oscillation rows are reclassified from "implement the A17 form" to "already correct — leave alone".
 
 ---
 
