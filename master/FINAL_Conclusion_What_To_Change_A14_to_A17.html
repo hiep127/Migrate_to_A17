@@ -806,18 +806,25 @@ git log --oneline aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/c
   <div class="section" id="s13">
     <div class="section-header">
       <span class="sec-pill add">§13 · Features</span>
-      <h2>New features added — Focus &amp; Fade Manager</h2>
-      <span class="note">Read from real diffs, not commit messages</span>
+      <h2>New features added — full A14 → A17 delta</h2>
+      <span class="note">Every feature in §1–§10, restated as "what does this do"</span>
     </div>
     <p>
-      §1 and §3b already name the files this change set touches. This section states what those
-      files actually add in product terms — 22 upstream commits (<code>Oscar Azucena</code> /
-      <code>Raj Goparaju</code> / <code>Weilin Xu</code>, Google), the same change set behind §1's
-      <code>AudioManagerWrapper.java</code> / <code>CarAudioFadeConfigurationHelper.java</code> rows and
-      §3b's <code>CarAudioFocus.java</code> / <code>FocusInteraction.java</code> rows. Full
-      per-commit trace: <code>../audio_focus_fade_manager_commit_summary.md</code>.
+      §1–§10 establish <em>which files</em> change and <em>what to decide</em>. This section restates
+      the same delta as a flat list of <strong>features</strong> — what actually gets added, grouped by
+      area, each pointing back at the section with the file/method detail. Nothing here is new
+      information; it's the "what feature is added" view of the whole document, not just the
+      Focus/Fade slice.
     </p>
 
+    <h3>13.1 · Audio Focus &amp; Fade Manager</h3>
+    <p>
+      22 upstream commits (<code>Oscar Azucena</code> / <code>Raj Goparaju</code> / <code>Weilin Xu</code>,
+      Google) — the change set behind §1's <code>AudioManagerWrapper.java</code> /
+      <code>CarAudioFadeConfigurationHelper.java</code> rows and §3b's <code>CarAudioFocus.java</code> /
+      <code>FocusInteraction.java</code> rows. Full per-commit trace:
+      <code>../audio_focus_fade_manager_commit_summary.md</code>.
+    </p>
     <div class="decision-grid">
       <div class="decision">
         <div class="d-num">Feature</div>
@@ -871,8 +878,116 @@ git log --oneline aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/c
       </div>
     </div>
 
-    <h3 style="margin-top:36px">Implementation detail (method-level)</h3>
-    <p>For engineers implementing the merge — the same features above, traced to the actual method signatures.</p>
+    <h3 style="margin-top:36px">13.2 · Volume &amp; activation</h3>
+    <p>See §1 (<code>CarActivationVolumeConfig.java</code>), §3b (<code>CarVolumeGroup.java</code>, <code>CoreAudioVolumeGroup.java</code>), §5 B2/B7.</p>
+    <div class="decision-grid">
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Activation volume framework <span class="badge badge-new">new</span></h4>
+        <p>Per volume-group min/max activation percentage, invoked on one of three triggers — <code>onBoot</code>, <code>onSourceChanged</code>, <code>onPlaybackChanged</code> (<code>CarActivationVolumeConfig</code>). The HAL-focus case in §13.1 is one specific invocation of this general mechanism.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Device-based volume-group mapping <span class="badge badge-changed">rewrite</span></h4>
+        <p><code>CarVolumeGroup</code>'s internal map goes from address <code>String</code> → <code>CarAudioDeviceInfo</code> object. Lands directly on top of the fork's MaxVolumeStartup/mute patches — §7's top collision risk.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Mute split into apply-vs-persist <span class="badge badge-changed">rewrite</span></h4>
+        <p><code>applyMuteLocked()</code> (does the mute) is now separate from <code>saveMuteStateToSettingsLocked()</code> (persists it) — was one path before.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Core-routing early return <span class="badge badge-new">new</span></h4>
+        <p><code>CoreAudioVolumeGroup.updateDevices()</code> skips its own work entirely when core audio routing is active — §5's <strong>B7</strong>, a direct drop-in.</p>
+      </div>
+    </div>
+
+    <h3>13.3 · Dynamic devices &amp; routing</h3>
+    <p>See §1 (<code>CarAudioDeviceCallback.java</code>), §3a (<code>CarAudioDynamicRouting.java</code>, <code>CarAudioZone.java</code>), §5 B3/B10.</p>
+    <div class="decision-grid">
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Dynamic device connect/disconnect re-routing <span class="badge badge-new">new</span></h4>
+        <p><code>CarAudioDeviceCallback</code> hooks <code>AudioDeviceCallback</code> into <code>CarAudioService.onAudioDevicesAdded/Removed()</code> so zones/groups react live to devices appearing or disappearing.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Smarter routing fallback <span class="badge badge-new">new</span></h4>
+        <p>Only the selected + active zone config is routed; the default config is always registered last as a guaranteed fallback. §5's <strong>B3</strong> — take it, little overlap with fork code.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Bug fix</div>
+        <h4>Config-switch device-affinity fix</h4>
+        <p>The old single-call <code>changeAudioPolicyForConfigChangeLocked()</code> is replaced by an explicit 3-step sequence (<code>setupRoutingAudioPolicyLocked</code> → <code>setAllUserIdDeviceAffinitiesToNewPolicyLocked</code> → <code>swapRoutingAudioPolicyLocked</code>) — fixes a latent bug where per-user device affinities weren't updated on config switch under core audio routing. §5's <strong>B10</strong>.</p>
+      </div>
+    </div>
+
+    <h3>13.4 · Resilience &amp; zone topology source</h3>
+    <p>See §1 (<code>CarAudioServerStateCallback.java</code>, <code>CarAudioZonesHelperAudioControlHAL.java</code>), §2, §5 B4/B5, §6.</p>
+    <div class="decision-grid">
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Audioserver-crash recovery <span class="badge badge-new">new</span></h4>
+        <p><code>CarAudioServerStateCallback</code> detects audioserver going down and defers/retriggers <code>CarAudioService</code> init instead of leaving the service in a broken state. §5's <strong>B4</strong> — take it, then verify against the fork's boot order.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Zone topology can come from the AudioControl HAL <span class="badge badge-warn" style="background:rgba(251,146,60,0.14);color:var(--orange);border:1px solid rgba(251,146,60,0.34)">recommend: decline</span></h4>
+        <p><code>CarAudioZonesHelper</code> becomes an interface with two implementations — the existing XML parser (<code>CarAudioZonesHelperImpl</code>) or a new HAL-backed one (<code>CarAudioZonesHelperAudioControlHAL</code>, via <code>getAudioZones()</code>). §5's <strong>B5</strong>/Decision 3 — keeping <code>supportsAudioZones()</code> false keeps this path fully inert and keeps XML in control.</p>
+      </div>
+    </div>
+
+    <h3>13.5 · Platform-wide, outside <code>car/audio</code></h3>
+    <p>
+      <span class="badge badge-unverified">Unverified</span> release-note sourced (§10) — real A16/A17 platform
+      changes, but none appear in the three verified <code>car/audio</code> patches, so treat as directional
+      until independently confirmed.
+    </p>
+    <div class="decision-grid">
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Background Audio Hardening <span class="badge badge-breaking" style="background:rgba(248,113,113,0.2);color:var(--red);border:1px solid rgba(248,113,113,0.4)">breaking</span></h4>
+        <p>Playback/focus/volume calls from apps without a visible Activity or a non-<code>SHORT_SERVICE</code> FGS now fail silently; API-37 targets additionally need while-in-use FGS capability. Audit every Nissan/Alliance app that plays audio without a visible Activity.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Dedicated assistant volume stream</h4>
+        <p><code>MODE_ASSISTANT_CONVERSATION</code> / <code>USAGE_ASSISTANT</code> isolated from <code>STREAM_MUSIC</code> — needs its own volume-group mapping and a settings-UI slider; interacts with the fork's Siri/E-call handling.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>CAP engine config moves to the core Audio HAL <span class="badge badge-breaking" style="background:rgba(248,113,113,0.2);color:var(--red);border:1px solid rgba(248,113,113,0.4)">hard-gated</span></h4>
+        <p><code>getEngineConfig()</code> returning AIDL <code>CapSpecificConfig</code> replaces XML + <code>.pfw</code> — but this is gated behind a full core-audio HIDL→AIDL migration the fork hasn't started. Keep XML; <code>EngineConfigXmlConverter.h</code> covers the gap if the HAL ever goes AIDL.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4><code>STRATEGY_</code> prefix rename <span class="badge badge-breaking" style="background:rgba(248,113,113,0.2);color:var(--red);border:1px solid rgba(248,113,113,0.4)">breaking, conditional</span></h4>
+        <p>Only required if the CAP path above goes AIDL-native. The fork has 21 lowercase strategy names referenced from <code>.pfw</code>, volumes XML, and product-strategy paths — plan as an isolated, mechanical rename if/when needed.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>New read-side <code>@SystemApi</code>s</h4>
+        <p><code>getFadeTowardFront()</code> / <code>getBalanceTowardRight()</code> — parity with the existing setters; optional adoption.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Alternative app audio controls</h4>
+        <p>Independent volume + routing path for communication apps while driving. Evaluate against the fork's existing call-volume handling.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Minor platform additions</h4>
+        <p><code>AudioDeviceInfo.TYPE_BLE_HEARING_AID</code> (new device type, system-routed, no app work expected) and the <code>c2.android.xheaac.encoder</code> software codec (informational).</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px">Implementation detail (method-level) — §13.1 only</h3>
+    <p>
+      Method-level tracing below covers <strong>Focus &amp; Fade Manager (§13.1)</strong> specifically, since
+      that's the area read from real commit diffs rather than file-diff summaries. For §13.2–§13.4, the
+      equivalent method/field detail already lives in §3a/§3b's per-file rows above.
+    </p>
 
     <h3>AudioManagerWrapper.java <span class="badge badge-changed">extended</span></h3>
     <p>The wrapper already existed for volume calls; these 5 focus-dispatch passthroughs are added to it.</p>
