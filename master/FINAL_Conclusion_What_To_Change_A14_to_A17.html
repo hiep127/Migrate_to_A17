@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Final Conclusion — What Must Change: A14 → A17</title>
+  <style>
+    :root {
+      --bg: #09090f;
+      --surface: #13141e;
+      --surface2: #1c1f2e;
+      --surface3: #222637;
+      --border: #2a2e44;
+      --accent: #60a5fa;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+      --teal: #2dd4bf;
+      --text: #e2e8f0;
+      --text-muted: #7c88a3;
+      --code-bg: #0d1117;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(160deg, #0a0514 0%, #0d1640 35%, #0f1c3d 60%, #0a1a0f 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 64px 48px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 40%, rgba(96,165,250,0.08) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 70%, rgba(167,139,250,0.07) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; max-width: 1100px; margin: 0 auto; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .eyebrow-chip {
+      background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.3);
+      color: var(--accent);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+    }
+    .eyebrow-chip.final {
+      background: rgba(52,211,153,0.12);
+      border-color: rgba(52,211,153,0.35);
+      color: var(--green);
+    }
+    .version-span { color: var(--text-muted); font-size: 13px; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900; color: #fff; line-height: 1.1;
+      margin-bottom: 12px; letter-spacing: -0.02em;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { color: rgba(255,255,255,0.6); font-size: 1.05rem; max-width: 720px; margin-bottom: 28px; }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 12px; padding: 4px 12px; border-radius: 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+
+    /* ===== STAT ROW ===== */
+    .stat-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px; margin-top: 28px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 16px 18px;
+    }
+    .stat .num { font-size: 1.7rem; font-weight: 800; color: #fff; line-height: 1; }
+    .stat .lbl { font-size: 11.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+
+    /* ===== NAV ===== */
+    .toc-bar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 48px; display: flex; align-items: center; gap: 0;
+      overflow-x: auto; scrollbar-width: none;
+      position: sticky; top: 0; z-index: 20;
+    }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-link {
+      color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500;
+      padding: 14px 16px; border-bottom: 2px solid transparent; white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .toc-link:hover { color: var(--text); border-bottom-color: var(--border); }
+
+    /* ===== LAYOUT ===== */
+    .page-body { max-width: 1100px; margin: 0 auto; padding: 56px 48px 96px; }
+
+    /* ===== SUMMARY BLOCK ===== */
+    .exec-summary {
+      background: linear-gradient(135deg, rgba(96,165,250,0.05) 0%, rgba(167,139,250,0.05) 100%);
+      border: 1px solid rgba(96,165,250,0.2);
+      border-radius: 16px; padding: 36px 40px; margin-bottom: 56px;
+    }
+    .exec-summary .exec-header {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .exec-summary h2 {
+      font-size: 1.6rem; font-weight: 800; color: #fff;
+      border: none; padding: 0; margin: 0 0 24px;
+    }
+    .ten-list { counter-reset: ten; list-style: none; margin: 0; padding: 0; }
+    .ten-list li {
+      counter-increment: ten; position: relative;
+      padding: 11px 0 11px 44px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 14.5px;
+    }
+    .ten-list li:last-child { border-bottom: none; }
+    .ten-list li::before {
+      content: counter(ten);
+      position: absolute; left: 0; top: 12px;
+      width: 26px; height: 26px; border-radius: 7px;
+      background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3);
+      color: var(--accent); font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section { margin-bottom: 60px; scroll-margin-top: 60px; }
+    .section-header {
+      display: flex; align-items: flex-end; gap: 16px;
+      margin-bottom: 26px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .sec-pill {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 20px;
+      background: rgba(167,139,250,0.14); color: var(--accent2); border: 1px solid rgba(167,139,250,0.32);
+    }
+    .sec-pill.add { background: rgba(52,211,153,0.12); color: var(--green); border-color: rgba(52,211,153,0.3); }
+    .sec-pill.mod { background: rgba(251,191,36,0.12); color: var(--yellow); border-color: rgba(251,191,36,0.3); }
+    .sec-pill.risk { background: rgba(248,113,113,0.12); color: var(--red); border-color: rgba(248,113,113,0.32); }
+    .sec-pill.warn { background: rgba(251,146,60,0.14); color: var(--orange); border-color: rgba(251,146,60,0.34); }
+    .section-header h2 {
+      font-size: 1.55rem; font-weight: 800; color: #fff;
+      border: none; padding: 0; margin: 0; line-height: 1.15;
+    }
+    .section-header .note { color: var(--text-muted); font-size: 13px; margin-left: auto; white-space: nowrap; }
+
+    /* ===== CONTENT ELEMENTS ===== */
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 28px 0 10px; }
+    h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin: 18px 0 8px; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 22px; }
+    li { margin-bottom: 5px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: 'Consolas', 'Courier New', monospace; font-size: 0.85rem;
+      background: var(--code-bg); color: #7dd3fc; padding: 2px 6px;
+      border-radius: 4px; border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 22px; overflow-x: auto; margin: 14px 0; line-height: 1.5;
+    }
+    pre code { background: none; border: none; padding: 0; color: #c9d1d9; font-size: 0.83rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin: 18px 0; }
+    .card.critical { border-left: 4px solid var(--red); }
+    .card.major { border-left: 4px solid var(--orange); }
+    .card.new { border-left: 4px solid var(--green); }
+    .card.changed { border-left: 4px solid var(--yellow); }
+    .card.info { border-left: 4px solid var(--accent2); }
+    .card h3 { margin-top: 0; }
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 5px;
+      margin-right: 6px; margin-bottom: 8px;
+    }
+    .badge-critical { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .badge-major { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+    .badge-new { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+    .badge-changed { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.25); }
+    .badge-breaking { background: rgba(248,113,113,0.2); color: var(--red); border: 1px solid rgba(248,113,113,0.4); }
+    .badge-verified { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .badge-unverified { background: rgba(251,146,60,0.14); color: var(--orange); border: 1px solid rgba(251,146,60,0.34); }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+    thead tr { background: var(--surface2); }
+    th { text-align: left; padding: 9px 13px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.015); }
+    .table-wrap { overflow-x: auto; }
+    .risk-high { color: var(--red); font-weight: 700; white-space: nowrap; }
+    .risk-med { color: var(--orange); font-weight: 700; white-space: nowrap; }
+    .risk-low { color: var(--yellow); font-weight: 600; white-space: nowrap; }
+    .risk-none { color: var(--green); font-weight: 600; white-space: nowrap; }
+    .net {
+      display: inline-block; background: rgba(52,211,153,0.12);
+      border: 1px solid rgba(52,211,153,0.3); color: var(--green);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 2px 8px; border-radius: 5px; margin-right: 6px;
+    }
+    .dont {
+      display: inline-block; background: rgba(248,113,113,0.14);
+      border: 1px solid rgba(248,113,113,0.32); color: var(--red);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 2px 8px; border-radius: 5px; margin-right: 6px;
+    }
+    .flag-chip {
+      display: inline-block; background: rgba(96,165,250,0.1);
+      border: 1px solid rgba(96,165,250,0.25); color: var(--accent);
+      font-family: monospace; font-size: 12px; padding: 3px 10px;
+      border-radius: 6px; margin: 2px;
+    }
+    .absent { color: var(--text-muted); font-style: italic; }
+    blockquote {
+      border-left: 3px solid var(--accent2); padding: 10px 16px; margin: 14px 0;
+      background: rgba(167,139,250,0.06); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+    .decision-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 18px; }
+    .decision {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-top: 3px solid var(--accent2); border-radius: 10px; padding: 16px 18px;
+    }
+    .decision .d-num { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
+    .decision h4 { color: #fff; text-transform: none; letter-spacing: 0; font-size: 0.95rem; margin: 0 0 6px; }
+    .decision p { font-size: 13px; color: var(--text-muted); margin: 0; }
+    .steps { counter-reset: step; list-style: none; margin: 16px 0 0; padding: 0; }
+    .steps li {
+      counter-increment: step; position: relative;
+      padding: 12px 0 12px 46px; border-bottom: 1px solid var(--border); font-size: 14.5px;
+    }
+    .steps li:last-child { border-bottom: none; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 13px; width: 28px; height: 28px; border-radius: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--accent); font-size: 12.5px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+    .footer {
+      text-align: center; padding: 40px; border-top: 1px solid var(--border);
+      color: var(--text-muted); font-size: 13px;
+    }
+    .sources-list { columns: 2; gap: 24px; font-size: 13px; }
+    .sources-list li { margin-bottom: 8px; }
+    @media (max-width: 700px) {
+      .hero { padding: 40px 24px; }
+      .page-body { padding: 32px 24px 64px; }
+      .toc-bar { padding: 0 16px; }
+      .decision-grid { grid-template-columns: 1fr; }
+      .sources-list { columns: 1; }
+      .exec-summary { padding: 24px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-chip final">Final Conclusion</span>
+      <span class="eyebrow-chip">Car Audio Framework</span>
+      <span class="version-span">Net end-state delta &nbsp;·&nbsp; not version-by-version</span>
+    </div>
+    <h1>What Must Change<br/><span class="highlight">A14 → A17</span></h1>
+    <p class="hero-sub">
+      Every other document in this folder is organised per version transition. This one collapses all
+      three into a single net delta: if you jump straight from the Android 14 baseline to the Android 17
+      end-state, this is the complete list of what changes — and nothing else.
+    </p>
+    <div class="tag-cloud">
+      <span class="tag">CarAudioService</span>
+      <span class="tag">CarVolumeGroup</span>
+      <span class="tag">CarAudioZonesHelper</span>
+      <span class="tag">AudioManagerWrapper</span>
+      <span class="tag">AudioControl HAL</span>
+      <span class="tag">car_audio_configuration.xml</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">~17,200</div><div class="lbl">Patch lines total</div></div>
+      <div class="stat"><div class="num">13</div><div class="lbl">Files to add</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">High/med-risk merges</div></div>
+      <div class="stat"><div class="num">9</div><div class="lbl">APIs that oscillate</div></div>
+      <div class="stat"><div class="num">6</div><div class="lbl">Decisions to close</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="toc-bar">
+  <a class="toc-link" href="#s0">§0 In ten lines</a>
+  <a class="toc-link" href="#s1">§1 Add</a>
+  <a class="toc-link" href="#s2">§2 Structural</a>
+  <a class="toc-link" href="#s3">§3 Modify</a>
+  <a class="toc-link" href="#s4">§4 Config</a>
+  <a class="toc-link" href="#s5">§5 Behavior</a>
+  <a class="toc-link" href="#s6">§6 HAL</a>
+  <a class="toc-link" href="#s7">§7 Collisions</a>
+  <a class="toc-link" href="#s8">§8 Order</a>
+  <a class="toc-link" href="#s9">§9 Do-not-replay</a>
+  <a class="toc-link" href="#s10">§10 Separate</a>
+  <a class="toc-link" href="#s11">§11 ⚠ Contradiction</a>
+</div>
+
+<div class="page-body">
+
+  <!-- PREAMBLE -->
+  <div class="card info">
+    <h3>Baseline, verified in-tree</h3>
+    <p>
+      <code>/a14full</code>, branch <code>nissan_u_ccs2_release</code>: <code>CarAudioService</code> has a
+      <strong>single</strong> <code>mAudioPolicy</code> (line 331), <code>CarAudioZonesHelper</code> is still a
+      <code>final class</code> parsing XML <strong>v1–v3</strong>, the <code>hal/</code> subfolder is still present,
+      and <strong>none</strong> of the AOSP A15/A16 new files exist. The whole A15+A16+A17 <code>car/audio</code>
+      delta is still to be applied — roughly <strong>17,200 patch lines</strong> (10,942 + 5,754 + 485).
+    </p>
+    <p style="margin-bottom:0">
+      <span class="badge badge-verified">Verified</span> §1–§9 come from real AOSP git patches cross-checked against the actual fork.
+      <span class="badge badge-unverified">Unverified</span> §10 is release-note-sourced only.
+      <span class="badge badge-critical">Open</span> §11 is a contradiction to resolve before work starts.
+    </p>
+  </div>
+
+  <!-- §0 -->
+  <div class="exec-summary" id="s0">
+    <div class="exec-header">§0 · The conclusion</div>
+    <h2>In ten lines</h2>
+    <ol class="ten-list">
+      <li><strong>Add 13 new files</strong> to <code>car/audio/</code> (8 from A15, 5 from A16). <code>AudioManagerWrapper</code> is the spine — it touches nearly every other file.</li>
+      <li><strong>Convert <code>CarAudioZonesHelper</code> from a class to an interface</strong>, and move its 1,000-line XML body into a new <code>CarAudioZonesHelperImpl</code>.</li>
+      <li><strong>Rewrite volume-group mapping</strong> from <em>address-based</em> (<code>String</code>) to <em>device-based</em> (<code>CarAudioDeviceInfo</code>), and <strong>split mute</strong> into apply-vs-persist.</li>
+      <li><strong>Split <code>CarAudioService</code>'s single <code>AudioPolicy</code> into four</strong>, and make init async + audioserver-crash-tolerant.</li>
+      <li><strong>Move all audio policies and callbacks to the main looper</strong>; the dedicated <code>HandlerThread</code> is gone.</li>
+      <li><strong>Two new optional features</strong> to accept or decline: system-enforced fade on focus loss, and min/max activation volume.</li>
+      <li><strong>XML config stays valid at v3</strong> unless you adopt those two features — then bump to <strong>v4</strong> and add <code>car_audio_fade_configuration.xml</code>.</li>
+      <li><strong>No <code>IAudioControl</code> version bump is required</strong> unless you choose HAL-delivered zones. Recommendation: don't — keep XML, <code>supportsAudioZones()</code> = false.</li>
+      <li><strong>Seven Nissan-forked files are real merge conflicts</strong>; five more need re-validation without being edited by Google.</li>
+      <li><strong>Three A17 items live outside <code>car/audio</code> entirely</strong> (background-audio hardening, assistant volume stream, CAP-on-HAL) and are separate projects.</li>
+    </ol>
+  </div>
+
+  <!-- §1 -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="sec-pill add">§1 · Add</span>
+      <h2>Files to add — 13 new files</h2>
+      <span class="note">No conflict — cost is wiring</span>
+    </div>
+    <p>None of these exist in the fork. They drop in cleanly.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Origin</th><th>What it does</th><th>Why you need it</th></tr></thead>
+        <tbody>
+          <tr><td><code>AudioManagerWrapper.java</code></td><td>A15</td><td>Wraps every <code>android.media.AudioManager</code> call</td><td><strong>Prerequisite for everything else.</strong> Nearly every modified file changes its <code>AudioManager</code> field to this type. Add it first.</td></tr>
+          <tr><td><code>CarActivationVolumeConfig.java</code></td><td>A15</td><td>Per-group min/max activation % + invocation type</td><td>Required by the new <code>CarVolumeGroup</code> constructor — needed even if you never enable the feature</td></tr>
+          <tr><td><code>CarAudioDeviceCallback.java</code></td><td>A15</td><td><code>AudioDeviceCallback</code> → <code>CarAudioService.onAudioDevicesAdded/Removed()</code></td><td>Dynamic device connect/disconnect re-routing</td></tr>
+          <tr><td><code>CarAudioFadeConfigurationHelper.java</code></td><td>A15</td><td>Parses <code>/vendor/etc/car_audio_fade_configuration.xml</code></td><td>Only exercised if fade is enabled; still compiled in</td></tr>
+          <tr><td><code>CarAudioParserUtils.java</code></td><td>A15</td><td>XML parse helpers extracted from the zones helper</td><td>De-duplication; required by <code>CarAudioZonesHelperImpl</code></td></tr>
+          <tr><td><code>CarAudioPlaybackMonitor.java</code></td><td>A15</td><td>Tracks active playback per zone → drives activation volume</td><td>Sits alongside the fork's existing <code>CarAudioPlaybackCallback</code> — they are <em>different</em> classes</td></tr>
+          <tr><td><code>CarAudioProtoUtils.java</code></td><td>A15</td><td>Protobuf dump of fade config for bugreports</td><td>Dump-only</td></tr>
+          <tr><td><code>CarAudioServerStateCallback.java</code></td><td>A15</td><td>Detects audioserver crash → triggers reinit</td><td>New resilience; interacts with boot order</td></tr>
+          <tr><td><code>AudioControlZoneConverter.java</code></td><td>A16</td><td>HAL AIDL <code>AudioZone</code> → <code>CarAudioZone</code></td><td>Only used on the HAL-zone path; compiled regardless</td></tr>
+          <tr><td><code>AudioControlZoneConverterUtils.java</code></td><td>A16</td><td>~529 lines of HAL→service type conversion</td><td>ditto</td></tr>
+          <tr><td><code>CarAudioZonesHelperAudioControlHAL.java</code></td><td>A16</td><td>Loads zone topology from <code>getAudioZones()</code></td><td>ditto — <strong>keep it inert</strong> (see §5, decision 3)</td></tr>
+          <tr><td><code>CarAudioZonesHelperImpl.java</code></td><td>A16</td><td>The old XML parser body, now implementing the interface (~1,234 lines)</td><td><strong>This is the file that keeps XML working. Mandatory.</strong></td></tr>
+          <tr><td><code>TEST_MAPPING</code></td><td>A16</td><td>CI test routing</td><td>Optional but cheap</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §2 -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="sec-pill">§2 · Structural</span>
+      <h2>The one structural change</h2>
+    </div>
+    <p><code>CarAudioZonesHelper.java</code>: <strong><code>final class</code> (~1,056 lines of XML parsing) → <code>interface</code> (8 signatures)</strong></p>
+    <pre><code>interface CarAudioZonesHelper {
+    SparseArray&lt;CarAudioZone&gt; loadAudioZones() throws IOException, XmlPullParserException;
+    CarAudioContext getCarAudioContext();
+    SparseIntArray getCarAudioZoneIdToOccupantZoneIdMapping();
+    List&lt;CarAudioDeviceInfo&gt; getMirrorDeviceInfos();
+    boolean useCoreAudioRouting();
+    boolean useCoreAudioVolume();
+    boolean useHalDuckingSignalOrDefault();
+    boolean useVolumeGroupMuting();
+}</code></pre>
+    <p><code>CarAudioService.init()</code> picks the implementation at runtime:</p>
+    <pre><code>boolean halSupportsZoneConfig = mAudioControlWrapper.supportsAudioZones();
+mCarAudioZonesHelper = halSupportsZoneConfig
+        ? new CarAudioZonesHelperAudioControlHAL(mAudioControlWrapper, ...)   // HAL topology
+        : new CarAudioZonesHelperImpl(mContext, ...);                        // XML — Nissan path</code></pre>
+    <blockquote>Keeping <code>supportsAudioZones()</code> false selects the XML impl and makes the entire HAL-zone branch dead code. That is the recommended posture.</blockquote>
+  </div>
+
+  <!-- §3 -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="sec-pill mod">§3 · Modify</span>
+      <h2>Files to modify — net A17 end-state</h2>
+      <span class="note">Final form only — never the intermediates</span>
+    </div>
+    <p><span class="net">Net A17</span> means: apply this form once; do not implement the A15 or A16 intermediate form.</p>
+
+    <h3>3a. Stock A14 in the fork — mechanical, low risk</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Net A17 state to reach</th></tr></thead>
+        <tbody>
+          <tr><td><code>CarAudioDeviceInfo.java</code></td><td>Constructor takes <code>(AudioManagerWrapper, AudioDeviceAttributes)</code> instead of <code>(AudioManager, AudioDeviceInfo)</code>. Add <code>isActive()</code>, <code>audioDevicesAdded/Removed()</code>, <code>setAudioDeviceInfo()</code>, <code>getAudioDevice()</code> (replaces <code>getAudioDeviceInfo()</code>). New constants <code>DEFAULT_NUM_CHANNELS=1</code>, <code>DEFAULT_ENCODING_FORMAT=ENCODING_PCM_16BIT</code>, <code>UNINITIALIZED_GAIN=-1</code>.</td></tr>
+          <tr><td><code>CarAudioDynamicRouting.java</code></td><td><code>setupAudioDynamicRouting()</code> signature changes; routes <strong>only selected + active</strong> configs, and always appends the <strong>default config last</strong> as fallback.</td></tr>
+          <tr><td><code>CarAudioContext.java</code></td><td>Remove <code>mContextsToDuck</code> / <code>getContextsToDuck()</code>. Add <code>getLegacyContextForUsage(int)</code>. <code>AudioAttributesWrapper</code> gains <code>mCarAudioContextId</code> + a 2-arg constructor; <code>equals()</code>/<code>hashCode()</code> become context-id-based when the id is valid.</td></tr>
+          <tr><td><code>CarAudioVolumeGroup.java</code></td><td>Inherits the base constructor change (device map + <code>CarActivationVolumeConfig</code>); <code>calculateNewGainStageFromDeviceInfos()</code> moves inside <code>synchronized(mLock)</code>. Only standalone A17 edit is a javadoc fix.</td></tr>
+          <tr><td><code>CarVolumeGroupFactory.java</code></td><td><code>AudioManager</code> → <code>AudioManagerWrapper</code>; internal map <code>SparseArray&lt;String&gt;</code> + <code>ArrayMap&lt;String,…&gt;</code> → <code>SparseArray&lt;CarAudioDeviceInfo&gt;</code>; passes the new <code>CarActivationVolumeConfig</code>.</td></tr>
+          <tr><td><code>CarAudioZone.java</code></td><td><code>getCurrentAudioDeviceInfos()</code> → <code>getCurrentAudioDevices()</code> returning <code>AudioDeviceAttributes</code>. Add <code>getDefaultAudioZoneConfigInfo()</code>, <code>getVolumeGroupForAudioAttributes()</code>, <code>audioDevicesAdded/Removed()</code>. <code>init()</code> selects the default config + <code>setIsSelected(true)</code> + <code>updateVolumeDevices()</code>. <span class="net">Net A17</span> call sites read the flag from <code>mCarAudioContext.useCoreAudioRouting()</code> rather than taking it as a parameter.</td></tr>
+          <tr><td><code>CarAudioUtils.java</code></td><td>Absorbs <code>generateCarAudioDeviceInfos()</code>, <code>generateAddressToCarAudioDeviceInfoMap()</code>, <code>generateAddressToInputAudioDeviceInfoMap()</code> from the zones helper. Add <code>isMicrophoneInputDevice()</code>, <code>isInvalidActivationPercentage()</code>.</td></tr>
+          <tr><td><code>ContentObserverFactory.java</code></td><td><span class="net">Net A17</span> <code>createObserver(ContentChangeCallback)</code> — <em>no</em> <code>Handler</code> parameter; binds <code>Looper.getMainLooper()</code> internally. <span class="dont">Do not</span> implement the A16 explicit-<code>Handler</code> form.</td></tr>
+          <tr><td><code>CoreAudioVolumeGroupCallback.java</code></td><td><code>AudioManagerWrapper</code>. <span class="net">Net A17</span> executor injected at <code>init(Executor)</code>, <strong>not</strong> stored in the constructor. <span class="dont">Do not</span> implement the A16 ctor-executor form.</td></tr>
+          <tr><td><code>hal/AudioControlWrapper.java</code></td><td>Add <code>supportsAudioZones()</code>, <code>getAudioZones()</code>, <code>getAudioDeviceConfiguration()</code>.</td></tr>
+          <tr><td><code>hal/AudioControlWrapperAidl.java</code></td><td>Implement <code>getAudioZones()</code>; the rest of the A15 HAL-capability updates.</td></tr>
+          <tr><td><code>hal/AudioControlWrapperV1.java</code>, <code>hal/AudioControlWrapperV2.java</code></td><td>Stub the new zone API as unsupported.</td></tr>
+          <tr><td><code>hal/HalAudioDeviceInfo.java</code>, <code>hal/HalAudioFocus.java</code>, <code>hal/HalFocusListener.java</code></td><td>Interface updates for dynamic device handling.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3b. Nissan-forked — the real merges</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Net A17 state to reach</th><th>Nissan code in the same methods</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>CarAudioService.java</code><br/><span class="badge badge-critical">High</span></td>
+            <td>Single <code>mAudioPolicy</code> → <strong>four</strong>: <code>mVolumeControlAudioPolicy</code>, <code>mFocusControlAudioPolicy</code>, <code>mRoutingAudioPolicy</code>, <code>mFadeManagerConfigAudioPolicy</code>. Constructor gains <code>AudioManagerWrapper</code> + <code>audioFadeConfigPath</code>. New fields: <code>mUseMinMaxActivationVolume</code>, <code>mUseFadeManagerConfiguration</code>, <code>mAudioServerStateCallback</code>, <code>mAudioDeviceInfoCallback</code>, <code>mCarAudioPlaybackMonitor</code>, <code>mCarAudioFadeConfigurationHelper</code>. <code>init()</code> checks <code>isAudioServerRunning()</code> and defers; async init with <code>waitForInitComplete()</code>. HAL-first zone load with XML fallback. All 4 policy builders use <code>Looper.getMainLooper()</code>; audioserver callback uses <code>mContext.getMainExecutor()</code>. Config switch becomes the explicit 3-step <code>setupRoutingAudioPolicyLocked()</code> → <code>setAllUserIdDeviceAffinitiesToNewPolicyLocked()</code> → <code>swapRoutingAudioPolicyLocked()</code>. <span class="dont">Do not add</span> <code>mPersistFadeBalanceLevels</code>.</td>
+            <td>Audio-Off persist, MaxVolumeStartup, OEM gain-callback wiring, master-mute callback, occupant-zone filter, Siri/E-call volume, cyber-mute, mirror handling</td>
+          </tr>
+          <tr>
+            <td><code>CarVolumeGroup.java</code><br/><span class="badge badge-critical">High</span></td>
+            <td>Mapping <code>SparseArray&lt;String&gt; contextToAddress</code> + <code>ArrayMap&lt;String,CarAudioDeviceInfo&gt;</code> → <strong><code>SparseArray&lt;CarAudioDeviceInfo&gt; contextToDevices</code></strong>, plus a <code>CarActivationVolumeConfig</code> ctor parameter. Add <code>getMax/MinActivationGainIndex()</code>, <code>getActivationVolumeInvocationType()</code>, <code>handleActivationVolume()</code>, <code>isActive()</code>, <code>audioDevicesAdded/Removed()</code>, <code>validateDeviceTypes()</code>, <code>getAudioDeviceAttributes()</code>. <strong>Mute splits</strong> into <code>applyMuteLocked()</code> + <code>saveMuteStateToSettingsLocked()</code>. <span class="net">Net A17</span> <code>updateDevices(boolean useCoreAudioRouting)</code>; <strong>no</strong> <code>mEventLogger</code>.</td>
+            <td>MaxVolumeStartup apply, skip master-mute event, skip ducking volume-change event, restore volume on unmute</td>
+          </tr>
+          <tr>
+            <td><code>CarAudioFocus.java</code><br/><span class="badge badge-critical">High</span></td>
+            <td><code>sendFocusLossLocked(loser, lossType)</code> → <code>sendFocusLossLocked(loser, lossType, winner, shouldFade, transientFadeManagerConfig)</code> using <code>dispatchAudioFocusChangeWithFade()</code>. <code>evaluateRequest()</code> switches to <code>int requestedUsage</code> instead of <code>@AudioContext int</code>. Add <code>isFadeManagerSupported()</code>, <code>getTransientFadeManagerConfig()</code>. Remove <code>removeDelayedAudioFocusRequestLocked()</code> (merged into <code>removeFocusEntryLocked</code>). <code>AudioManager</code> → <code>AudioManagerWrapper</code>. <span class="dont">Do not add</span> <code>TimingsTraceLog</code>.</td>
+            <td>"Audio Off mode" focus dispatch, assistant/call-ring talkback fix, block BT voice-call focus</td>
+          </tr>
+          <tr>
+            <td><code>FocusInteraction.java</code><br/><span class="badge badge-critical">High</span></td>
+            <td>Drop <code>CarAudioContext</code> from the constructor. <code>evaluateRequest(@AudioContext int, FocusEntry)</code> → <code>evaluateRequest(int requestedUsage, FocusEntry)</code>; visibility <code>public</code> → package-private. <span class="net">Net A17</span> <code>mContentObserverFactory.createObserver(callback)</code> with no explicit <code>Handler</code> (main looper).</td>
+            <td>Audio Off mode; prevent entertainment resuming during Audio Off</td>
+          </tr>
+          <tr>
+            <td><code>CoreAudioVolumeGroup.java</code><br/><span class="badge badge-critical">High</span></td>
+            <td><code>AudioManager</code> → <code>AudioManagerWrapper</code>; device-based context map + <code>CarActivationVolumeConfig</code>. <strong>Remove all <code>VersionUtils.isPlatformVersionAtLeastU()</code> guards.</strong> <code>isAmGroupMuted()</code> → <code>mAudioManager.isVolumeGroupMuted(mAmId)</code>; <code>applyMuteLocked()</code> → <code>mAudioManager.adjustVolumeGroupVolume()</code>. Add <code>EMPTY_FLAGS = 0</code>. <span class="net">Net A17</span> <code>updateDevices(boolean useCoreAudioRouting)</code> that <strong>returns early when core routing is on</strong>.</td>
+            <td>Siri volume after E-call, restore on unmute, per-usage default volume (#222006) + <code>storeAndPersistGainIndexLocked</code></td>
+          </tr>
+          <tr>
+            <td><code>CarZonesAudioFocus.java</code><br/><span class="badge badge-major">Med</span></td>
+            <td><code>createCarZonesAudioFocus()</code>: <code>AudioManager</code> → <code>AudioManagerWrapper</code>, plus a <code>@Nullable CarAudioFeaturesInfo</code> parameter. <code>mCarAudioService</code> and <code>mAudioPolicy</code> become <code>@GuardedBy("mLock")</code>; <code>setOwningPolicy()</code> synchronized. Shared <code>ContentObserverFactory</code> created once outside the per-zone loop. <code>FocusInteraction</code> no longer receives <code>CarAudioContext</code>.</td>
+            <td>Audio Off mode — dispatch focus-gain to Entertainment</td>
+          </tr>
+          <tr>
+            <td><code>CarAudioZoneConfig.java</code><br/><span class="badge badge-major">Med</span></td>
+            <td>Add <code>mDefaultCarAudioFadeConfiguration</code>, <code>mAudioAttributesToCarAudioFadeConfiguration</code>, <code>mIsFadeManagerConfigurationEnabled</code>, <code>@GuardedBy("mLock") mIsSelected</code>. Add <code>isSelected()</code>, <code>setIsSelected()</code>, <code>isFadeManagerConfigurationEnabled()</code>, <code>isActive()</code>, <code>audioDevicesAdded/Removed()</code>, the two fade getters. <span class="net">Net A17</span> <code>updateVolumeDevices(boolean useCoreAudioRouting)</code> — the parameter was dropped in A16 and restored in A17; go straight to the parameterised form.</td>
+            <td>Cyber-mute</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3c. Nissan-only — Google never touched them, but they break if ignored</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><code>CoreAudioVolumeGroupHelper.java</code> (#222006)</td><td>Keep. <strong>Re-wire</strong> onto the rewritten <code>CoreAudioVolumeGroup</code> — its <code>getDefaultVolumeForAttributes(attrs, max, min)</code> call sits inside the constructor Google rewrote.</td></tr>
+          <tr><td><code>CarAudioGainMonitor.java</code></td><td>Holds MaxVolumeStartup. Reconcile with Google's activation volume (§5, decision 2).</td></tr>
+          <tr><td><code>CarAudioGainCallbackHandler.java</code></td><td>Re-test only — OEM gain callback timing changes with the main-looper move.</td></tr>
+          <tr><td><code>CarAudioSettings.java</code></td><td>Re-test only — guest-profile volume bar, CP-song max volume, Audio-Off persist.</td></tr>
+          <tr><td><code>ZoneAudioPlaybackCallback.java</code></td><td>Re-test only — <code>CarAudioPlaybackMonitor</code> now runs alongside it.</td></tr>
+          <tr><td><code>vendor/alliance/.../oemcaraudioservices/</code></td><td>Not in the AOSP diff, but <code>CarAudioService</code> calls it on every focus/ducking/volume decision. Its contract must keep working through the merge. <strong>Full regression required.</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §4 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="sec-pill">§4 · Config</span>
+      <h2>Configuration and XML changes</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>A14 today</th><th>A17 requirement</th></tr></thead>
+        <tbody>
+          <tr><td><code>car_audio_configuration.xml</code> schema</td><td><strong>v3</strong> (v2 + plugin on da2)</td><td>Stays <strong>valid at v3</strong>. Bump to <strong>v4 only if</strong> you adopt fade or activation volume.</td></tr>
+          <tr><td>v4 new elements</td><td>—</td><td><code>&lt;activationVolumeConfig&gt;</code> / <code>&lt;activationVolumeConfigEntry&gt;</code> (min/max %, <code>invocationType</code> = <code>onBoot</code> | <code>onSourceChanged</code> | <code>onPlaybackChanged</code>); <code>&lt;applyFadeConfigs&gt;</code> / <code>&lt;fadeConfig&gt;</code>; <code>&lt;deviceConfigurations&gt;</code> block (<code>useCoreAudioVolume</code>, <code>useCoreAudioRouting</code>, <code>useHalDuckingSignals</code>, <code>useCarVolumeGroupMuting</code>); <code>&lt;activationVolumeConfigs&gt;</code></td></tr>
+          <tr><td><code>car_audio_fade_configuration.xml</code></td><td><span class="absent">Does not exist</span></td><td>New file at <code>/vendor/etc/</code>, parsed by <code>CarAudioFadeConfigurationHelper</code>. Only needed if fade is enabled.</td></tr>
+          <tr><td><span class="flag-chip">audioUseFadeManagerConfiguration</span></td><td><span class="absent">Does not exist</span></td><td>New, default <code>false</code>. Leave false to decline system fade.</td></tr>
+          <tr><td><span class="flag-chip">audioUseMinMaxActivationVolume</span></td><td><span class="absent">Does not exist</span></td><td>New, default <code>false</code>. Leave false to keep Nissan MaxVolumeStartup.</td></tr>
+          <tr><td>Existing flags</td><td colspan="2"><span class="flag-chip">audioUseDynamicRouting</span> <span class="flag-chip">audioUseHalDuckingSignals</span> <span class="flag-chip">audioUseCarVolumeGroupMuting</span> <span class="flag-chip">audioPersistMasterMuteState</span> <span class="flag-chip">audioUseCarVolumeGroupEvent</span> <span class="flag-chip">useCoreAudioVolume</span> <span class="flag-chip">useCoreAudioRouting</span> — all unchanged through A17</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §5 -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="sec-pill">§5 · Behavior</span>
+      <h2>Behavioral changes and the decisions they force</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Behavior</th><th>Net A17 state</th><th>Decision</th></tr></thead>
+        <tbody>
+          <tr><td><strong>B1</strong></td><td><strong>System fades apps out on focus loss</strong> — a losing app is volume-shaped down via <code>dispatchAudioFocusChangeWithFade</code>, even if it ignores its focus-loss callback</td><td>On when <code>audioUseFadeManagerConfiguration</code> + fade XML present</td><td><strong>Decide whether to enable.</strong> Independent of Nissan Audio Off (an entertainment mute) — they do different jobs and can coexist. The only overlap is textual: the fade code edits <code>CarAudioFocus</code>/<code>FocusInteraction</code>/<code>CarZonesAudioFocus</code>, which the fork also patched. That is a merge, not a behavior clash.</td></tr>
+          <tr><td><strong>B2</strong></td><td><strong>Volume clamped into a safe range at activation</strong> — gain forced between min and max % on boot / new source / new playback</td><td>On when <code>audioUseMinMaxActivationVolume</code></td><td><strong>Pick one implementation.</strong> Same goal as Nissan MaxVolumeStartup (<code>CarVolumeGroup</code> + <code>CarAudioGainMonitor</code>). Running both double-clamps the boot volume.</td></tr>
+          <tr><td><strong>B3</strong></td><td><strong>Smarter routing fallback</strong> — only the selected+active config is routed; default config always registered last</td><td>Always on</td><td>Take it. Little overlap with fork code; improves device connect/disconnect behavior.</td></tr>
+          <tr><td><strong>B4</strong></td><td><strong>Audioserver-crash recovery + deferred init</strong> — init defers if audioserver is down, reinitialises when it restarts</td><td>Always on</td><td>Take it, then <strong>verify against the fork's boot order and Audio-Off-persist init</strong>.</td></tr>
+          <tr><td><strong>B5</strong></td><td><strong>Zone layout can come from the AudioControl HAL</strong> (<code>getAudioZones()</code>) instead of XML</td><td>Runtime choice</td><td><strong>Recommendation: keep XML.</strong> <code>supportsAudioZones()</code> = false → <code>CarAudioZonesHelperImpl</code> is selected. The HAL path costs a v3→v5 AIDL upgrade plus a new vendor HAL implementation, for a stable single-zone topology.</td></tr>
+          <tr><td><strong>B6</strong></td><td><strong>XML v4 elements</strong> for fade + activation volume</td><td>v4 available</td><td>Bump <strong>only if</strong> B1 or B2 is adopted.</td></tr>
+          <tr><td><strong>B7</strong></td><td><strong><code>CoreAudioVolumeGroup.updateDevices()</code> skips work under core routing</strong></td><td>Early return when <code>useCoreAudioRouting</code></td><td>Take it — lands directly in a forked file.</td></tr>
+          <tr><td><strong>B8</strong></td><td><strong>Audio work moved to the main thread</strong> — all policies and callbacks on <code>Looper.getMainLooper()</code> / <code>getMainExecutor()</code>; the dedicated <code>HandlerThread</code> is gone</td><td>Main looper</td><td><strong>Re-test callback timing</strong>: OEM gain callback, master-mute callback, volume-group callback, content observers.</td></tr>
+          <tr><td><strong>B9</strong></td><td><strong>Added-then-removed intermediates</strong> — persist-fade-balance, <code>CarVolumeGroup</code> event logger, <code>TimingsTraceLog</code> in focus</td><td>All gone by A17</td><td><span class="dont">Do not port them.</span></td></tr>
+          <tr><td><strong>B10</strong></td><td><strong>Config-switch device-affinity fix</strong> — <code>changeAudioPolicyForConfigChangeLocked()</code> replaced by an explicit 3-step sequence</td><td>Always on</td><td>Take it — fixes a latent bug where user device affinities were not updated on config switch under core audio routing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Six decisions to close before merging</h3>
+    <div class="decision-grid">
+      <div class="decision"><div class="d-num">Decision 1</div><h4>Enable Google's system fade (B1)?</h4><p>Yes / no. Independent of Audio Off.</p></div>
+      <div class="decision"><div class="d-num">Decision 2</div><h4>MaxVolumeStartup <em>or</em> activation volume (B2)?</h4><p>Pick exactly one — otherwise boot volume is clamped twice.</p></div>
+      <div class="decision"><div class="d-num">Decision 3</div><h4>Zone source: XML or HAL (B5)?</h4><p>Recommendation: XML.</p></div>
+      <div class="decision"><div class="d-num">Decision 4</div><h4>Bump XML to v4 (B6)?</h4><p>Follows directly from decisions 1 and 2.</p></div>
+      <div class="decision"><div class="d-num">Decision 5</div><h4>Re-validate callback timing (B8)</h4><p>OEM gain callback + master-mute after the main-thread move.</p></div>
+      <div class="decision"><div class="d-num">Decision 6</div><h4>Confirm the skip-intermediates rule (B9)</h4><p>With anyone reading the per-version docs.</p></div>
+    </div>
+  </div>
+
+  <!-- §6 -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="sec-pill">§6 · HAL</span>
+      <h2>HAL-layer conclusion</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td><code>IAudioControl</code> AIDL version</td><td><strong>No bump required.</strong> The interface is identical across A14/15/16/17 at <strong>AIDL v3</strong>. Every architectural change in this span lands elsewhere: fade in Java <code>CarAudioService</code>, CAP in <code>android.hardware.audio.core</code>, background hardening in <code>audioserver</code>.</td></tr>
+          <tr><td>AudioControl HAL version hygiene</td><td><span class="badge badge-changed">Do now</span> <strong>Fix regardless of A17.</strong> The tree is inconsistent: device manifests say <strong>v1</strong>, the VINTF fragment says <strong>v3</strong>, the build says <strong>V2-ndk</strong>. Settle on <strong>v3</strong> — required for the existing <code>IModuleChangeCallback</code> path, and cheap.</td></tr>
+          <tr><td>Zone-config-on-HAL (<code>getAudioZones()</code>)</td><td><strong>Defer.</strong> <code>getAudioZones</code> / <code>AudioZone</code> / <code>getAudioDeviceConfiguration</code> <strong>do not exist anywhere in the tree</strong> — in-tree <code>IAudioControl.aidl</code> (v3 and <code>current</code>) declares only the A14 method set. Adopting it needs an AIDL v3→v5 interface import <strong>plus</strong> a new Alliance vendor HAL implementation. Take the CarService-side interface refactor (needed anyway), keep <code>supportsAudioZones()</code> false.</td></tr>
+          <tr><td>Core Audio HAL</td><td>Still <strong>HIDL</strong> (6.0 on da2, 7.0 on full). No AIDL <code>android.hardware.audio.core</code> in tree. This gates §10's CAP work.</td></tr>
+          <tr><td>HIDL AudioControl 1.0 / 2.0</td><td>Deprecated since A12L; the fork is already off them. No action.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §7 -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="sec-pill risk">§7 · Collisions</span>
+      <h2>Nissan collision map — where the effort actually is</h2>
+      <span class="note">Only files both sides changed are dangerous</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Google changed</th><th>Nissan forked</th><th>Risk</th><th>The conflict, in short</th></tr></thead>
+        <tbody>
+          <tr><td><code>CarAudioService.java</code></td><td>Heavily, all 3 versions</td><td>Heavily</td><td class="risk-high">🔴 HIGH</td><td>Google's 4-way policy split + async/HAL init vs. the fork's many hooks</td></tr>
+          <tr><td><code>CarVolumeGroup.java</code></td><td>A15 mapping rewrite, A16/A17</td><td>Heavily</td><td class="risk-high">🔴 HIGH</td><td>Address→device rewrite and the mute split land exactly on MaxVolumeStartup / mute patches</td></tr>
+          <tr><td><code>CoreAudioVolumeGroup.java</code></td><td>A15 rewrite, A17 device update</td><td>Yes</td><td class="risk-high">🔴 HIGH</td><td>Google's ctor + mute rewrite vs. Siri/E-call fix and #222006</td></tr>
+          <tr><td><code>CarAudioFocus.java</code></td><td>A15 fade, A16/A17 tracing</td><td>Yes</td><td class="risk-high">🔴 HIGH</td><td>Textual merge — fade dispatch vs. Audio Off dispatch. No behavior clash.</td></tr>
+          <tr><td><code>FocusInteraction.java</code></td><td>A15 signature change, A16/A17</td><td>Yes</td><td class="risk-high">🔴 HIGH</td><td>Textual merge — signature changes vs. Audio Off. No behavior clash.</td></tr>
+          <tr><td><code>CarZonesAudioFocus.java</code></td><td>A15 wrapper</td><td>Yes</td><td class="risk-med">🟠 MED</td><td><code>AudioManagerWrapper</code> + <code>@GuardedBy</code> tightening vs. Audio Off focus-gain dispatch</td></tr>
+          <tr><td><code>CarAudioZoneConfig.java</code></td><td>A15/A16/A17</td><td>Yes</td><td class="risk-med">🟠 MED</td><td>Fade + selected-state fields vs. cyber-mute</td></tr>
+          <tr><td><code>CoreAudioVolumeGroupHelper.java</code></td><td>No (Nissan-only)</td><td>Yes (new)</td><td class="risk-low">🟡 LOW</td><td>Re-point at the rewritten <code>CoreAudioVolumeGroup</code></td></tr>
+          <tr><td><code>CarAudioGainMonitor.java</code></td><td>No</td><td>Yes</td><td class="risk-low">🟡 LOW</td><td>Reconcile MaxVolumeStartup intent with B2</td></tr>
+          <tr><td><code>CarAudioGainCallbackHandler.java</code></td><td>No</td><td>Yes</td><td class="risk-low">🟡 LOW</td><td>Re-test after the main-thread move</td></tr>
+          <tr><td><code>CarAudioSettings.java</code></td><td>No</td><td>Yes</td><td class="risk-low">🟡 LOW</td><td>Re-test</td></tr>
+          <tr><td><code>ZoneAudioPlaybackCallback.java</code></td><td>No</td><td>Yes</td><td class="risk-low">🟡 LOW</td><td>Re-test alongside <code>CarAudioPlaybackMonitor</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card critical">
+      <h3>Why the volume classes are the worst of it</h3>
+      <p style="margin-bottom:0">
+        Google rewrote the <em>exact two surfaces</em> the fork patched — the mute path (now
+        <code>applyMuteLocked()</code> + <code>saveMuteStateToSettingsLocked()</code>) and the sound→speaker
+        mapping (address → device). The MaxVolumeStartup, master-mute-skip, ducking-skip, restore-on-unmute,
+        #222006 default-volume and Siri/E-call patches all sit in those methods. They must be
+        <strong>re-applied on top of the new structure</strong>, not pasted back.
+      </p>
+    </div>
+  </div>
+
+  <!-- §8 -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="sec-pill">§8 · Order</span>
+      <h2>Order of work</h2>
+    </div>
+    <ol class="steps">
+      <li><strong>Add the A15 foundation.</strong> <code>AudioManagerWrapper</code> first, then the other 7 A15 classes, then the §3a stock-A14 modifications. Large but low-risk — nothing else compiles without it.</li>
+      <li><strong>Merge the HIGH/MED forked files one at a time</strong> (§3b), each followed by a targeted test of the Nissan feature living in it: Audio Off, MaxVolumeStartup, Siri/E-call volume, master mute, ducking, cyber-mute.</li>
+      <li><strong>Take the A16 zone refactor</strong> — <code>CarAudioZonesHelper</code> as interface + <code>CarAudioZonesHelperImpl</code> — but keep reading XML. Add the HAL-zone classes inert.</li>
+      <li><strong>Apply the A17 cleanups</strong> — main looper, the core-routing early return, the explicit 3-step config-switch sequence, and the parameterised <code>updateDevices</code>/<code>updateVolumeDevices</code>.</li>
+      <li><strong>Close decisions 1 and 2 (§5) with the audio team</strong> before finalising the focus and volume merges.</li>
+      <li><strong>Fix the AudioControl HAL v1/v3/V2 manifest inconsistency</strong> — independent, cheap, do it any time.</li>
+      <li><strong>Run §10 items as separate projects.</strong></li>
+    </ol>
+    <div class="card new">
+      <h3>Verification</h3>
+      <ul>
+        <li>Boot each variant (<code>aivi2_n_full</code>, <code>aivi2_n_da2</code>, <code>aasp_n</code> emulator). Check <code>dumpsys car_service</code> (audio) and <code>dumpsys audio</code> for zones/groups/policies; watch <code>CarAudioService</code> / <code>AudioPolicy</code> logcat for config-parse errors.</li>
+        <li>Confirm zones came from <code>CarAudioZonesHelperImpl</code> (XML), not the HAL — proof that B5 stayed off.</li>
+        <li><code>adb shell lshal | grep -i audiocontrol</code> → one consistent AIDL version.</li>
+        <li>Regression-test the Nissan flows: Audio Off mode, MaxVolumeStartup, master mute, ducking, Siri/E-call volume, guest-profile volume bar, OEM gain callback, cyber-mute, mirroring.</li>
+        <li>Standard checks: volume keys, focus arbitration, ADAS ducking, ANC.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- §9 -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="sec-pill risk">§9 · Do-not-replay</span>
+      <h2>The oscillations</h2>
+      <span class="note">Implement only the right-hand column</span>
+    </div>
+    <p>These changed direction across the three releases. Jumping A14→A17 means implementing <strong>only the net A17 form</strong>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>API / field</th><th>A15</th><th>A16</th><th>Net A17 — implement this</th></tr></thead>
+        <tbody>
+          <tr><td><code>ContentObserverFactory.createObserver</code></td><td class="absent">no <code>Handler</code></td><td class="absent">explicit <code>Handler</code></td><td><strong>no <code>Handler</code></strong> (main looper internally)</td></tr>
+          <tr><td><code>CoreAudioVolumeGroupCallback.init()</code></td><td class="absent">takes <code>Executor</code></td><td class="absent">no-param (executor in ctor)</td><td><strong>takes <code>Executor</code></strong></td></tr>
+          <tr><td><code>CarVolumeGroup.updateDevices()</code></td><td class="absent"><code>(boolean)</code></td><td class="absent">no-param</td><td><strong><code>(boolean)</code></strong></td></tr>
+          <tr><td><code>CoreAudioVolumeGroup.updateDevices()</code></td><td class="absent"><code>(boolean)</code></td><td class="absent">no-param</td><td><strong><code>(boolean useCoreAudioRouting)</code> with early-return guard</strong></td></tr>
+          <tr><td><code>CarAudioZoneConfig.updateVolumeDevices()</code></td><td class="absent">—</td><td class="absent">no-param</td><td><strong><code>(boolean useCoreAudioRouting)</code></strong></td></tr>
+          <tr><td><code>TimingsTraceLog</code> in focus classes</td><td class="absent">absent</td><td class="absent">added</td><td><strong>absent</strong></td></tr>
+          <tr><td><code>mPersistFadeBalanceLevels</code> / <code>AUDIO_FEATURE_PERSIST_FADE_BALANCE_VALUES</code></td><td class="absent">absent</td><td class="absent">added</td><td><strong>absent</strong></td></tr>
+          <tr><td><code>mEventLogger</code> (LocalLog) in <code>CarVolumeGroup</code></td><td class="absent">absent</td><td class="absent">added</td><td><strong>absent</strong></td></tr>
+          <tr><td><code>AudioPolicy</code> looper</td><td class="absent">handler thread</td><td class="absent">main looper</td><td><strong>main looper</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §10 -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="sec-pill warn">§10 · Separate</span>
+      <h2>Projects outside <code>car/audio</code></h2>
+      <span class="note"><span class="badge badge-unverified" style="margin:0">Release-note sourced</span></span>
+    </div>
+    <blockquote>
+      These are real A16/A17 platform changes, but none appear in the three verified <code>car/audio</code> patches.
+      Confirm each against real <code>frameworks/av</code> + <code>hardware/interfaces/audio</code> diffs before planning any effort.
+    </blockquote>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Ver</th><th>Impact on the fork</th><th>Recommendation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CAP engine config moves to the core Audio HAL</strong> — <code>getEngineConfig()</code> returning <code>AudioHalEngineConfig.CapSpecificConfig</code> (<code>AudioHalCapConfiguration</code>, <code>AudioHalCapCriterionV2</code>, <code>AudioHalCapDomain</code>, <code>AudioHalCapParameter</code>, <code>AudioHalCapRule</code>) replaces <code>audio_policy_engine_configuration.xml</code> + <code>.pfw</code></td><td>A16</td><td>The fork uses <code>engine_library="configurable"</code> with static XML + parameter-framework. <strong>Hard-gated behind a full core-audio HIDL→AIDL migration</strong> — the single largest piece of work in the whole effort.</td><td><strong>Keep XML.</strong> <code>EngineConfigXmlConverter.h</code> converts existing vendor XML→AIDL, so the config survives even if the core HAL goes AIDL. Do not hand-author AIDL <code>CapSpecificConfig</code>.</td></tr>
+          <tr><td><strong><code>STRATEGY_</code> prefix rename</strong> — all product strategy names require it (<code>media</code> → <code>STRATEGY_MEDIA</code>). OEM slots <code>vx_1000</code>–<code>vx_1039</code> unchanged. <span class="badge badge-breaking">Breaking</span></td><td>A16</td><td>The fork has <strong>21 lowercase strategies</strong> (<code>music</code>, <code>nav_guidance</code>, <code>voice_call</code>, <code>oem_ipa</code>, …) referenced from <code>.pfw</code>, volumes XML, and <code>/Policy/.../product_strategies/&lt;name&gt;</code> paths.</td><td>Only required <strong>if</strong> the CAP path goes AIDL-native. Plan it as an isolated, mechanical, wide, well-tested rename.</td></tr>
+          <tr><td><strong>Background Audio Hardening</strong> — <code>AudioTrack.write()</code>, <code>AAudioStream_write()</code>, <code>requestAudioFocus()</code>, <code>setStreamVolume()</code>, <code>adjustVolume()</code>, <code>setStreamMute()</code>, <code>setRingerMode()</code> fail silently without a visible Activity or a non-<code>SHORT_SERVICE</code> FGS; apps targeting API 37 additionally need while-in-use FGS capability (<code>mediaPlayback</code>). Waived only with <code>SCHEDULE_EXACT_ALARM</code> + <code>USAGE_ALARM</code>-only.</td><td>A17</td><td><strong>App-side, not <code>car/audio</code>.</strong> Hits background music with display off, boot-triggered audio via <code>BOOT_COMPLETE</code>, backgrounded navigation audio, background VoIP, alarm/reminder audio.</td><td>Audit every Nissan/Alliance app that plays audio without a visible Activity. Migrate to <code>MediaSessionService</code> (media3) or a manual <code>mediaPlayback</code> FGS. Debug: <code>adb shell cmd audio set-enable-hardening enable|throw|disable</code>, <code>adb logcat | grep AudioHardening</code>.</td></tr>
+          <tr><td><strong>Dedicated assistant volume stream</strong> — <code>AudioManager.MODE_ASSISTANT_CONVERSATION</code>; <code>USAGE_ASSISTANT</code> isolated from <code>STREAM_MUSIC</code></td><td>A17</td><td>Map the new stream to a volume group in <code>car_audio_configuration.xml</code> and expose an independent slider in the Audio Settings UI. Interacts with the fork's Siri/E-call volume handling.</td><td>Scope once verified.</td></tr>
+          <tr><td><strong><code>AudioDeviceInfo.TYPE_BLE_HEARING_AID</code></strong></td><td>A17</td><td>New device type distinct from <code>TYPE_BLE_HEADSET</code>; routing handled by the system.</td><td>No app/service work expected.</td></tr>
+          <tr><td><strong>xHE-AAC software encoder</strong> (<code>c2.android.xheaac.encoder</code>)</td><td>A17</td><td>Codec availability with mandatory loudness metadata.</td><td>Informational.</td></tr>
+          <tr><td><strong>New <code>@SystemApi</code>s</strong> <code>getFadeTowardFront()</code> / <code>getBalanceTowardRight()</code> (AAOS 25Q4)</td><td>A16</td><td>Read-side parity with the A9 setters; values persist per user across ignition cycles.</td><td>Optional adoption.</td></tr>
+          <tr><td><strong>Alternative app audio controls</strong> (AAOS 25Q4)</td><td>A16</td><td>Independent volume + routing path for communication apps while driving.</td><td>Optional; evaluate against the fork's existing call-volume handling.</td></tr>
+          <tr><td><strong>AAudio OEM-defined attribute tags</strong></td><td>A16</td><td>Integrates with <code>&lt;oemContext&gt;</code> in XML v3+. Under CAP, the OEM context must match a CAP product strategy.</td><td>Only relevant if CAP goes AIDL-native.</td></tr>
+          <tr><td><strong>Deprecated <code>CarAudioManager</code> APIs</strong> — <code>isDynamicRoutingEnabled()</code>, <code>getExternalSources()</code>, <code>createAudioPatch()</code>, <code>releaseAudioPatch()</code></td><td>Dep. in <strong>A14</strong></td><td>Already deprecated at the baseline; still present through A17.</td><td>Audit for callers; no forced removal.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §11 -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="sec-pill risk">§11 · ⚠ Open</span>
+      <h2>Unresolved contradiction — settle before starting</h2>
+    </div>
+    <div class="card critical">
+      <p>
+        <code>docs/migrate_to_a17.md</code> contains <strong>third-party notes</strong> (explicitly "from other
+        people") claiming an A15→A16 change set that the verified patches <strong>do not show</strong>.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Third-party claim</th><th>What the verified diffs say</th></tr></thead>
+          <tbody>
+            <tr><td>The <code>audio/hal/</code> subfolder is flattened; <code>AudioControlWrapper</code>, <code>HalAudioDeviceInfo</code>, <code>HalAudioFocus</code>, <code>HalAudioGainCallback</code>, <code>HalAudioModuleChangeCallback</code>, <code>HalFocusListener</code> move up to <code>audio/</code></td><td><code>hal/</code> is <strong>still present and modified in place</strong> in A15, A16 <strong>and</strong> A17</td></tr>
+            <tr><td>New files <code>CarAudioEffects.java</code>, <code>CarAudioFocusEnforcement.java</code>, <code>CarAudioParkedStateMonitor.java</code></td><td><strong>None appear</strong> in any of the three patches</td></tr>
+            <tr><td>"Relaxed Park Mode" focus enforcement — <code>Flags.audioFocusEnforcement()</code>, <code>R.bool.audioEnableAudioFocusEnforcement</code>, <code>audioFocusEnforcementUsages</code>, <code>audioFocusEnforcementDoNotSilenceAttributes</code>, <code>R.bool.audioFocusEnforcementRelaxedWhileParked</code></td><td><strong>No trace</strong> in any patch</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Most likely explanation:</strong> those notes were taken against a <strong>newer AOSP <code>main</code> snapshot</strong> than the <code>android-16.0.0_r1</code> tag used to generate these patches — i.e. post-A16 <code>main</code> work that may or may not land in the A17 release.</p>
+      <p><strong>Action:</strong> before committing to a plan, re-run the A16→A17 diff against current <code>main</code> and check specifically for the <code>hal/</code> flattening and the three focus-enforcement classes. If they are real, the migration gains a <strong>package-move refactor plus a new focus-enforcement subsystem</strong> — neither of which is costed anywhere in this document.</p>
+      <pre><code>cd /home/worker/a14full/android/packages/services/Car
+git remote add aosp https://android.googlesource.com/platform/packages/services/Car
+git fetch aosp --tags
+git diff --name-status aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/car/audio/
+git log --oneline aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/car/audio/</code></pre>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- SOURCES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="sec-pill">Sources</span>
+      <h2>Provenance</h2>
+    </div>
+    <h4><span class="badge badge-verified">Verified</span> real git patches vs. the actual fork</h4>
+    <ul>
+      <li><code>raw/AOSP_Car_Audio_File_Diff.md</code> · <code>raw/AOSP_Car_Audio_Changelog.md</code></li>
+      <li><code>docs/a14_current_vs_a17_changes.md</code> · <code>docs/final_migration_summary_a14_to_a17.md</code> · <code>docs/config_on_hal_deep_dive.md</code></li>
+      <li>Direct inspection of <code>/a14full/.../car/audio/</code></li>
+    </ul>
+    <h4><span class="badge badge-unverified">Unverified</span> release-note sourced (§10)</h4>
+    <ul class="sources-list">
+      <li><code>master/Master_Audio_Changelog_A14_to_A17.md</code></li>
+      <li><code>master/Architectural_Master_Audio_Changelog_A14_to_A17.md</code></li>
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-24q3">AAOS 24Q3 Release Notes</a></li>
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-25q2">AAOS 25Q2 Release Notes</a></li>
+      <li><a href="https://source.android.com/docs/automotive/start/releases/aaos-25q4">AAOS 25Q4 Release Notes</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/audio-control-hal">Audio Control HAL</a></li>
+      <li><a href="https://source.android.com/docs/core/audio/aidl-cap">Configurable Audio Policy AIDL HAL</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/audio-policy-configuration">Car Audio Configuration</a></li>
+      <li><a href="https://source.android.com/docs/automotive/audio/config-flags">Audio Configuration Flags</a></li>
+      <li><a href="https://developer.android.com/about/versions/17/changes/bg-audio">Background Audio Hardening — Android 17</a></li>
+    </ul>
+    <h4><span class="badge badge-critical">Contradicted</span> third-party notes (§11)</h4>
+    <ul><li><code>docs/migrate_to_a17.md</code></li></ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  Final Conclusion — What Must Change: A14 → A17 &nbsp;·&nbsp; Car Audio Framework &nbsp;·&nbsp;
+  Companion to <code>FINAL_Conclusion_What_To_Change_A14_to_A17.md</code>
+</div>
+
+</body>
+</html>
