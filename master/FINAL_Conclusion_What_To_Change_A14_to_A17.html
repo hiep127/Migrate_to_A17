@@ -322,6 +322,7 @@
   <a class="toc-link" href="#s10">§10 Separate</a>
   <a class="toc-link" href="#s11">§11 ⚠ Contradiction</a>
   <a class="toc-link" href="#s12">§12 Verification</a>
+  <a class="toc-link" href="#s13">§13 Functions</a>
 </div>
 
 <div class="page-body">
@@ -801,6 +802,173 @@ git log --oneline aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/c
 
   <hr/>
 
+  <!-- §13 -->
+  <div class="section" id="s13">
+    <div class="section-header">
+      <span class="sec-pill add">§13 · Features</span>
+      <h2>New features added — Focus &amp; Fade Manager</h2>
+      <span class="note">Read from real diffs, not commit messages</span>
+    </div>
+    <p>
+      §1 and §3b already name the files this change set touches. This section states what those
+      files actually add in product terms — 22 upstream commits (<code>Oscar Azucena</code> /
+      <code>Raj Goparaju</code> / <code>Weilin Xu</code>, Google), the same change set behind §1's
+      <code>AudioManagerWrapper.java</code> / <code>CarAudioFadeConfigurationHelper.java</code> rows and
+      §3b's <code>CarAudioFocus.java</code> / <code>FocusInteraction.java</code> rows. Full
+      per-commit trace: <code>../audio_focus_fade_manager_commit_summary.md</code>.
+    </p>
+
+    <div class="decision-grid">
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>System-driven fade on audio focus loss <span class="badge badge-new">new</span></h4>
+        <p>An app losing focus can now be volume-faded out by the platform (<code>dispatchAudioFocusChangeWithFade</code>) instead of getting an abrupt focus-loss callback it might ignore. This is exactly §5's <strong>B1</strong>.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Per-zone-config fade assignment (XML v4) <span class="badge badge-new">new</span></h4>
+        <p><code>car_audio_configuration.xml</code>'s new <code>&lt;applyFadeConfigs&gt;</code> lets each zone config declare a default fade config and/or per-audio-attribute transient overrides, by name, from a new <code>car_audio_fade_configuration.xml</code> overlay.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>OEM plugin can override transient fade configs <span class="badge badge-new">new</span></h4>
+        <p>If an OEM audio-focus plugin is active, the fade config it supplies for a transient loss wins outright over whatever the XML file declares — the config file is only a fallback.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Selective fading — never on ducked or transient loss <span class="badge badge-new">new</span></h4>
+        <p>Fading only ever applies to a genuine, permanent focus loss where the app wasn't already ducked. Transient losses and delayed-focus abandonment are explicitly excluded, so ducking behavior is unaffected.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Activation volume for HAL audio focus <span class="badge badge-new">new</span></h4>
+        <p>When the AudioControl HAL is granted focus for a hardware source, the matching car volume group's gain is now clamped into a min/max range on grant. This is §5's <strong>B2</strong> — the same job Nissan's MaxVolumeStartup already does (decision 2: pick one).</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Feature</div>
+        <h4>Isolated audio focus for dynamic devices <span class="badge badge-warn" style="background:rgba(251,146,60,0.14);color:var(--orange);border:1px solid rgba(251,146,60,0.34)">groundwork only</span></h4>
+        <p>A new RRO (<code>audioUseIsolatedAudioFocusForDynamicDevices</code>) and feature-info bit are wired through in this commit set, but no isolation behavior actually ships yet — it's plumbing for a later change.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Bug fix</div>
+        <h4>Focus interaction no longer skewed by OEM context grouping</h4>
+        <p>Previously, if an OEM's audio context config mapped several distinct usages onto one context, unrelated usages could incorrectly interact as if they were the same context. Interaction decisions are now always made against the fixed legacy context per usage, regardless of the OEM's grouping.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Bug fix</div>
+        <h4>Focus-service race during unregistration closed</h4>
+        <p>A focus message already queued on the looper when <code>CarZonesAudioFocus</code> was being unregistered could previously NPE. It now detects the null service and no-ops with a logged error.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Bug fix</div>
+        <h4>HAL activation-volume permission fix</h4>
+        <p>The activation-volume callback for HAL focus grants runs under the AudioControl HAL binder thread's identity, which lacks the volume-control permission. Calling identity is now cleared/restored around it so it actually applies.</p>
+      </div>
+      <div class="decision">
+        <div class="d-num">Diagnostics</div>
+        <h4>Proto dump for focus, ducking, muting, and fade configs</h4>
+        <p><code>dumpsys car_service --proto</code> now surfaces active focus holders, ducking/muting state, and which fade configs are loaded and assigned per zone config.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px">Implementation detail (method-level)</h3>
+    <p>For engineers implementing the merge — the same features above, traced to the actual method signatures.</p>
+
+    <h3>AudioManagerWrapper.java <span class="badge badge-changed">extended</span></h3>
+    <p>The wrapper already existed for volume calls; these 5 focus-dispatch passthroughs are added to it.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>int requestAudioFocus(AudioFocusRequest)</code></td><td>Wraps <code>AudioManager.requestAudioFocus()</code> for the HAL focus path</td></tr>
+          <tr><td><code>int abandonAudioFocusRequest(AudioFocusRequest)</code></td><td>Wraps <code>AudioManager.abandonAudioFocusRequest()</code></td></tr>
+          <tr><td><code>int dispatchAudioFocusChange(AudioFocusInfo, int, AudioPolicy)</code></td><td>Old, abrupt focus-loss dispatch — kept as the non-fade fallback</td></tr>
+          <tr><td><code>int dispatchAudioFocusChangeWithFade(AudioFocusInfo, int, AudioPolicy, List&lt;AudioFocusInfo&gt;, FadeManagerConfiguration)</code></td><td><strong>New platform API.</strong> Dispatches focus loss with a volume fade instead of an abrupt stop</td></tr>
+          <tr><td><code>void setFocusRequestResult(AudioFocusInfo, int, AudioPolicy)</code></td><td>Reports the final grant/deny result back through the policy</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>CarAudioFadeConfigurationHelper.java <span class="badge badge-new">new class</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>CarAudioFadeConfigurationHelper(InputStream)</code></td><td>Parses <code>car_audio_fade_configuration.xml</code> at construction</td></tr>
+          <tr><td><code>CarAudioFadeConfiguration getCarAudioFadeConfiguration(String configName)</code></td><td>Look up a parsed fade config by name</td></tr>
+          <tr><td><code>boolean isConfigAvailable(String configName)</code></td><td>Used by <code>CarAudioZonesHelper</code> to validate <code>&lt;fadeConfig name=...&gt;</code> references at parse time</td></tr>
+          <tr><td><code>Set&lt;String&gt; getAllConfigNames()</code></td><td>Enumeration, mainly for dump/test</td></tr>
+          <tr><td><code>void dump(IndentingPrintWriter)</code> / <code>void dumpProto(ProtoOutputStream)</code></td><td>Text and proto <code>dumpsys</code> output</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>CarAudioFocus.java <span class="badge badge-changed">changed</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What changed</th></tr></thead>
+        <tbody>
+          <tr><td><code>sendFocusLossLocked(AudioFocusInfo loser, int lossType, AudioFocusInfo winner, boolean shouldFade, FadeManagerConfiguration transientFadeManagerConfig)</code></td><td>Signature grows from 2 args to 5. Fans out to <code>dispatchAudioFocusChangeWithFade()</code> when <code>shouldFade</code> and fade is supported, else the old <code>dispatchAudioFocusChange()</code></td></tr>
+          <tr><td><code>boolean isFadeManagerSupported()</code> <span class="badge badge-new">new</span></td><td>True only when <code>CarAudioFeaturesInfo</code> carries <code>AUDIO_FEATURE_FADE_MANAGER_CONFIGS</code></td></tr>
+          <tr><td><code>FadeManagerConfiguration getTransientFadeManagerConfig(CarAudioFadeConfiguration defaultCfg, CarAudioFadeConfiguration transientCfg)</code> <span class="badge badge-new">new</span></td><td>Picks transient over default; skips the zone default entirely for the primary zone (core framework already applies it there)</td></tr>
+          <tr><td><code>CarAudioFadeConfiguration getOptimalUsageBasedTransientFadeConfig(AudioAttributes, CarAudioFadeConfiguration, Map&lt;AudioAttributes, CarAudioFadeConfiguration&gt;)</code> <span class="badge badge-new">new</span></td><td>Priority: OEM-plugin-supplied map first, XML-configured transient as fallback</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>FocusInteraction.java <span class="badge badge-changed">signature change</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What changed</th></tr></thead>
+        <tbody>
+          <tr><td><code>int evaluateRequest(int requestedUsage, FocusEntry, boolean, boolean, List&lt;FocusEntry&gt;)</code></td><td>Was <code>evaluateRequest(@AudioContext int, FocusEntry)</code>, <code>public</code>. Now takes the raw usage int and is package-private.</td></tr>
+          <tr><td><code>int getFocusInteractionLocked(int requestedUsage, int holderUsage)</code> <span class="badge badge-new">new, private</span></td><td>Converts <em>both</em> sides via <code>CarAudioContext.getLegacyContextForUsage()</code> before indexing <code>INTERACTION_MATRIX</code> — this is the actual bug fix (§3b): the OEM's custom context grouping can no longer skew the interaction lookup</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>hal/HalAudioFocus.java <span class="badge badge-new">new method</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>void handleNewlyActiveHalPlayback(AudioAttributes attributes, int zoneId)</code></td><td>Called from <code>makeAudioFocusRequestLocked()</code> on a fresh HAL focus grant; forwards to <code>CarAudioPlaybackMonitor.onActiveAudioPlaybackAttributesAdded()</code> — this is what actually applies min/max activation volume. Wrapped in <code>Binder.clearCallingIdentity()</code>/<code>restoreCallingIdentity()</code> so the callback holds <code>PERMISSION_CAR_CONTROL_AUDIO_VOLUME</code> instead of the HAL binder thread's identity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>CarAudioService.java <span class="badge badge-new">new methods</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>setupRoutingAudioPolicyLocked()</code></td><td>Registers the routing-only <code>AudioPolicy</code> (dynamic routing + mirror)</td></tr>
+          <tr><td><code>setupVolumeControlAudioPolicyLocked()</code></td><td>Registers the volume-only <code>AudioPolicy</code> (<code>CarAudioPolicyVolumeCallback</code>)</td></tr>
+          <tr><td><code>setupFocusControlAudioPolicyLocked()</code></td><td>Builds <code>CarZonesAudioFocus</code>, registers the focus-only <code>AudioPolicy</code> with <code>setIsAudioFocusPolicy(true)</code></td></tr>
+          <tr><td><code>setupFadeManagerConfigAudioPolicyLocked()</code></td><td>Registers the 4th, otherwise-empty <code>AudioPolicy</code> that only carries the primary zone's default fade config</td></tr>
+          <tr><td><code>CarAudioFeaturesInfo getAudioFeaturesInfo()</code></td><td>Builds the feature bitset (<code>AUDIO_FEATURE_FADE_MANAGER_CONFIGS</code>, <code>AUDIO_FEATURE_ISOLATED_DEVICE_FOCUS</code>) passed down to <code>CarAudioFocus</code> / <code>HalAudioFocus</code></td></tr>
+          <tr><td><code>updateFadeManagerConfigurationForPrimaryZoneLocked()</code>, <code>updateFadeManagerConfigurationLocked(boolean isPrimaryZone)</code>, <code>setAudioPolicyFadeManagerConfigurationLocked(FadeManagerConfiguration)</code></td><td>Push the primary zone's default fade config into <code>AudioPolicy.setFadeManagerConfigurationForFocusLoss()</code> at startup and on zone-config change</td></tr>
+          <tr><td><code>validateFeatureFlagSettings()</code></td><td>Throws at construction if fade manager is enabled while running in legacy (non-dynamic-routing) mode</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Everything else touched</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Class</th><th>Method(s)</th></tr></thead>
+        <tbody>
+          <tr><td><code>CarAudioZoneConfig.java</code></td><td><code>isFadeManagerConfigurationEnabled()</code>, <code>getDefaultCarAudioFadeConfiguration()</code>, <code>getCarAudioFadeConfigurationForAudioAttributes(AudioAttributes)</code>, <code>getAllTransientCarAudioFadeConfigurations()</code>, plus matching <code>Builder</code> setters</td></tr>
+          <tr><td><code>CarAudioZonesHelper.java</code></td><td><code>parseApplyFadeConfigs()</code>, <code>parseFadeConfig()</code>, <code>parseTransientFadeConfigs()</code>, <code>validateFadeConfig(String)</code> — new private parser methods for schema v4's <code>&lt;applyFadeConfigs&gt;</code></td></tr>
+          <tr><td><code>CarAudioContext.java</code></td><td><code>getLegacyContextForUsage(int)</code> — already listed in §3a; it's what <code>FocusInteraction</code>'s fix calls into</td></tr>
+          <tr><td><code>CarZonesAudioFocus.java</code></td><td>No new public methods, but <code>onAudioFocusRequest</code>, <code>onAudioFocusAbandon</code>, <code>reevaluateAndRegainAudioFocus()</code>, <code>reevaluateAndRegainAudioFocusList()</code> all gain a snapshot-and-null-check of <code>mCarAudioService</code> under <code>mLock</code> before proceeding</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr/>
+
   <!-- SOURCES -->
   <div class="section">
     <div class="section-header">
@@ -812,6 +980,7 @@ git log --oneline aosp/android-16.0.0_r1..aosp/main -- service/src/com/android/c
       <li><code>raw/AOSP_Car_Audio_File_Diff.md</code> · <code>raw/AOSP_Car_Audio_Changelog.md</code></li>
       <li><code>docs/a14_current_vs_a17_changes.md</code> · <code>docs/final_migration_summary_a14_to_a17.md</code> · <code>docs/config_on_hal_deep_dive.md</code></li>
       <li>Direct inspection of <code>/a14full/.../car/audio/</code></li>
+      <li><code>../audio_focus_fade_manager_commit_summary.md</code> — §13's method-level source, traced from the 22 upstream Focus/Fade Manager commits</li>
     </ul>
     <h4><span class="badge badge-unverified">Unverified</span> release-note sourced (§10)</h4>
     <ul class="sources-list">
