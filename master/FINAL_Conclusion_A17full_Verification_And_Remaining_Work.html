@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>a17full Verification — What the Old Plan Got Wrong</title>
+  <style>
+    :root {
+      --bg: #09090f;
+      --surface: #13141e;
+      --surface2: #1c1f2e;
+      --surface3: #222637;
+      --border: #2a2e44;
+      --accent: #60a5fa;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+      --teal: #2dd4bf;
+      --text: #e2e8f0;
+      --text-muted: #7c88a3;
+      --code-bg: #0d1117;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(160deg, #14060a 0%, #3d0d18 30%, #401004 55%, #0a1a0f 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 64px 48px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 40%, rgba(248,113,113,0.10) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 70%, rgba(251,146,60,0.08) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; max-width: 1100px; margin: 0 auto; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .eyebrow-chip {
+      background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.3);
+      color: var(--accent);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+    }
+    .eyebrow-chip.warn {
+      background: rgba(248,113,113,0.14);
+      border-color: rgba(248,113,113,0.4);
+      color: var(--red);
+    }
+    .version-span { color: rgba(255,255,255,0.55); font-size: 13px; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      font-weight: 900; color: #fff; line-height: 1.12;
+      margin-bottom: 12px; letter-spacing: -0.02em;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(90deg, var(--red), var(--orange));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { color: rgba(255,255,255,0.62); font-size: 1.05rem; max-width: 760px; margin-bottom: 28px; }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 12px; padding: 4px 12px; border-radius: 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+
+    /* ===== STAT ROW ===== */
+    .stat-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px; margin-top: 28px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 16px 18px;
+    }
+    .stat .num { font-size: 1.7rem; font-weight: 800; color: #fff; line-height: 1; }
+    .stat .lbl { font-size: 11.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+
+    /* ===== NAV ===== */
+    .toc-bar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 48px; display: flex; align-items: center; gap: 0;
+      overflow-x: auto; scrollbar-width: none;
+      position: sticky; top: 0; z-index: 20;
+    }
+    .toc-bar::-webkit-scrollbar { display: none; }
+    .toc-link {
+      color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500;
+      padding: 14px 16px; border-bottom: 2px solid transparent; white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .toc-link:hover { color: var(--text); border-bottom-color: var(--border); }
+
+    /* ===== LAYOUT ===== */
+    .page-body { max-width: 1100px; margin: 0 auto; padding: 56px 48px 96px; }
+
+    /* ===== SUMMARY BLOCK ===== */
+    .exec-summary {
+      background: linear-gradient(135deg, rgba(248,113,113,0.06) 0%, rgba(251,146,60,0.05) 100%);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 16px; padding: 36px 40px; margin-bottom: 56px;
+    }
+    .exec-summary .exec-header {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+    }
+    .exec-summary h2 {
+      font-size: 1.6rem; font-weight: 800; color: #fff;
+      border: none; padding: 0; margin: 0 0 24px;
+    }
+    .ten-list { counter-reset: ten; list-style: none; margin: 0; padding: 0; }
+    .ten-list li {
+      counter-increment: ten; position: relative;
+      padding: 11px 0 11px 44px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 14.5px;
+    }
+    .ten-list li:last-child { border-bottom: none; }
+    .ten-list li::before {
+      content: counter(ten);
+      position: absolute; left: 0; top: 12px;
+      width: 26px; height: 26px; border-radius: 7px;
+      background: rgba(248,113,113,0.12); border: 1px solid rgba(248,113,113,0.3);
+      color: var(--red); font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section { margin-bottom: 60px; scroll-margin-top: 60px; }
+    .section-header {
+      display: flex; align-items: flex-end; gap: 16px;
+      margin-bottom: 26px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .sec-pill {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 20px;
+      background: rgba(167,139,250,0.14); color: var(--accent2); border: 1px solid rgba(167,139,250,0.32);
+    }
+    .sec-pill.add { background: rgba(52,211,153,0.12); color: var(--green); border-color: rgba(52,211,153,0.3); }
+    .sec-pill.mod { background: rgba(251,191,36,0.12); color: var(--yellow); border-color: rgba(251,191,36,0.3); }
+    .sec-pill.risk { background: rgba(248,113,113,0.12); color: var(--red); border-color: rgba(248,113,113,0.32); }
+    .sec-pill.warn { background: rgba(251,146,60,0.14); color: var(--orange); border-color: rgba(251,146,60,0.34); }
+    .section-header h2 {
+      font-size: 1.55rem; font-weight: 800; color: #fff;
+      border: none; padding: 0; margin: 0; line-height: 1.15;
+    }
+    .section-header .note { color: var(--text-muted); font-size: 13px; margin-left: auto; white-space: nowrap; }
+
+    /* ===== CONTENT ELEMENTS ===== */
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 28px 0 10px; }
+    h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin: 18px 0 8px; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 22px; }
+    li { margin-bottom: 5px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: 'Consolas', 'Courier New', monospace; font-size: 0.85rem;
+      background: var(--code-bg); color: #7dd3fc; padding: 2px 6px;
+      border-radius: 4px; border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 22px; overflow-x: auto; margin: 14px 0; line-height: 1.5;
+    }
+    pre code { background: none; border: none; padding: 0; color: #c9d1d9; font-size: 0.83rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin: 18px 0; }
+    .card.critical { border-left: 4px solid var(--red); }
+    .card.major { border-left: 4px solid var(--orange); }
+    .card.new { border-left: 4px solid var(--green); }
+    .card.changed { border-left: 4px solid var(--yellow); }
+    .card.info { border-left: 4px solid var(--accent2); }
+    .card h3 { margin-top: 0; }
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 5px;
+      margin-right: 6px; margin-bottom: 8px;
+    }
+    .badge-critical { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .badge-major { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+    .badge-new { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+    .badge-changed { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.25); }
+    .badge-breaking { background: rgba(248,113,113,0.2); color: var(--red); border: 1px solid rgba(248,113,113,0.4); }
+    .badge-verified { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .badge-unverified { background: rgba(251,146,60,0.14); color: var(--orange); border: 1px solid rgba(251,146,60,0.34); }
+    .badge-wrong { background: rgba(248,113,113,0.18); color: var(--red); border: 1px solid rgba(248,113,113,0.4); }
+    .badge-confirmed { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+    thead tr { background: var(--surface2); }
+    th { text-align: left; padding: 9px 13px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.015); }
+    .table-wrap { overflow-x: auto; }
+    .risk-high { color: var(--red); font-weight: 700; white-space: nowrap; }
+    .risk-med { color: var(--orange); font-weight: 700; white-space: nowrap; }
+    .risk-low { color: var(--yellow); font-weight: 600; white-space: nowrap; }
+    .risk-none { color: var(--green); font-weight: 600; white-space: nowrap; }
+    .net {
+      display: inline-block; background: rgba(52,211,153,0.12);
+      border: 1px solid rgba(52,211,153,0.3); color: var(--green);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 2px 8px; border-radius: 5px; margin-right: 6px;
+    }
+    .dont {
+      display: inline-block; background: rgba(248,113,113,0.14);
+      border: 1px solid rgba(248,113,113,0.32); color: var(--red);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 2px 8px; border-radius: 5px; margin-right: 6px;
+    }
+    .flag-chip {
+      display: inline-block; background: rgba(96,165,250,0.1);
+      border: 1px solid rgba(96,165,250,0.25); color: var(--accent);
+      font-family: monospace; font-size: 12px; padding: 3px 10px;
+      border-radius: 6px; margin: 2px;
+    }
+    .absent { color: var(--text-muted); font-style: italic; }
+    blockquote {
+      border-left: 3px solid var(--accent2); padding: 10px 16px; margin: 14px 0;
+      background: rgba(167,139,250,0.06); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+    .decision-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 18px; }
+    .decision {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-top: 3px solid var(--accent2); border-radius: 10px; padding: 16px 18px;
+    }
+    .decision .d-num { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
+    .decision h4 { color: #fff; text-transform: none; letter-spacing: 0; font-size: 0.95rem; margin: 0 0 6px; }
+    .decision p { font-size: 13px; color: var(--text-muted); margin: 0; }
+    .steps { counter-reset: step; list-style: none; margin: 16px 0 0; padding: 0; }
+    .steps li {
+      counter-increment: step; position: relative;
+      padding: 12px 0 12px 46px; border-bottom: 1px solid var(--border); font-size: 14.5px;
+    }
+    .steps li:last-child { border-bottom: none; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 13px; width: 28px; height: 28px; border-radius: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--accent); font-size: 12.5px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+    .footer {
+      text-align: center; padding: 40px; border-top: 1px solid var(--border);
+      color: var(--text-muted); font-size: 13px;
+    }
+    .sources-list { columns: 2; gap: 24px; font-size: 13px; }
+    .sources-list li { margin-bottom: 8px; }
+    @media (max-width: 700px) {
+      .hero { padding: 40px 24px; }
+      .page-body { padding: 32px 24px 64px; }
+      .toc-bar { padding: 0 16px; }
+      .decision-grid { grid-template-columns: 1fr; }
+      .sources-list { columns: 1; }
+      .exec-summary { padding: 24px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-chip warn">Verification</span>
+      <span class="eyebrow-chip">Car Audio Framework</span>
+      <span class="version-span">Checked against the real <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">a17full</code> tree, not patches</span>
+    </div>
+    <h1>The Old Plan vs.<br/><span class="highlight">Real A17 Source</span></h1>
+    <p class="hero-sub">
+      <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">FINAL_Conclusion_What_To_Change_A14_to_A17.md</code>
+      was built from AOSP git patches, never a released tree. Now that <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">a17full</code>
+      exists (branch <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">nissan_c_join_aivi2_fc</code>), every material claim was re-checked
+      file-by-file, line-by-line. The AOSP-side structural migration turned out to be already done. The real
+      gap is bigger than "merge conflicts" — and several of the old plan's "verified" facts were wrong.
+    </p>
+    <div class="tag-cloud">
+      <span class="tag">CarAudioService</span>
+      <span class="tag">CarVolumeGroup</span>
+      <span class="tag">IAudioControl AIDL</span>
+      <span class="tag">CarOemProxyService</span>
+      <span class="tag">661 commits audited</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">0</div><div class="lbl">Nissan authors in car/audio history</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">Corrected "verified" claims</div></div>
+      <div class="stat"><div class="num">v3 → v6</div><div class="lbl">IAudioControl AIDL, actual</div></div>
+      <div class="stat"><div class="num">13 / 13</div><div class="lbl">New AOSP files already present</div></div>
+      <div class="stat"><div class="num">1</div><div class="lbl">File claimed "re-wire" that doesn't exist</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="toc-bar">
+  <a class="toc-link" href="#s0">§0 The one fact</a>
+  <a class="toc-link" href="#s1">§1 Confirmed done</a>
+  <a class="toc-link" href="#s2">§2 Corrections</a>
+  <a class="toc-link" href="#s3">§3 HAL reality</a>
+  <a class="toc-link" href="#s4">§4 OEM plugin</a>
+  <a class="toc-link" href="#s5">§5 Task list</a>
+  <a class="toc-link" href="#s6">§6 Why</a>
+</div>
+
+<div class="page-body">
+
+  <!-- PREAMBLE -->
+  <div class="card info">
+    <h3>What changed since the old plan</h3>
+    <p>
+      The old plan's own preamble said its AOSP-side claims came from <strong>git patches</strong>, cross-checked
+      only against the A14 fork — never against a real A17 tree, because none was available. We now have
+      <code>/home/worker/a17full</code>, a real, buildable A17 checkout
+      (<code>packages/services/Car</code> at commit <code>36afc909f0</code>, branch <code>nissan_c_join_aivi2_fc</code>).
+      This document re-verifies every material claim against that tree and against the in-tree AOSP HAL
+      sources (<code>hardware/interfaces/automotive/audiocontrol</code>).
+    </p>
+    <p style="margin-bottom:0">
+      <span class="badge badge-confirmed">Confirmed</span> The AOSP structural migration (13 new files, the interface split, the 4-policy service) is already in the tree — no work needed there.
+      <span class="badge badge-wrong">Corrected</span> Seven specific "verified" claims in the old plan turned out false against the real source.
+      <span class="badge badge-critical">Critical</span> Zero Nissan behavioral code exists anywhere in <code>car/audio/</code> — this is a full re-implementation project, not a merge.
+    </p>
+  </div>
+
+  <!-- §0 -->
+  <div class="exec-summary" id="s0">
+    <div class="exec-header">§0 · The one fact that changes everything</div>
+    <h2>car/audio has zero Nissan behavioral code</h2>
+    <p>
+      Every non-merge commit author touching <code>packages/services/Car/service/src/com/android/car/audio/</code>
+      on this branch is <code>@google.com</code> / <code>@ford.com</code> / historical <code>@renault.com</code>/<code>@ampere.cars</code>
+      (a dead branch, not an ancestor of this HEAD). <strong>No Nissan, no LGE author appears anywhere in 661 commits.</strong>
+      Grepping the entire directory for <code>MaxVolumeStartup</code>, <code>Audio Off</code>, <code>cyber-mute</code>,
+      <code>Siri</code>, <code>e-call</code>, <code>Nissan</code>, <code>Renault</code>, <code>Mitsubishi</code>
+      returns <strong>zero hits</strong>. <code>config.xml</code> defaults (<code>audioUseDynamicRouting=false</code>, etc.)
+      are stock AOSP defaults, not Nissan production values.
+    </p>
+    <p>
+      This is <strong>not</strong> a merge-conflict situation. It is a clean-room AOSP A17 car-audio service with
+      Nissan build fixes on top (commits literally titled <code>[Build] ninja build error fix by AI-copilot for A17</code>)
+      and <strong>nothing else</strong>. Meanwhile the Nissan device trees
+      (<code>device/nissan/.../overlay/CarServiceOverlayNissanFull/...</code>) already correctly flip
+      <code>audioUseDynamicRouting=true</code>, <code>audioUseCarVolumeGroupMuting=true</code> for A17 —
+      the <strong>RRO/config layer is ahead of the Java source layer</strong>. Shipping today would silently
+      run stock AOSP audio behavior with Nissan's config flags pointed at code that was never written.
+    </p>
+    <p style="margin-bottom:0">
+      The old plan's §7 "Nissan collision map" (a table of merge risk) is the wrong mental model. There is
+      nothing to <em>merge</em> — there is a full feature set to <strong>re-implement from scratch</strong> against
+      the new AOSP class shapes, using the A14 fork purely as the <strong>functional spec</strong>, not as a patch source.
+    </p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="sec-pill add">§1 · Confirmed</span>
+      <h2>AOSP structural migration — already complete</h2>
+      <span class="note">No further work needed on any of these</span>
+    </div>
+    <p>These parts of the old plan's §1–§3 were right, and are already true in <code>a17full</code>:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Claim</th><th>Verified in a17full</th></tr></thead>
+        <tbody>
+          <tr><td>13 new files exist (<code>AudioManagerWrapper</code>, <code>CarActivationVolumeConfig</code>, <code>CarAudioDeviceCallback</code>, <code>CarAudioFadeConfigurationHelper</code>, <code>CarAudioParserUtils</code>, <code>CarAudioPlaybackMonitor</code>, <code>CarAudioProtoUtils</code>, <code>CarAudioServerStateCallback</code>, <code>AudioControlZoneConverter</code>, <code>AudioControlZoneConverterUtils</code>, <code>CarAudioZonesHelperAudioControlHAL</code>, <code>CarAudioZonesHelperImpl</code>, <code>TEST_MAPPING</code>)</td><td><span class="badge badge-confirmed">✓</span> all present</td></tr>
+          <tr><td><code>CarAudioZonesHelper</code> is now an 8-method interface</td><td><span class="badge badge-confirmed">✓</span> <code>CarAudioZonesHelper.java:30</code></td></tr>
+          <tr><td><code>CarAudioService</code> split into 4 <code>AudioPolicy</code> fields</td><td><span class="badge badge-confirmed">✓</span> <code>mVolumeControlAudioPolicy</code>/<code>mFocusControlAudioPolicy</code>/<code>mRoutingAudioPolicy</code>/<code>mFadeManagerConfigAudioPolicy</code> at <code>CarAudioService.java:357-363</code></td></tr>
+          <tr><td><code>CarVolumeGroup</code> moved to device-based mapping</td><td><span class="badge badge-confirmed">✓</span> <code>SparseArray&lt;CarAudioDeviceInfo&gt; mContextToDevices</code> at <code>CarVolumeGroup.java:107</code></td></tr>
+          <tr><td><code>CarAudioDeviceInfo</code> ctor takes <code>(AudioManagerWrapper, AudioDeviceAttributes)</code></td><td><span class="badge badge-confirmed">✓</span> <code>CarAudioDeviceInfo.java:97</code></td></tr>
+          <tr><td><code>CarAudioContext</code> drops <code>mContextsToDuck</code>, adds <code>getLegacyContextForUsage</code></td><td><span class="badge badge-confirmed">✓</span> old API gone; new API at <code>CarAudioContext.java:456</code></td></tr>
+          <tr><td><code>CarAudioDynamicRouting</code> routes selected+active configs, default last</td><td><span class="badge badge-confirmed">✓</span> <code>CarAudioDynamicRouting.java:55-90</code></td></tr>
+          <tr><td><code>CoreAudioVolumeGroupCallback</code> uses <code>Executor</code></td><td><span class="badge badge-confirmed">✓</span> <code>CoreAudioVolumeGroupCallback.java:37-45</code></td></tr>
+          <tr><td>RRO flags <span class="flag-chip">audioUseFadeManagerConfiguration</span> <span class="flag-chip">audioUseMinMaxActivationVolume</span> exist, default <code>false</code></td><td><span class="badge badge-confirmed">✓</span> <code>config.xml:102,109</code></td></tr>
+          <tr><td><code>car_audio_configuration.xml</code> still v3, no v4 elements</td><td><span class="badge badge-confirmed">✓</span> <code>device/nissan/aivi2_n_full/audio_policy_configurable/car_audio_configuration.xml:2</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <blockquote>Do not spend any effort "applying the AOSP A15/A16/A17 diff." It is already in the tree. The work is entirely in re-adding Nissan behavior on top of it.</blockquote>
+  </div>
+
+  <!-- §2 -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="sec-pill risk">§2 · Corrections</span>
+      <h2>Where the old plan was verified wrong</h2>
+      <span class="note">Checked against patches from a pre-release AOSP snapshot</span>
+    </div>
+    <p>
+      The old plan's §9 ("do-not-replay list") and §12 ("verification record") were checked against patches
+      from an AOSP snapshot that turned out to <strong>not</strong> match what actually shipped in this A17
+      tree. Seven specific claims are reversed:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Claim</th><th>Old plan said</th><th>Actual a17full state</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td><code>mEventLogger</code> (LocalLog) in <code>CarVolumeGroup</code></td><td><span class="dont">Absent — don't add</span></td><td><span class="badge badge-wrong">Present</span> <code>protected final LocalLog mEventLogger</code></td><td><code>CarVolumeGroup.java:178,599,674</code></td></tr>
+          <tr><td><code>TimingsTraceLog</code> in <code>CarAudioFocus</code></td><td><span class="dont">Absent — don't add</span></td><td><span class="badge badge-wrong">Present</span>, used in focus-loss dispatch</td><td><code>CarAudioFocus.java:43,363</code></td></tr>
+          <tr><td><code>mPersistFadeBalanceLevels</code> / <span class="flag-chip">audioPersistFadeBalanceLevels</span></td><td><span class="dont">Absent — don't add</span></td><td><span class="badge badge-wrong">Present</span>, gated by <code>Flags.audioFadeBalanceGetterApis()</code> + RRO flag, drives <code>CarAudioEffects</code> fade/balance persistence</td><td><code>CarAudioService.java:232,498-499,692,932,998,1174</code>; flag at <code>config.xml:129</code></td></tr>
+          <tr><td><code>ContentObserverFactory.createObserver()</code></td><td><span class="net">Already A17</span> no-<code>Handler</code> form, main-looper internal — don't touch</td><td><span class="badge badge-wrong">Takes explicit <code>Handler</code></span></td><td><code>ContentObserverFactory.java:33</code></td></tr>
+          <tr><td><code>CoreAudioVolumeGroup.updateDevices()</code></td><td>Net A17 = <code>(boolean useCoreAudioRouting)</code> with early-return guard</td><td><span class="badge badge-wrong">No-arg</span>: <code>void updateDevices()</code></td><td><code>CoreAudioVolumeGroup.java:315</code></td></tr>
+          <tr><td><code>CarAudioZoneConfig.updateVolumeDevices()</code></td><td>Net A17 = <code>(boolean useCoreAudioRouting)</code></td><td><span class="badge badge-wrong">No-arg</span>: <code>void updateVolumeDevices()</code></td><td><code>CarAudioZoneConfig.java:579</code></td></tr>
+          <tr><td>Audio-policy looper (B8)</td><td><span class="net">No work</span> "already on <code>Looper.getMainLooper()</code> at A14 baseline"</td><td><span class="badge badge-wrong">Runs on <code>mHandlerThread.getLooper()</code></span>, a dedicated <code>HandlerThread</code>, for all 4 policy builders</td><td><code>CarAudioService.java:2278,2308,2365,2403</code> (thread created at <code>:523-524</code>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card major">
+      <h3>On the looper point specifically</h3>
+      <p style="margin-bottom:0">
+        The old plan's "A14 baseline" evidence was read from the <strong>Nissan fork's own patched</strong>
+        <code>CarAudioService.java</code> (<code>nissan_u_ccs2_release</code>), not from stock AOSP A14. The
+        main-looper behavior was very likely a <strong>Nissan customization</strong>, not an AOSP default the
+        fork happened to already have. Since <code>a17full</code> has no Nissan code, it shows AOSP's real
+        default (<code>HandlerThread</code>) — which the old plan mis-attributed as "already-there, no work."
+        <strong>If Nissan wants policies back on the main looper, that is now a real, undone piece of work</strong>,
+        not a closed decision.
+      </p>
+    </div>
+
+    <h3>§11's contradiction is resolved — the third-party notes were right</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Old plan's verdict</th><th>Actual a17full state</th></tr></thead>
+        <tbody>
+          <tr><td><code>hal/</code> subfolder flattened into <code>audio/</code></td><td>"Still present in A15/16/17 — contradiction unconfirmed"</td><td><span class="badge badge-wrong">Flattened.</span> No <code>hal/</code> dir exists; confirmed by commit <code>c10de5e22f Move com.android.car.audio.hal to com.android.car.audio</code></td></tr>
+          <tr><td><code>CarAudioEffects.java</code>, <code>CarAudioFocusEnforcement.java</code>, <code>CarAudioParkedStateMonitor.java</code></td><td>"None appear in any patch"</td><td><span class="badge badge-wrong">All three exist</span> in <code>car/audio/</code> today (Relaxed Park Mode / focus enforcement subsystem is real, shipped AOSP code)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §3 -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="sec-pill warn">§3 · HAL</span>
+      <h2>HAL layer — materially different from the old conclusion</h2>
+    </div>
+    <p>
+      §6 of the old plan said "No <code>IAudioControl</code> bump required — tops out at AIDL v3,
+      <code>getAudioZones()</code> doesn't exist anywhere." Both are now false.
+    </p>
+    <ul>
+      <li><strong><code>IAudioControl</code> is at AIDL v6</strong> in <code>hardware/interfaces/automotive/audiocontrol/aidl/</code> (<code>aidl_api/.../1</code> through <code>/6</code>, plus <code>current</code>).</li>
+      <li>The v6 interface adds <code>getAudioDeviceConfiguration()</code>, <code>getOutputMirroringDevices()</code>, and <strong><code>getCarAudioZones()</code></strong> (not <code>getAudioZones()</code> — the old plan's method name was itself approximate) — see <code>IAudioControl.aidl:227,235,248</code>.</li>
+      <li><code>AudioControlWrapper.java</code> is a <strong>single</strong> AIDL-only class that runtime-negotiates via <code>mAudioControl.getInterfaceVersion()</code> (<code>AudioControlWrapper.java:161-449</code>) — there is no <code>AudioControlWrapperV1</code>/<code>V2</code>/<code>Aidl</code> file split as the old plan's §1/§3a assumed. Those were consolidated into one class that checks <code>getInterfaceVersion()</code> before calling anything version-gated.</li>
+      <li>Zone-on-HAL loading is real and wired: <code>CarAudioService.loadAudioZonesUsingAudioControlLocked()</code> (<code>CarAudioService.java:2172-2200</code>) gates on <strong>both</strong> an AConfig flag (<code>Flags.audioControlHalConfiguration()</code>) <strong>and</strong> a HAL capability check (<code>audioControlWrapper.supportsFeature(AUDIOCONTROL_FEATURE_AUDIO_CONFIGURATION)</code>, feature id <code>6</code>, <code>AudioControlWrapper.java:79-175</code>) before it ever tries <code>CarAudioZonesHelperAudioControlHAL</code>. Different gating mechanism than the old plan's simple <code>supportsAudioZones()</code> boolean, but the <strong>same practical effect</strong>: with an Alliance vendor HAL that doesn't advertise the feature, it silently falls through to XML.</li>
+    </ul>
+    <div class="card new">
+      <h3>Keep-XML recommendation still stands — and needs zero code change</h3>
+      <p style="margin-bottom:0">
+        With the current Alliance vendor HAL, <code>loadAudioZonesUsingAudioControlLocked()</code> already
+        falls through to <code>CarAudioZonesHelperImpl</code> (XML) by default. Enforcing "keep XML" requires
+        <em>not doing anything</em> — don't flip <code>Flags.audioControlHalConfiguration()</code> and don't add
+        <code>AUDIOCONTROL_FEATURE_AUDIO_CONFIGURATION</code> support to the vendor HAL.
+      </p>
+    </div>
+    <div class="card major">
+      <h3>Vendor/AOSP interface version mismatch is real, and wider than reported</h3>
+      <p style="margin-bottom:0">
+        AOSP interface headers are at v6; <code>vendor/alliance/hardware/interfaces/automotive/audiocontrol/Android.bp</code>
+        builds the default implementation against <code>android.hardware.automotive.audiocontrol-V2-ndk</code>
+        (<code>default/Android.bp:24</code>) while a separate target in the same package references
+        <code>-V6</code> (<code>Android.bp:13</code>) and another references <code>-V2</code> (<code>Android.bp:34</code>)
+        — the same mismatch pattern the old plan flagged in §6/§12, just wider (v2 vs v6, not v1/v2/v3).
+        Functionally safe today because every new v3–v6 method is called behind
+        <code>getInterfaceVersion()</code>/<code>supportsFeature()</code> checks, but should still be cleaned
+        up for hygiene, and to avoid a silent feature gap if <code>Flags.audioControlHalConfiguration()</code>
+        is ever turned on.
+      </p>
+    </div>
+  </div>
+
+  <!-- §4 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="sec-pill add">§4 · OEM plugin</span>
+      <h2>Alliance plugin integration — good news, no action needed</h2>
+    </div>
+    <p>
+      The old plan's §3c worried about "Full regression required" for the Alliance OEM plugin. Verified:
+      the plugin hooks in through the <strong>standard AOSP <code>CarOemProxyService</code></strong> mechanism
+      (<code>CarAudioService.java:149,1194-1199</code> — <code>proxy.getCarOemAudioFocusService()</code> /
+      <code>getCarOemAudioVolumeService()</code> / <code>getCarOemAudioDuckingService()</code>), which is
+      generic AOSP code, not a Nissan patch. It is present and intact in <code>a17full</code> as shipped.
+      The Alliance plugin app itself (<code>vendor/alliance/services/car/plugins/audio/</code>, separate git
+      history, tag <code>[Audio] AllianceCaraudioService 1.0.0 Release</code>) already has A17 build fixes
+      applied and its module structure (mute management, VPA status) is untouched.
+    </p>
+    <blockquote>No wiring gap here — just the standard regression test pass the old plan already called for.</blockquote>
+  </div>
+
+  <!-- §5 -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="sec-pill mod">§5 · Task list</span>
+      <h2>Corrected final task list for a17full</h2>
+    </div>
+    <ol class="steps">
+      <li>
+        <strong>Re-implement, not merge, every Nissan car-audio behavior</strong>, using the A14 fork
+        (<code>/home/worker/a14full/.../car/audio/</code>) purely as functional reference. Concretely, against
+        the current <code>a17full</code> class shapes: Audio Off mode (new logic in <code>CarAudioFocus</code>,
+        <code>FocusInteraction</code>, <code>CarZonesAudioFocus</code>); MaxVolumeStartup (new logic layered on
+        <code>CarVolumeGroup</code>/<code>CarAudioGainMonitor</code> — today's <code>CarAudioGainMonitor.java</code>
+        is stock AOSP 2022 code, confirmed by its header and generic <code>// TODO (b/224885748)</code> comment,
+        holding no Nissan logic to "reconcile" with); master-mute persistence + OEM gain-callback wiring,
+        cyber-mute, Siri/E-call volume, occupant-zone filter, mirror-handling patches, guest-profile volume bar,
+        CP-song max volume — all absent, all need fresh implementation against
+        <code>applyMuteLocked()</code>/<code>saveMuteStateToSettingsLocked()</code> in <code>CarVolumeGroup</code>
+        and the new <code>CarAudioZoneConfig</code>/<code>CarAudioZone</code> shapes. <code>CoreAudioVolumeGroupHelper.java</code>
+        (#222006) <strong>does not exist in a17full at all</strong> — not "re-wire," needs to be created new
+        against the current <code>CoreAudioVolumeGroup.java</code>.
+      </li>
+      <li>
+        <strong>Decide the main-looper question fresh</strong> — it is not a closed no-op. <code>a17full</code>
+        currently builds all 4 audio policies on <code>mHandlerThread.getLooper()</code>. If Nissan requires
+        main-looper behavior for OEM-plugin-timing reasons, that must be implemented now.
+      </li>
+      <li>
+        <strong>Keep the two new AOSP features off</strong> (<span class="flag-chip">audioUseFadeManagerConfiguration</span>
+        <span class="flag-chip">audioUseMinMaxActivationVolume</span> both default <code>false</code>) unless
+        product wants them — this part of the old plan's recommendation still holds, no change needed.
+      </li>
+      <li>
+        <strong>Keep zone config on XML, not HAL</strong> — also still correct, and now confirmed to be the
+        automatic fallback behavior of <code>loadAudioZonesUsingAudioControlLocked()</code> with the current
+        vendor HAL. No code change needed to enforce this.
+      </li>
+      <li>
+        <strong>Fix the AudioControl HAL version hygiene</strong>, same recommendation as before but revised
+        numbers: consolidate on a single AIDL version across
+        <code>vendor/alliance/hardware/interfaces/automotive/audiocontrol/Android.bp</code> (currently
+        references V2, V2-ndk, and V6 across different build targets in the same package) and the VINTF
+        manifest fragments. Cheap, independent, do any time.
+      </li>
+      <li>
+        <strong>Regression-test the RRO layer against real code</strong>:
+        <code>device/nissan/aivi2_n_full/overlay/CarServiceOverlayNissanFull/res/values/config.xml</code>
+        already flips <code>audioUseDynamicRouting</code>/<code>audioUseCarVolumeGroupMuting</code> to
+        <code>true</code> for A17 — verify this doesn't currently enable stock-AOSP-only behavior (e.g. plain
+        group muting with no cyber-mute logic) in a way that ships silently wrong before the item-1
+        reimplementation lands.
+      </li>
+      <li>
+        <strong>Everything in the old plan's §10</strong> (background-audio hardening, assistant volume
+        stream, CAP-on-HAL, <code>STRATEGY_</code> rename) is still unverified against <code>a17full</code>'s
+        <code>frameworks/base</code>/<code>frameworks/av</code> and remains a separate-project scope; not
+        rechecked in this pass.
+      </li>
+    </ol>
+  </div>
+
+  <!-- §6 -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="sec-pill">§6 · Why</span>
+      <h2>Why the discrepancy happened</h2>
+    </div>
+    <p>
+      The old plan's own preamble is explicit that its AOSP-side claims came from <strong>git patches</strong>,
+      not a released tree — and its §11 already flagged that a <em>different</em> set of third-party notes
+      (<code>docs/migrate_to_a17.md</code>) disagreed with those patches on exactly the items that turned out
+      to be real (<code>hal/</code> flattening, the three focus-enforcement classes). The most likely
+      explanation, confirmed now: <strong>the patches were cut from an AOSP <code>main</code> snapshot that
+      predates the actual A17 release</strong>, and upstream kept moving (AIDL v3→v6,
+      <code>mEventLogger</code>/<code>TimingsTraceLog</code>/<code>mPersistFadeBalanceLevels</code> retained
+      rather than removed, looper choice never actually changed at the AOSP level) between that snapshot and
+      what shipped.
+    </p>
+    <blockquote>
+      Nothing here reflects badly on the earlier analysis method — cross-checking against a real tree, once
+      available, is exactly the right next step, which is what this document does.
+    </blockquote>
+  </div>
+
+</div>
+
+<div class="footer">
+  a17full Verification — What the Old Plan Got Wrong, and What Actually Remains &nbsp;·&nbsp; Car Audio Framework &nbsp;·&nbsp;
+  Companion to <code>FINAL_Conclusion_A17full_Verification_And_Remaining_Work.md</code>
+</div>
+
+</body>
+</html>
