@@ -20,6 +20,13 @@
 > **Confidence marking.** §1–§9 come from real AOSP git patches cross-checked against the actual fork.
 > §10 is release-note-sourced and **unverified locally**. §11 is a contradiction that must be resolved
 > before work starts.
+>
+> **⚠️ Step 1 audit update (2026-08-05).** This doc's baseline assumption — a clean A14 tree with none
+> of the new files present — does not match `/a17full` (branch `nissan_c_join_aivi2_fc`), which already
+> has the full Step 1 file set. See
+> [`STEP1_AUDIT_RESULT_Actual_A17_State.md`](STEP1_AUDIT_RESULT_Actual_A17_State.md) for the full,
+> AOSP-verified findings before using this doc's §9 oscillation table or its `hal/`-layout assumptions
+> for that tree — several rows there no longer apply as written.
 
 ---
 
