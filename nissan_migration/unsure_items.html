@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unsure Items — Nissan A17 Migration</title>
+  <style>
+    :root {
+      --bg: #09090f; --surface: #13141e; --surface2: #1c1f2e; --border: #2a2e44;
+      --accent: #60a5fa; --accent2: #a78bfa; --green: #34d399; --yellow: #fbbf24;
+      --red: #f87171; --orange: #fb923c; --text: #e2e8f0; --text-muted: #7c88a3; --code-bg: #0d1117;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 15px; line-height: 1.75;
+    }
+    .hero {
+      background: linear-gradient(160deg, #1a1006 0%, #402a0d 35%, #3d1f04 60%, #1a1a0a 100%);
+      position: relative; overflow: hidden; padding: 56px 48px 48px; border-bottom: 1px solid var(--border);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 40%, rgba(251,146,60,0.10) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 70%, rgba(251,191,36,0.08) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; max-width: 1000px; margin: 0 auto; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .eyebrow-chip {
+      background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.35); color: var(--orange);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+    }
+    .hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.02em; }
+    .hero-sub { color: rgba(255,255,255,0.62); font-size: 1.02rem; max-width: 720px; }
+    .back-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+    .back-link:hover { text-decoration: underline; }
+    .page-body { max-width: 1000px; margin: 0 auto; padding: 48px 48px 96px; }
+    .item {
+      background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--orange);
+      border-radius: 12px; padding: 28px 30px; margin-bottom: 28px;
+    }
+    .item-num {
+      display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px;
+      border-radius: 8px; background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.35);
+      color: var(--orange); font-size: 13px; font-weight: 800; margin-right: 10px;
+    }
+    .item h2 { display: inline; font-size: 1.15rem; font-weight: 800; color: #fff; }
+    .status-badge {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; margin: 10px 0 14px; background: rgba(251,146,60,0.14);
+      color: var(--orange); border: 1px solid rgba(251,146,60,0.35);
+    }
+    h3 { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 0 8px; }
+    p { margin-bottom: 10px; }
+    ul { margin: 8px 0 8px 20px; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'Consolas', 'Courier New', monospace; font-size: 0.85rem;
+      background: var(--code-bg); color: #7dd3fc; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);
+    }
+    .resolve {
+      background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.2); border-radius: 8px;
+      padding: 12px 16px; margin-top: 14px; font-size: 14px;
+    }
+    .resolve strong { color: var(--accent); }
+    .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="eyebrow-chip">Unresolved · For Review</span></div>
+    <h1>Unsure Items</h1>
+    <p class="hero-sub">
+      Four items investigated during the Nissan-to-A17 migration research that did <strong>not</strong> meet
+      the bar for inclusion in the final-state plan as confirmed work. Each states exactly what was checked,
+      what was found, and what would resolve the uncertainty — nothing here should be acted on without
+      further confirmation.
+    </p>
+    <p style="margin-top:16px"><a class="back-link" href="nissan_migration_plan.html">← back to the final-state plan</a></p>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <div class="item">
+    <span class="item-num">1</span><h2>"Siri / E-call volume" fix — existence unconfirmed</h2>
+    <div class="status-badge">Could not find evidence this exists</div>
+    <h3>What was checked</h3>
+    <ul>
+      <li>Exhaustive text search (<code>siri|ecall|e-call|emergency</code>) across the <strong>entire</strong> Car project in <code>a14full</code>, not just <code>car/audio/</code> — zero hits for "Siri" anywhere.</li>
+      <li>The authoritative <code>nissan_u_ccs2_release</code> vs <code>android14-release</code> diff — no matching feature in <code>CarAudioFocus.java</code>/<code>FocusInteraction.java</code>/<code>CoreAudioVolumeGroup.java</code>.</li>
+      <li>Only related code found: a stock AOSP javadoc constant, <code>EXTRA_INFO_MUTE_TOGGLED_BY_EMERGENCY</code>, in <code>car-lib</code> — generic AOSP plumbing already in <code>a17full</code>, not Nissan-authored.</li>
+    </ul>
+    <div class="resolve"><strong>Resolves with:</strong> the actual ticket/CR number. Without it this can't be scoped — may not exist in <code>car/audio</code> at all, or may live in <code>frameworks/base</code> <code>AudioService</code> or the Alliance OEM plugin instead. Do not implement a speculative fix.</div>
+  </div>
+
+  <div class="item">
+    <span class="item-num">2</span><h2>Occupant-zone <em>filter</em> — likely conflated with an already-present feature</h2>
+    <div class="status-badge">No evidence of a separate filter</div>
+    <h3>What was checked</h3>
+    <ul>
+      <li>The original plan listed "occupant-zone filter" as a suspected customization.</li>
+      <li>Research found a real Nissan A14 feature nearby — occupant-zone/mirror-request cleanup on user reassignment — confirmed via diff, and confirmed <strong>already present</strong> in <code>a17full</code> today.</li>
+      <li>No second, separate "filter" mechanism was found — every other occupant-zone method in <code>CarAudioService.java</code> is line-for-line identical to stock AOSP.</li>
+    </ul>
+    <p><strong>Most likely explanation:</strong> "occupant-zone filter" was probably an inexact description of the cleanup logic above, which is already resolved. Listed here rather than in "already done" because a genuinely separate filter elsewhere (e.g. <code>CarOccupantZoneService.java</code>, outside <code>car/audio</code>) was not exhaustively ruled out.</p>
+    <div class="resolve"><strong>Resolves with:</strong> confirming with whoever used the term what specific behavior they meant, or searching <code>CarOccupantZoneService.java</code> if the term resurfaces in testing.</div>
+  </div>
+
+  <div class="item">
+    <span class="item-num">3</span><h2><code>canSwapCallOrRingerClientRequest()</code> — confirmed real gap, priority unconfirmed</h2>
+    <div class="status-badge">Gap confirmed real; impact unknown</div>
+    <h3>What was checked</h3>
+    <ul>
+      <li>The authoritative diff shows Nissan's <strong>blocked/pending-request</strong> matching path in <code>CarAudioFocus.java</code> calls <code>canSwapCallOrRingerClientRequest(...)</code>; Google's <code>android14-release</code> only checks <code>entry.getAudioContext() == requestedContext</code> there.</li>
+      <li>Directly confirmed in <code>a17full</code> by reading the exact code: exactly one call site exists (line 307, in the <strong>focus-holders</strong> matching block, "Replacing accepted request from same client"). The <strong>blocked-request</strong> block (line 343, "Replacing pending request from same client id") does <strong>not</strong> call it — matches Google's stock form, not Nissan's.</li>
+      <li>The function itself already exists and is already used in the other path — this is a one-call-site gap, not a missing function.</li>
+    </ul>
+    <h3>What this means in practice — unconfirmed</h3>
+    <p>Without this second call site, a call/ringer client request that is currently <em>blocked</em> (not yet holding focus) may be evaluated more strictly than one that's already a holder — e.g. a legitimate call-to-ringer swap might be rejected in that specific pending-request case. Whether this is user-visible was not determined.</p>
+    <div class="resolve"><strong>Resolves with:</strong> tracing an actual call/ringer swap scenario through both paths, or finding a bug report matching the symptom. If load-bearing, it's a one-line addition mirroring the existing call site.</div>
+  </div>
+
+  <div class="item">
+    <span class="item-num">4</span><h2><code>CarAudioContextInfo.equals()</code> / <code>hashCode()</code> — real addition, purpose unconfirmed</h2>
+    <div class="status-badge">Real, but no consumer identified</div>
+    <h3>What was checked</h3>
+    <ul>
+      <li>The diff shows Nissan's <code>CarAudioContextInfo.java</code> has a full <code>equals()</code>/<code>hashCode()</code> (value-equality via ID, name, and <code>ArraySet</code>-based audio-attribute comparison) that Google's <code>android14-release</code> does not have.</li>
+      <li>No caller requiring this specific implementation (a <code>Set</code>/<code>Map</code> keyed by it, or an equality-asserting test) was identified — search did not extend to the full test suite or callers outside <code>car/audio/</code>.</li>
+    </ul>
+    <div class="resolve"><strong>Resolves with:</strong> searching the A14 fork's test suite and any <code>Set</code>/<code>Map</code> usage of <code>CarAudioContextInfo</code> for a real dependency. If none exists, this can likely be skipped rather than ported.</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Unsure Items &nbsp;·&nbsp; Nissan Car-Audio Migration onto A17 &nbsp;·&nbsp;
+  Companion to <code>nissan_migration_plan.html</code> and <code>unsure_items.md</code>
+</div>
+
+</body>
+</html>

@@ -30,74 +30,41 @@
       font-size: 15px;
       line-height: 1.75;
     }
-
-    /* ===== HERO ===== */
     .hero {
       background: linear-gradient(160deg, #0a0514 0%, #0d1640 35%, #0f1c3d 60%, #0a1a0f 100%);
-      position: relative;
-      overflow: hidden;
-      padding: 64px 48px 56px;
+      position: relative; overflow: hidden; padding: 64px 48px 56px;
       border-bottom: 1px solid var(--border);
     }
     .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: radial-gradient(ellipse 70% 60% at 80% 40%, rgba(96,165,250,0.08) 0%, transparent 70%),
                   radial-gradient(ellipse 50% 50% at 20% 70%, rgba(167,139,250,0.07) 0%, transparent 60%);
     }
     .hero-content { position: relative; max-width: 1100px; margin: 0 auto; }
     .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     .eyebrow-chip {
-      background: rgba(96,165,250,0.12);
-      border: 1px solid rgba(96,165,250,0.3);
-      color: var(--accent);
+      background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); color: var(--accent);
       font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
       padding: 5px 14px; border-radius: 20px;
     }
-    .eyebrow-chip.final {
-      background: rgba(52,211,153,0.12);
-      border-color: rgba(52,211,153,0.35);
-      color: var(--green);
-    }
+    .eyebrow-chip.final { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); color: var(--green); }
     .version-span { color: var(--text-muted); font-size: 13px; }
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 900; color: #fff; line-height: 1.1;
+      font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; color: #fff; line-height: 1.1;
       margin-bottom: 12px; letter-spacing: -0.02em;
     }
     .hero h1 .highlight {
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .hero-sub { color: rgba(255,255,255,0.6); font-size: 1.05rem; max-width: 760px; margin-bottom: 28px; }
-    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.7);
-      font-size: 12px; padding: 4px 12px; border-radius: 14px;
-      font-family: 'Consolas', 'Courier New', monospace;
-    }
-
-    /* ===== STAT ROW ===== */
-    .stat-row {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px; margin-top: 28px;
-    }
-    .stat {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px; padding: 16px 18px;
-    }
+    .hero-sub { color: rgba(255,255,255,0.6); font-size: 1.05rem; max-width: 760px; margin-bottom: 8px; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 28px; }
+    .stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 18px; }
     .stat .num { font-size: 1.7rem; font-weight: 800; color: #fff; line-height: 1; }
     .stat .lbl { font-size: 11.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
-
-    /* ===== NAV ===== */
     .toc-bar {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0 48px; display: flex; align-items: center; gap: 0;
-      overflow-x: auto; scrollbar-width: none;
+      background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 48px;
+      display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none;
       position: sticky; top: 0; z-index: 20;
     }
     .toc-bar::-webkit-scrollbar { display: none; }
@@ -107,31 +74,11 @@
       transition: color 0.15s, border-color 0.15s;
     }
     .toc-link:hover { color: var(--text); border-bottom-color: var(--border); }
-
-    /* ===== LAYOUT ===== */
     .page-body { max-width: 1100px; margin: 0 auto; padding: 56px 48px 96px; }
-
-    /* ===== SUMMARY BLOCK ===== */
-    .exec-summary {
-      background: linear-gradient(135deg, rgba(96,165,250,0.05) 0%, rgba(167,139,250,0.05) 100%);
-      border: 1px solid rgba(96,165,250,0.2);
-      border-radius: 16px; padding: 36px 40px; margin-bottom: 56px;
-    }
-    .exec-summary .exec-header {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 20px;
-    }
-    .exec-summary h2 {
-      font-size: 1.6rem; font-weight: 800; color: #fff;
-      border: none; padding: 0; margin: 0 0 24px;
-    }
-
-    /* ===== SECTIONS ===== */
-    .section { margin-bottom: 60px; scroll-margin-top: 60px; }
+    .section { margin-bottom: 52px; scroll-margin-top: 60px; }
     .section-header {
-      display: flex; align-items: flex-end; gap: 16px;
-      margin-bottom: 26px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
+      display: flex; align-items: flex-end; gap: 16px; margin-bottom: 22px; padding-bottom: 14px;
+      border-bottom: 1px solid var(--border); flex-wrap: wrap;
     }
     .sec-pill {
       font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
@@ -139,18 +86,12 @@
       background: rgba(167,139,250,0.14); color: var(--accent2); border: 1px solid rgba(167,139,250,0.32);
     }
     .sec-pill.add { background: rgba(52,211,153,0.12); color: var(--green); border-color: rgba(52,211,153,0.3); }
-    .sec-pill.mod { background: rgba(251,191,36,0.12); color: var(--yellow); border-color: rgba(251,191,36,0.3); }
     .sec-pill.risk { background: rgba(248,113,113,0.12); color: var(--red); border-color: rgba(248,113,113,0.32); }
     .sec-pill.warn { background: rgba(251,146,60,0.14); color: var(--orange); border-color: rgba(251,146,60,0.34); }
-    .section-header h2 {
-      font-size: 1.55rem; font-weight: 800; color: #fff;
-      border: none; padding: 0; margin: 0; line-height: 1.15;
-    }
+    .sec-pill.none { background: rgba(124,136,163,0.14); color: var(--text-muted); border-color: rgba(124,136,163,0.3); }
+    .section-header h2 { font-size: 1.4rem; font-weight: 800; color: #fff; border: none; padding: 0; margin: 0; line-height: 1.15; }
     .section-header .note { color: var(--text-muted); font-size: 13px; margin-left: auto; white-space: nowrap; }
-
-    /* ===== CONTENT ELEMENTS ===== */
-    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 28px 0 10px; }
-    h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin: 18px 0 8px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin: 22px 0 8px; }
     p { margin-bottom: 12px; }
     ul, ol { margin: 10px 0 10px 22px; }
     li { margin-bottom: 5px; }
@@ -158,1302 +99,376 @@
     a:hover { text-decoration: underline; }
     code {
       font-family: 'Consolas', 'Courier New', monospace; font-size: 0.85rem;
-      background: var(--code-bg); color: #7dd3fc; padding: 2px 6px;
-      border-radius: 4px; border: 1px solid var(--border);
+      background: var(--code-bg); color: #7dd3fc; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);
     }
     pre {
       background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
-      padding: 18px 22px; overflow-x: auto; margin: 14px 0; line-height: 1.5;
+      padding: 16px 20px; overflow-x: auto; margin: 12px 0; line-height: 1.5;
     }
-    pre code { background: none; border: none; padding: 0; color: #c9d1d9; font-size: 0.83rem; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin: 18px 0; }
+    pre code { background: none; border: none; padding: 0; color: #c9d1d9; font-size: 0.82rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; margin: 14px 0; }
     .card.critical { border-left: 4px solid var(--red); }
-    .card.major { border-left: 4px solid var(--orange); }
-    .card.new { border-left: 4px solid var(--green); }
-    .card.changed { border-left: 4px solid var(--yellow); }
     .card.info { border-left: 4px solid var(--accent2); }
-    .card h3 { margin-top: 0; }
-    .badge {
-      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
-      text-transform: uppercase; padding: 3px 9px; border-radius: 5px;
-      margin-right: 6px; margin-bottom: 8px;
-    }
-    .badge-critical { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
-    .badge-major { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
-    .badge-new { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
-    .badge-changed { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.25); }
-    .badge-verified { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
-    .badge-unverified { background: rgba(251,146,60,0.14); color: var(--orange); border: 1px solid rgba(251,146,60,0.34); }
-    .badge-wrong { background: rgba(248,113,113,0.18); color: var(--red); border: 1px solid rgba(248,113,113,0.4); }
-    .badge-confirmed { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .card.new { border-left: 4px solid var(--green); }
     table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
     thead tr { background: var(--surface2); }
     th { text-align: left; padding: 9px 13px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-    td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    td { padding: 10px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255,255,255,0.015); }
     .table-wrap { overflow-x: auto; }
-    .risk-high { color: var(--red); font-weight: 700; white-space: nowrap; }
-    .risk-med { color: var(--orange); font-weight: 700; white-space: nowrap; }
-    .risk-low { color: var(--yellow); font-weight: 600; white-space: nowrap; }
-    .risk-none { color: var(--green); font-weight: 600; white-space: nowrap; }
-    .absent { color: var(--text-muted); font-style: italic; }
+    .num-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 7px; background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.3); color: var(--accent); font-size: 12px; font-weight: 800;
+    }
+    .done-list { list-style: none; margin: 0; padding: 0; }
+    .done-list li {
+      padding: 10px 0 10px 30px; border-bottom: 1px solid var(--border); font-size: 14.5px; position: relative;
+    }
+    .done-list li:last-child { border-bottom: none; }
+    .done-list li::before {
+      content: '✓'; position: absolute; left: 0; top: 10px; color: var(--green); font-weight: 800;
+    }
     blockquote {
-      border-left: 3px solid var(--accent2); padding: 10px 16px; margin: 14px 0;
-      background: rgba(167,139,250,0.06); border-radius: 0 8px 8px 0;
-      color: var(--text-muted); font-style: italic;
+      border-left: 3px solid var(--accent2); padding: 10px 16px; margin: 12px 0;
+      background: rgba(167,139,250,0.06); border-radius: 0 8px 8px 0; color: var(--text-muted); font-style: italic;
     }
     blockquote p:last-child { margin-bottom: 0; }
-    .steps { counter-reset: step; list-style: none; margin: 16px 0 0; padding: 0; }
-    .steps li {
-      counter-increment: step; position: relative;
-      padding: 12px 0 12px 46px; border-bottom: 1px solid var(--border); font-size: 14.5px;
-    }
-    .steps li:last-child { border-bottom: none; }
-    .steps li::before {
-      content: counter(step);
-      position: absolute; left: 0; top: 13px; width: 28px; height: 28px; border-radius: 8px;
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--accent); font-size: 12.5px; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-    }
-    hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
-    .footer {
-      text-align: center; padding: 40px; border-top: 1px solid var(--border);
-      color: var(--text-muted); font-size: 13px;
-    }
-    .step-nav { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--text-muted); margin-top: 8px; }
-    .depends { color: var(--text-muted); font-size: 13px; margin-left: 4px; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+    .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 13px; }
+    .depends { color: var(--text-muted); font-size: 13px; }
     @media (max-width: 700px) {
-      .hero { padding: 40px 24px; }
-      .page-body { padding: 32px 24px 64px; }
-      .toc-bar { padding: 0 16px; }
-      .exec-summary { padding: 24px 22px; }
+      .hero { padding: 40px 24px; } .page-body { padding: 32px 24px 64px; } .toc-bar { padding: 0 16px; }
     }
   </style>
 </head>
 <body>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-content">
     <div class="hero-eyebrow">
-      <span class="eyebrow-chip final">Implementation Plan</span>
+      <span class="eyebrow-chip final">Implementation Plan · Final State</span>
       <span class="eyebrow-chip">Car Audio Framework</span>
-      <span class="version-span">Re-implementing Nissan behavior on a clean AOSP A17 base</span>
     </div>
     <h1>Migrate Nissan<br/><span class="highlight">Car-Audio Behavior → A17</span></h1>
     <p class="hero-sub">
       <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">a17full</code>'s
       <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">car/audio/</code>
       is a clean AOSP tree with zero Nissan behavioral code, while the device overlays already point at
-      Nissan-only flags. This plan is the re-implementation project that closes that gap — 11 independently
-      verifiable steps, each grounded in real source (either direct on-disk reads of the A14 fork, or a
-      genuine <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">git diff</code>
-      against real Google AOSP).
+      Nissan-only flags. Below is exactly what closes that gap — nothing more, nothing speculative. Every
+      row is grounded in either a direct on-disk read of the real A14 source, or a real
+      <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">git diff</code>
+      against Google's actual <code style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">android14-release</code> tag.
     </p>
-    <div class="tag-cloud">
-      <span class="tag">CarAudioService</span>
-      <span class="tag">CarAudioFocus</span>
-      <span class="tag">CarVolumeGroup</span>
-      <span class="tag">CarAudioSettings</span>
-      <span class="tag">OEM Plugin</span>
-      <span class="tag">AudioControl HAL</span>
-    </div>
     <div class="stat-row">
-      <div class="stat"><div class="num">11</div><div class="lbl">Steps (0-10)</div></div>
-      <div class="stat"><div class="num">0</div><div class="lbl">Nissan authors in a17full today</div></div>
-      <div class="stat"><div class="num">3</div><div class="lbl">Features found only via real Google diff</div></div>
-      <div class="stat"><div class="num">1</div><div class="lbl">Earlier "no work" call corrected (Step 10)</div></div>
-      <div class="stat"><div class="num">1</div><div class="lbl">Real cross-branch gap found (Step 4)</div></div>
+      <div class="stat"><div class="num">9</div><div class="lbl">Confirmed changes needed</div></div>
+      <div class="stat"><div class="num">5</div><div class="lbl">Confirmed already done / stock</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">Unconfirmed items included below</div></div>
     </div>
   </div>
 </div>
 
-<!-- NAV -->
 <div class="toc-bar">
-  <a class="toc-link" href="#index">Index</a>
-  <a class="toc-link" href="#step0">§0 Resync</a>
-  <a class="toc-link" href="#step1">§1 MaxVolume</a>
-  <a class="toc-link" href="#step2">§2 Settings.Global</a>
-  <a class="toc-link" href="#step3">§3 OEM gain</a>
-  <a class="toc-link" href="#step4">§4 ANR fix</a>
-  <a class="toc-link" href="#step5">§5 BT focus</a>
-  <a class="toc-link" href="#step6">§6 Audio Off</a>
-  <a class="toc-link" href="#step7">§7 Regression</a>
-  <a class="toc-link" href="#step8">§8 NAV_DUCKING</a>
-  <a class="toc-link" href="#step9">§9 Suspend/wake</a>
-  <a class="toc-link" href="#step10">§10 Forced mute</a>
+  <a class="toc-link" href="#summary">Summary</a>
+  <a class="toc-link" href="#done">Already done</a>
+  <a class="toc-link" href="#item1">1 · MaxVolume</a>
+  <a class="toc-link" href="#item2">2 · Settings.Global</a>
+  <a class="toc-link" href="#item3">3 · OEM gain</a>
+  <a class="toc-link" href="#item4">4 · ANR fix</a>
+  <a class="toc-link" href="#item5">5 · BT focus</a>
+  <a class="toc-link" href="#item6">6 · Audio Off</a>
+  <a class="toc-link" href="#item7">7 · Gain context</a>
+  <a class="toc-link" href="#item8">8 · Suspend/wake</a>
+  <a class="toc-link" href="#item9">9 · Forced mute</a>
 </div>
 
 <div class="page-body">
 
-  <!-- INDEX -->
-  <div class="exec-summary" id="index">
-    <div class="exec-header">Index · Why this folder exists</div>
-    <h2>The gap this plan closes</h2>
-    <p>
-      Verification work established that <code>a17full</code>'s
-      <code>packages/services/Car/service/src/com/android/car/audio/</code> is a clean AOSP A17 tree — the
-      Google-side structural migration (13 new files, <code>CarAudioZonesHelper</code> as interface, 4-way
-      <code>AudioPolicy</code> split, device-based <code>CarVolumeGroup</code>, IAudioControl AIDL v6, etc.)
-      is already complete, but <strong>zero Nissan behavioral code exists anywhere in it</strong> (0
-      Nissan/LGE authors across 661 commits). Meanwhile the Nissan device overlays
-      (<code>device/nissan/.../CarServiceOverlayNissanFull/res/values/config.xml</code>) already flip
-      <code>audioUseDynamicRouting</code>/<code>audioUseCarVolumeGroupMuting</code> to <code>true</code> —
-      i.e. the config layer is already pointed at Nissan behavior that the Java layer doesn't implement yet.
-      This plan is the re-implementation project that closes that gap.
-    </p>
-
-    <h3>Two research passes, two levels of confidence</h3>
-    <p>
-      <strong>Steps 1-7</strong> came from three parallel deep-dive research passes over the actual A14
-      fork, cross-diffed against the A17 stock baseline in <code>a17full</code> to positively confirm what's
-      genuinely Nissan vs. stock AOSP. That method mixes two kinds of change (AOSP's own A14→A17 evolution,
-      and Nissan's A14 customization) and relies on knowing the right method/class names to grep for — real,
-      but imperfect.
-    </p>
-    <p>
-      <strong>Steps 8-10</strong> came from a materially stronger source added later:
-      <code>diffs_nissan_vs_google/packages_services_Car.diff</code>, a real <code>git diff</code> between
-      Nissan's actual <code>nissan_u_ccs2_release</code> branch and Google's actual
-      <code>android14-release</code> tag — <strong>both on Android 14</strong>, so it isolates pure Nissan
-      customization with zero AOSP-version noise. Reviewing it surfaced three real, substantial Nissan
-      features Steps 1-7's research missed entirely, and corrected the occupant-zone/mirror-handling
-      conclusion below.
-    </p>
-    <blockquote>
-      Recommendation: if more budget exists, re-run Steps 1-7's research using this same
-      diff-against-real-Google-tag method instead of the original A14-fork/A17-diff method — it's a
-      strictly better signal.
-    </blockquote>
-
-    <h3>Steps</h3>
+  <!-- SUMMARY -->
+  <div class="section" id="summary">
+    <div class="section-header"><h2>Final state — the complete list</h2></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Step</th><th>What it covers</th><th>Risk</th></tr></thead>
+        <thead><tr><th>#</th><th>Change</th><th>File(s)</th><th>Evidence</th></tr></thead>
         <tbody>
-          <tr><td><a href="#step0">§0</a></td><td>Confirm source-of-truth state; pull the one real cross-branch gap found (Step 4's ANR fix)</td><td class="risk-none">Prerequisite</td></tr>
-          <tr><td><a href="#step1">§1</a></td><td><code>CoreAudioVolumeGroupHelper.java</code> + MaxVolumeStartup boot volume ceiling</td><td class="risk-low">Low</td></tr>
-          <tr><td><a href="#step2">§2</a></td><td><code>Settings.Global</code> persistence for MEDIA/RING/CALL (guest volume bar + CP-song max-volume bugs)</td><td class="risk-low">Low</td></tr>
-          <tr><td><a href="#step3">§3</a></td><td>OEM gain-callback wiring to the Alliance plugin</td><td class="risk-low">Low</td></tr>
-          <tr><td><a href="#step4">§4</a></td><td><code>ZoneAudioPlaybackCallback</code> ANR fix (confirmed real cross-branch gap) + null/shutdown guards</td><td class="risk-low">Low</td></tr>
-          <tr><td><a href="#step5">§5</a></td><td>Block duplicate BT voice-call focus requests</td><td class="risk-low">Low</td></tr>
-          <tr><td><a href="#step6">§6</a></td><td>Audio Off mode + master-mute callback conflation</td><td class="risk-high">High — do late</td></tr>
-          <tr><td><a href="#step7">§7</a></td><td>Full build/boot regression across both device targets</td><td class="risk-none">Final gate</td></tr>
-          <tr><td><a href="#step8">§8</a></td><td>NAV_DUCKING exposure to OEM plugin + shared-device-port gain-active disambiguation</td><td class="risk-med">Low-Med</td></tr>
-          <tr><td><a href="#step9">§9</a></td><td>Suspend-exit volume-limit scoped to media groups + power-state limit reset on wake</td><td class="risk-med">Low-Med</td></tr>
-          <tr><td><a href="#step10">§10</a></td><td>Block explicit volume-set requests during forced-mute/cyber HAL conditions (corrects an earlier "nothing to port" call)</td><td class="risk-low">Low</td></tr>
+          <tr><td><a href="#item1"><span class="num-badge">1</span></a></td><td><code>CoreAudioVolumeGroupHelper.java</code> (MaxVolumeStartup boot volume ceiling)</td><td>New file + <code>CoreAudioVolumeGroup.java</code> ctor</td><td>On-disk read + diff</td></tr>
+          <tr><td><a href="#item2"><span class="num-badge">2</span></a></td><td>Route MEDIA/RING/CALL volume+mute through <code>Settings.Global</code> instead of per-user <code>Settings.System</code></td><td><code>CarAudioSettings.java</code></td><td>On-disk read + diff</td></tr>
+          <tr><td><a href="#item3"><span class="num-badge">3</span></a></td><td>OEM gain-callback wiring to the Alliance plugin</td><td>New <code>CarAudioGainCallbackHandler.java</code> + <code>CarAudioService.java</code></td><td>On-disk read + diff</td></tr>
+          <tr><td><a href="#item4"><span class="num-badge">4</span></a></td><td>ANR fix: register playback callback on a worker <code>Handler</code>, not <code>null</code>; narrow lock scope</td><td><code>CarAudioService.java</code>, <code>ZoneAudioPlaybackCallback.java</code></td><td>Real commit <code>429afe45ba0</code> (source: <code>alliance_u_release</code>, not <code>nissan_u_ccs2_release</code>)</td></tr>
+          <tr><td><a href="#item5"><span class="num-badge">5</span></a></td><td>Reject duplicate BT voice-call focus requests</td><td><code>CarAudioFocus.java</code></td><td>On-disk read + diff</td></tr>
+          <tr><td><a href="#item6"><span class="num-badge">6</span></a></td><td>Audio Off mode (MEDIA-group-mute proxy) + master-mute callback conflation</td><td><code>CarAudioService.java</code>, <code>CarZonesAudioFocus.java</code>, <code>CarAudioFocus.java</code></td><td>On-disk read, confirmed again by diff</td></tr>
+          <tr><td><a href="#item7"><span class="num-badge">7</span></a></td><td>NAV_DUCKING exposure to OEM plugin + shared-device-port gain-active disambiguation</td><td>6 files incl. car-lib <code>OemCarAudioVolumeRequest.java</code></td><td>Diff only</td></tr>
+          <tr><td><a href="#item8"><span class="num-badge">8</span></a></td><td>Suspend-exit volume limit scoped to media groups + power-state listener resets limits on wake</td><td><code>CarVolumeGroup.java</code>, <code>CarAudioService.java</code></td><td>Diff only</td></tr>
+          <tr><td><a href="#item9"><span class="num-badge">9</span></a></td><td>Block explicit <code>setGroupVolume()</code> requests while a forced-mute/TCU-mute/remote-mute HAL reason is active</td><td><code>CarAudioService.java</code></td><td>Diff only</td></tr>
         </tbody>
       </table>
     </div>
     <blockquote>
-      Steps 8-10 touch the same <code>CarVolumeGroup.onAudioGainChanged()</code>/<code>CarAudioService</code>
-      gain-callback code paths as each other and as parts of Step 6 — implement and test them together
-      rather than in strict isolation, and do all of them (plus Step 6) before the final Step 7 regression
-      pass.
+      Then: full build/boot regression on <code>aivi2_n_full</code> and <code>aasp_n</code> once 1–9 are in.
+      Items 7, 8, and 9 all touch <code>CarVolumeGroup.onAudioGainChanged()</code>/<code>CarAudioService</code>'s
+      gain-callback code paths, plus item 6's mute path — implement and test them as one cluster.
     </blockquote>
-
-    <h3>Out of scope — confirmed stock AOSP already, or unconfirmed</h3>
-    <p>Do <strong>not</strong> spend effort on these; re-verify only if something breaks during Step 7:</p>
-    <div class="card info">
-      <h4 style="margin-top:0">Occupant-zone filter / mirror-request cleanup on user reassignment</h4>
-      <p style="margin-bottom:0">
-        <span class="badge badge-changed">Correction</span> This <em>was</em> a real, substantial Nissan A14
-        feature (<code>CarAudioService.removePrimaryZoneRequestForOccupantLocked()</code> +
-        <code>removeAudioMirrorForZoneId()</code>, called from <code>updateUserForOccupantZoneLocked()</code>;
-        <code>MediaRequestHandler.getAssignedRequestIdForOccupantZoneId()</code>), confirmed via the
-        authoritative Nissan-vs-Google diff — the earlier "not found, matches stock" conclusion was based on
-        the A14-fork research not knowing the right method names to check. However, direct grep against
-        <code>a17full</code> today shows <strong>all of this logic is already present</strong>, wired at
-        <code>CarAudioService.java:4024-4026</code> and in <code>MediaRequestHandler.java:244</code>. Likely
-        explanation: AOSP itself adopted equivalent logic by A17, independent of Nissan. Net effect is the
-        same as originally concluded — <strong>no work needed</strong> — but for the correct reason.
-      </p>
-    </div>
-    <div class="card">
-      <h4 style="margin-top:0">Mirror handling patches (routing/HAL-command logic itself)</h4>
-      <p style="margin-bottom:0">Still confirmed unmodified stock AOSP, no correction needed here.</p>
-    </div>
-    <div class="card major">
-      <h4 style="margin-top:0">Cyber-mute</h4>
-      <p style="margin-bottom:0">
-        <span class="badge badge-changed">Partially corrected</span> The HAL-reason-handling primitive
-        itself (<code>Reasons.FORCED_MASTER_MUTE</code>/<code>TCU_MUTE</code>/<code>REMOTE_MUTE</code> via
-        <code>CarAudioGainMonitor.shouldBlockVolumeRequest()</code>) is genuinely stock AOSP, unmodified,
-        already in <code>a17full</code> — that part of the original conclusion holds. But the authoritative
-        diff found a second piece the original research missed: Nissan wires that same check into
-        <code>CarAudioService.setGroupVolume()</code> to reject explicit volume-set requests during a
-        blocking HAL condition, which is <strong>not</strong> present in <code>a17full</code>. See
-        <a href="#step10">§10</a> — this is real work, not out of scope.
-      </p>
-    </div>
-    <div class="card">
-      <h4 style="margin-top:0">Restore volume on unmute</h4>
-      <p style="margin-bottom:0">
-        Still confirmed: <code>CarVolumeGroup</code>/<code>CoreAudioVolumeGroup</code> mute/unmute design
-        never overwrites the underlying gain index; restoration is inherent to stock AOSP, byte-identical in
-        both trees.
-      </p>
-    </div>
-    <div class="card">
-      <h4 style="margin-top:0">Siri / E-call volume fix</h4>
-      <p style="margin-bottom:0">
-        Still unconfirmed. Exhaustive search (Car project-wide, plus a scan of the authoritative diff's
-        <code>CarAudioFocus.java</code>/<code>FocusInteraction.java</code> sections) found no feature
-        matching this description. The closest adjacent code is <code>canSwapCallOrRingerClientRequest()</code>
-        in <code>CarAudioFocus.java</code> (already present in <code>a17full</code>, used in the
-        focus-holders matching path; the authoritative diff shows Nissan also applies it in the
-        blocked/pending-request matching path — low priority, spot-check during <a href="#step5">§5</a> or
-        <a href="#step6">§6</a> implementation rather than as a standalone step). Recommend getting the
-        actual ticket/CR number before assuming further work is needed.
-      </p>
-    </div>
-    <div class="card">
-      <h4 style="margin-top:0"><code>CarAudioContextInfo.equals()</code>/<code>hashCode()</code></h4>
-      <p style="margin-bottom:0">
-        A small Nissan-only addition (proper value-equality, likely needed for <code>Set</code>/<code>Map</code>
-        usage or test assertions elsewhere). Minor; add only if something that depends on it surfaces during
-        implementation of the other steps — not worth a standalone step.
-      </p>
-    </div>
+    <p>
+      Two items were investigated and could not be confirmed to exist as real features (a "Siri/E-call
+      volume" fix, and an occupant-zone <em>filter</em> distinct from the cleanup logic below) — they are
+      intentionally omitted from this list rather than included as guesses. See the companion
+      <a href="unsure_items.html">unsure items</a> document for what was checked and why.
+    </p>
   </div>
 
-  <!-- STEP 0 -->
-  <div class="section" id="step0">
+  <!-- ALREADY DONE -->
+  <div class="section" id="done">
     <div class="section-header">
-      <span class="sec-pill">§0 · Prerequisite</span>
-      <h2>Re-sync source of truth</h2>
+      <span class="sec-pill none">No work needed</span>
+      <h2>Already done or already stock</h2>
     </div>
-    <h3>Goal</h3>
-    <p>Confirm the <code>a14full</code> checkout is a valid porting source, and re-sync only the specific piece that turned out to be unreliable, before writing any A17 code.</p>
-
-    <h3>Correction after re-verification</h3>
-    <p>
-      An earlier research pass characterized the whole <code>a14full</code> checkout
-      (<code>nissan_u_ccs2_release</code>, HEAD <code>dbe12bde8d8</code>) as stale, based on grepping the
-      working tree for "guest"/"CP"/"audio_off" and finding nothing, then reconstructing the real code via
-      <code>git show &lt;hash&gt; -- &lt;path&gt;</code> against commits reachable from
-      <code>remotes/m/nissan_u_ccs2_release</code> (tip <code>df434821b9b</code>) and later unmerged refs
-      (up to <code>429afe45ba0</code>).
-    </p>
-    <p>
-      A follow-up direct verification pass — running real <code>diff -u</code> between <code>a14full</code>
-      and <code>a17full</code>, and reading the actual on-disk files in full (not <code>git show</code> on
-      scattered hashes) — found that <strong>most of what matters is actually present, committed, and
-      clean</strong> in the checked-out tree:
-    </p>
-    <ul>
-      <li><code>CoreAudioVolumeGroupHelper.java</code> (<a href="#step1">§1</a>) — present, full content confirmed on disk, matches exactly.</li>
-      <li><code>CarAudioSettings.java</code>'s <code>GROUP_ID_MEDIA</code>/<code>RING</code>/<code>CALL</code> → <code>Settings.Global</code> logic and the <code>ro.config.isPersistVolumeGroupMute</code> sysprop override (<a href="#step2">§2</a>) — present, confirmed via direct <code>diff -u</code> against <code>a17full</code>, <code>git status</code> clean.</li>
-      <li><code>CarAudioGainCallbackHandler.java</code> (<a href="#step3">§3</a>) — present, full content confirmed on disk.</li>
-      <li>Audio Off's core mechanism (<a href="#step6">§6</a>) — present, confirmed on disk, and <strong>simpler</strong> than what the reconstruction described.</li>
-      <li>The BT voice-call focus block (<a href="#step5">§5</a>) — present, confirmed on disk with full original comments intact.</li>
+    <ul class="done-list">
+      <li>AOSP's own A15→A17 structural migration (13 new files, <code>CarAudioZonesHelper</code> as interface, 4-way <code>AudioPolicy</code> split, device-based <code>CarVolumeGroup</code>, IAudioControl AIDL v6, etc.)</li>
+      <li>Occupant-zone/mirror-request cleanup on user reassignment (<code>removePrimaryZoneRequestForOccupantLocked()</code>, <code>removeAudioMirrorForZoneId()</code>) — a real Nissan A14 feature, confirmed via diff, but already present in <code>a17full</code> today (<code>CarAudioService.java:4024-4026</code>, <code>MediaRequestHandler.java:244</code>)</li>
+      <li>Mirror routing/HAL-command logic itself — stock AOSP, Nissan never touched it</li>
+      <li>Restore-volume-on-unmute behavior — stock AOSP, mute/unmute design never overwrites the underlying gain index</li>
+      <li>The <code>FORCED_MASTER_MUTE</code>/<code>TCU_MUTE</code>/<code>REMOTE_MUTE</code> HAL-reason primitive itself (<code>CarAudioGainMonitor.shouldBlockVolumeRequest()</code>) — stock AOSP, already present (only its enforcement wiring, item 9, is missing)</li>
     </ul>
-    <blockquote>
-      What the reconstruction got wrong, specifically: it described a <code>SettingsObserver.java</code>
-      trigger file and per-<code>FocusEntry</code> mute tracking for Audio Off that <strong>do not exist
-      anywhere in the checked-out tree</strong>. Those were most likely details from a genuinely later,
-      unmerged commit reachable only via <code>git show</code>. <a href="#step6">§6</a> has been corrected
-      to describe the on-disk mechanism, which is directly verified and simpler.
-    </blockquote>
-
-    <h3>What's still genuinely open — now precisely identified</h3>
-    <ul>
-      <li><code>git diff HEAD remotes/m/nissan_u_ccs2_release</code> shows local <code>HEAD</code> (2026-08-03) is <strong>already newer</strong> than the remote ref (2026-04-29) — <strong>the "stale" claim for that comparison is fully retracted.</strong></li>
-      <li>The <a href="#step4">§4</a> ANR fix commit <code>429afe45ba0</code> genuinely exists as a git object, but <code>git merge-base --is-ancestor 429afe45ba0 HEAD</code> returns <strong>false</strong> — it lives only on a sibling branch family: <code>alliance_u_26w30_260720</code>/<code>260722</code>/<code>260724</code> and <code>alliance_u_release</code>. Confirmed both A14 and A17 have the underlying bug, unfixed. <strong>This is a real, unmerged, cross-branch fix</strong>, not a reconstruction artifact.</li>
-      <li>Audio Off's <code>SettingsObserver.java</code>/per-<code>FocusEntry</code> claim could not be corroborated anywhere in reachable history. Treat as <strong>unconfirmed</strong> — don't block on it.</li>
-    </ul>
-
-    <h3>Actions</h3>
-    <ol class="steps">
-      <li><strong>For Step 4 specifically</strong>: pull the ANR fix from <code>alliance_u_release</code> — <code>git show 429afe45ba0 -- .../ZoneAudioPlaybackCallback.java .../CarAudioService.java</code> against that branch, then port forward to <code>a17full</code>'s current method names/structure.</li>
-      <li>Confirm with whoever owns Gerrit whether <code>nissan_u_ccs2_release</code> is meant to pick up <code>alliance_u_release</code> fixes automatically, or whether this is a genuine gap needing manual cherry-picks — and whether other <code>alliance_u_*</code>-only fixes are also missing.</li>
-      <li>Chase down the real Audio Off "final iteration" only if/when Gerrit access surfaces it — not a blocker for starting Steps 1-5.</li>
-    </ol>
-
-    <h3>Verify</h3>
-    <ul>
-      <li><code>git merge-base --is-ancestor 429afe45ba0 HEAD</code> on the authoritative ref returns true once the ANR fix is merged/cherry-picked, or manually ported per <a href="#step4">§4</a>.</li>
-      <li>No other <code>alliance_u_*</code>-only commits for <code>car/audio/</code> remain unaccounted for.</li>
-    </ul>
-
-    <h3>Addendum: a materially better source became available</h3>
-    <p>
-      After the above was written, <code>diffs_nissan_vs_google/packages_services_Car.diff</code> was
-      generated — a real <code>git diff nissan_u_ccs2_release..android14-release</code> (both Android 14),
-      a strictly cleaner signal than diffing across Android versions the way the rest of this plan was
-      researched. Reviewing it surfaced <a href="#step8">§8</a>, <a href="#step9">§9</a>, and
-      <a href="#step10">§10</a> — three real Nissan features the original research missed entirely — and
-      corrected the occupant-zone/mirror-handling "out of scope" claim in the index.
-    </p>
-    <blockquote>
-      If more time is available, re-run the Steps 1-7 verification using this diff as the primary source.
-      <code>frameworks_base.diff</code> and <code>frameworks_av.diff</code> in the same folder are also
-      unreviewed as of this writing and may contain platform-level Nissan customizations relevant to APIs
-      <code>car/audio</code> depends on.
-    </blockquote>
   </div>
 
-  <!-- STEP 1 -->
-  <div class="section" id="step1">
-    <div class="section-header">
-      <span class="sec-pill add">§1 · Low risk</span>
-      <h2><code style="background:transparent;border:none;color:inherit;padding:0">CoreAudioVolumeGroupHelper.java</code> + MaxVolumeStartup</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <h3>What it is</h3>
+  <!-- ITEM 1 -->
+  <div class="section" id="item1">
+    <div class="section-header"><span class="sec-pill add">1 · Low risk</span><h2>MaxVolumeStartup</h2></div>
     <p>
-      A whole new Nissan-only file, absent from AOSP entirely — confirmed absent from the A17 baseline.
-      Provides <code>getDefaultVolumeForAttributes(attrs, maxGain, minGain, volumeGroup)</code>, a
-      per-<code>AudioAttributes</code>-usage-category default-volume lookup backed by
-      <code>SystemProperties</code>, replacing AOSP's flat "1/3 of range" default for core-audio volume
-      groups.
+      A whole new Nissan-only file, absent from AOSP. Provides a per-<code>AudioAttributes</code>-usage
+      default-volume lookup backed by <code>SystemProperties</code>, replacing AOSP's flat "1/3 of range"
+      default for core-audio volume groups. <code>persist.vendor.max_vol_startup</code> is a
+      <strong>factory first-boot ceiling</strong>, consulted only when there's no valid persisted user
+      value — not a per-ignition re-clamp.
     </p>
-    <p>
-      <code>persist.vendor.max_vol_startup</code> is what actually implements "MaxVolumeStartup" — a
-      <strong>factory first-boot ceiling</strong> on <code>mDefaultGainIndex</code>, consulted only when
-      there's no valid persisted user value. It is <strong>not</strong> a per-ignition re-clamp — the
-      persisted Media volume already lives in <code>Settings.Global</code> (<a href="#step2">§2</a>) and
-      survives reboots untouched.
-    </p>
-
-    <h3>Source (A14 fork, <code style="background:transparent;border:none;color:inherit;padding:0">CoreAudioVolumeGroupHelper.java</code>)</h3>
-    <pre><code>package com.android.car.audio;
-final class CoreAudioVolumeGroupHelper {
-    // system-property keys — mostly reused stock Android names + 3 new vendor ones
-    DEFAULT_CALL                 = "ro.config.vc_call_vol_default"
-    DEFAULT_MEDIA                = "ro.config.media_vol_default"
-    DEFAULT_ALARM                = "ro.config.alarm_vol_default"
-    DEFAULT_SYSTEM               = "ro.config.system_vol_default"
-    DEFAULT_NOTIFICATION         = "ro.config.notification_vol_default"
-    DEFAULT_TOUCHSCREEN_CLICK    = "persist.vendor.touchscreen_click_vol_default"   // new
-    DEFAULT_ASSISTANT            = "persist.vendor.assistant_vol_default"          // new
-    DEFAULT_MAX_VOLUME_START_UP  = "persist.vendor.max_vol_startup"                // new — MaxVolumeStartup
-
+    <pre><code>final class CoreAudioVolumeGroupHelper {
     static int getDefaultVolumeForAttributes(AudioAttributes attrs, int maxGain, int minGain,
-            CoreAudioVolumeGroup volumeGroup)
+            CoreAudioVolumeGroup volumeGroup) {
+        // switch on attrs.getUsage() -> SystemProperties key, validated against
+        // volumeGroup.isValidGainIndexLocked(...), falls through to (maxGain-minGain)/3+minGain
+
+        // Media/Game/Unknown:
+        int maxVolumeStartUp = SystemProperties.getInt("persist.vendor.max_vol_startup", -1);
+        int defaultVolume    = SystemProperties.getInt("ro.config.media_vol_default", -1);
+        return (defaultVolume != -1 &amp;&amp; maxVolumeStartUp != -1)
+                ? Math.min(defaultVolume, maxVolumeStartUp)
+                : (maxVolumeStartUp != -1 ? maxVolumeStartUp : defaultVolume);
+    }
 }</code></pre>
-    <p>
-      <code>getDefaultVolumeForAttributes</code> is a <code>switch</code> on <code>attrs.getUsage()</code>
-      mapping usage buckets to a <code>SystemProperties</code> key, validated against
-      <code>volumeGroup.isValidGainIndexLocked(...)</code>, falling through to the stock formula
-      <code>(maxGain - minGain) / 3 + minGain</code> if nothing valid is found:
-    </p>
-    <pre><code>// Media / Game / Unknown → getMediaDefaultVolume():
-int maxVolumeStartUp = SystemProperties.getInt("persist.vendor.max_vol_startup", -1);
-int defaultVolume    = SystemProperties.getInt("ro.config.media_vol_default", -1);
-return (defaultVolume != -1 &amp;&amp; maxVolumeStartUp != -1)
-        ? Math.min(defaultVolume, maxVolumeStartUp)
-        : (maxVolumeStartUp != -1 ? maxVolumeStartUp : defaultVolume);</code></pre>
-    <ul>
-      <li>Assistance sonification → touchscreen-click prop, falling back to system prop.</li>
-      <li>Voice communication / signalling → call prop.</li>
-      <li>Navigation guidance / Safety / Vehicle status / Assistant / Announcement → assistant prop.</li>
-      <li>Alarm / Ringtone → alarm prop.</li>
-      <li>Notification / Notification event → notification prop.</li>
-    </ul>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><strong>Add</strong> <code>CoreAudioVolumeGroupHelper.java</code> to <code>car/audio/</code>, ported as-is from the Step-0-resynced source.</li>
-      <li><strong>Modify</strong> <code>CoreAudioVolumeGroup.java</code> constructor — A17's shape now takes <code>AudioManagerWrapper</code> / <code>SparseArray&lt;CarAudioDeviceInfo&gt;</code> / <code>CarActivationVolumeConfig</code>. Wire the helper call in at the same spot the stock fallback formula lives — keep that formula as the helper's own tail case.</li>
-    </ul>
-
-    <h3>Gate</h3>
-    <p>
-      Only active when <code>audioUseCoreVolume=true</code>. Confirm the <code>aivi2_n_full</code>/<code>aivi2_n_da2</code>
-      device overlays set this flag consistent with product intent — the <code>aasp</code>/emulator overlay
-      already does. The build-time <code>persist.vendor.max_vol_startup=20</code> property itself comes from
-      <code>device/alliance/aasp/audio/aasp.mk</code> in the A14 tree — confirm the equivalent Nissan device
-      <code>.mk</code> file still sets it for A17 targets.
-    </p>
-
-    <h3>Open item, not blocking</h3>
-    <p>
-      AOSP's own <code>audioUseMinMaxActivationVolume</code> feature does a similar boot/source/
-      playback-change clamp. <code>a17full</code>'s config already defaults it <code>false</code>, so
-      there's no active conflict today — just don't enable it later without re-checking against
-      MaxVolumeStartup.
-    </p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Fresh data wipe; confirm first-boot MEDIA volume is clamped to <code>persist.vendor.max_vol_startup</code>'s configured value, not the stock 1/3-of-range default.</li>
-      <li>Confirm devices/configs not using core audio volume are unaffected.</li>
-      <li>Confirm a second boot after a user has already changed the volume does <strong>not</strong> re-clamp it.</li>
-    </ul>
+    <p><strong>Change:</strong> add the file as-is; wire the call into <code>CoreAudioVolumeGroup.java</code>'s constructor at the spot the stock fallback formula lives (keep that formula as the tail case). Gated behind <code>audioUseCoreVolume=true</code>.</p>
+    <p><strong>Verify:</strong> fresh data wipe clamps first-boot MEDIA volume to the sysprop value; a later boot with a persisted value does not re-clamp.</p>
   </div>
 
-  <!-- STEP 2 -->
-  <div class="section" id="step2">
-    <div class="section-header">
-      <span class="sec-pill add">§2 · Low risk</span>
-      <h2><code style="background:transparent;border:none;color:inherit;padding:0">Settings.Global</code> persistence for MEDIA/RING/CALL</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <h3>What it is</h3>
-    <p>One well-defined patch that fixes two separately-reported bugs at once:</p>
-    <ul>
-      <li><strong>CP-song max volume</strong> (ticket <code>REAVN-156016</code>, "CP song is outputted in Max volume during profile switch"). "CP" = CarPlay per the commit description.</li>
-      <li><strong>Guest-profile volume bar</strong> (ticket <code>REAVN-158472</code>, "Phone volume bar appears when we switch to the guest profile").</li>
-    </ul>
+  <!-- ITEM 2 -->
+  <div class="section" id="item2">
+    <div class="section-header"><span class="sec-pill add">2 · Low risk</span><h2><code style="background:transparent;border:none;color:inherit;padding:0">Settings.Global</code> persistence for MEDIA/RING/CALL</h2></div>
     <p>
-      Root cause both times: <code>getStoredVolumeGainIndexForUser</code>/<code>storeVolumeGainIndexForUser</code>
-      persist per-user via <code>Settings.System</code>, keyed by <code>userId</code>. During a user-switch
-      transition, the framework briefly reads the new (fresh/ephemeral) user's unset default (<code>-1</code>)
-      before the real value is re-applied. For MEDIA this manifests as a moment of max-volume playback
-      across the switch; for RING/CALL on a guest profile it manifests as a phantom phone/ring volume bar.
+      One patch fixing two reported bugs: CP-song volume spiking to max across a user switch, and a
+      phantom phone/ring volume bar on guest-profile switch. Root cause both times:
+      <code>getStoredVolumeGainIndexForUser</code>/<code>storeVolumeGainIndexForUser</code> persist per-user
+      via <code>Settings.System</code>, so a switch briefly reads the new user's unset default.
     </p>
-    <p>The CP-song fix (MEDIA only) landed first and is the foundational patch; the guest fix later extended the exact same mechanism to RING and CALL.</p>
-
-    <h3>Source pattern (A14 fork, <code style="background:transparent;border:none;color:inherit;padding:0">CarAudioSettings.java</code>)</h3>
-    <pre><code>GROUP_ID_MEDIA = CoreAudioHelper.getVolumeGroupIdForAudioAttributes(mediaAttributes) - 1;
-GROUP_ID_RING  = CoreAudioHelper.getVolumeGroupIdForAudioAttributes(ringAttributes) - 1;
-GROUP_ID_CALL  = CoreAudioHelper.getVolumeGroupIdForAudioAttributes(callAttributes) - 1;
-
-// in getStoredVolumeGainIndexForUser / storeVolumeGainIndexForUser /
+    <pre><code>// in getStoredVolumeGainIndexForUser / storeVolumeGainIndexForUser /
 // storeVolumeGroupMuteForUser / getVolumeGroupMuteForUser:
 if ((groupId == GROUP_ID_MEDIA) || (groupId == GROUP_ID_RING) || (groupId == GROUP_ID_CALL)) {
     // Settings.Global.getInt/putInt(...) instead of per-user Settings.System
+}
+
+boolean isPersistVolumeGroupMuteEnabled(int userId) {
+    int isPersistVolumeGroupMute = SystemProperties.getInt("ro.config.isPersistVolumeGroupMute", -1);
+    if (isPersistVolumeGroupMute != -1) return isPersistVolumeGroupMute != 0;
+    return getSecureIntForUser(CarSettings.Secure.KEY_AUDIO_PERSIST_VOLUME_GROUP_MUTE_STATES, 0, userId) == 1;
 }</code></pre>
-    <p>No RRO booleans, no new Settings keys — reuses the existing key scheme, just routes MEDIA/RING/CALL through <code>Settings.Global</code> (device-wide) instead of per-user <code>Settings.System</code>.</p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <p><code>CarAudioSettings.java</code> — four confirmed-present methods, all currently routed through <code>getIntForUser</code>/<code>putIntForUser</code> → <code>Settings.System</code>:</p>
-    <ul>
-      <li><code>getStoredVolumeGainIndexForUser(userId, zoneId, configId, groupId)</code></li>
-      <li><code>storeVolumeGainIndexForUser(userId, zoneId, configId, groupId, gainIndex)</code></li>
-      <li><code>storeVolumeGroupMuteForUser(userId, zoneId, configId, groupId, isMuted)</code></li>
-      <li><code>getVolumeGroupMuteForUser(userId, zoneId, configId, groupId)</code></li>
-    </ul>
-    <ol class="steps">
-      <li>Resolve <code>GROUP_ID_MEDIA</code>/<code>GROUP_ID_RING</code>/<code>GROUP_ID_CALL</code> once via <code>CoreAudioHelper.getVolumeGroupIdForAudioAttributes(...)</code>.</li>
-      <li>In each of the 4 methods, branch: if <code>groupId</code> matches one of the three, read/write through <code>Settings.Global</code> instead of the per-user path. Otherwise, fall through to stock behavior unchanged.</li>
-      <li>
-        Add a sysprop override to <code>isPersistVolumeGroupMuteEnabled(userId)</code>:
-        <pre><code>int isPersistVolumeGroupMute = SystemProperties.getInt("ro.config.isPersistVolumeGroupMute", -1);
-if (isPersistVolumeGroupMute != -1) return isPersistVolumeGroupMute != 0;
-return getSecureIntForUser(CarSettings.Secure.KEY_AUDIO_PERSIST_VOLUME_GROUP_MUTE_STATES, 0, userId) == 1;</code></pre>
-        This sysprop feeds <a href="#step6">§6</a>'s reboot-persistence behavior, since Audio Off is implemented purely as MEDIA-group mute.
-      </li>
-    </ol>
-
-    <h3>Risk</h3>
-    <p>Low — additive branches in 4 already-small methods, no signature changes, no interaction with Google's new fade/activation-volume code.</p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Switch to a guest profile; confirm no phantom ring/phone volume bar appears.</li>
-      <li>Switch users mid-playback; confirm MEDIA volume doesn't spike to max during the transition.</li>
-      <li>Confirm groups other than MEDIA/RING/CALL still persist per-user as before.</li>
-      <li>Confirm <code>ro.config.isPersistVolumeGroupMute</code> correctly overrides the stock path when set, falls back when unset.</li>
-    </ul>
+    <p><strong>Change:</strong> <code>CarAudioSettings.java</code> — branch the 4 methods above on the 3 group IDs, and add the sysprop override (feeds item 6's reboot persistence).</p>
+    <p><strong>Verify:</strong> no phantom volume bar on guest switch; no max-volume spike on user switch mid-playback; other groups still persist per-user as before.</p>
   </div>
 
-  <!-- STEP 3 -->
-  <div class="section" id="step3">
-    <div class="section-header">
-      <span class="sec-pill add">§3 · Low risk</span>
-      <h2>OEM gain-callback wiring to the Alliance plugin</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <h3>What it is</h3>
-    <p>A14 runs gain events through <strong>two parallel paths</strong>:</p>
-    <ol>
-      <li><strong>AOSP's stock HAL-direct path</strong> — already fully present, unmodified, in <code>a17full</code>: <code>CarAudioService.setupHalAudioGainCallbackLocked()</code> registers <code>mCarAudioGainMonitor.registerAudioGainListener(mHalAudioGainCallback)</code> directly against the AudioControl HAL.</li>
-      <li><strong>A Nissan-added second path</strong>, through the standard AOSP <code>CarOemProxyService</code> / <code>OemCarAudioVolumeService.addAudioGainListener()</code> API — this API itself is confirmed present and unmodified in <code>a17full</code>. What's missing is Nissan's <em>use</em> of it for gain events.</li>
-    </ol>
+  <!-- ITEM 3 -->
+  <div class="section" id="item3">
+    <div class="section-header"><span class="sec-pill add">3 · Low risk</span><h2>OEM gain-callback wiring</h2></div>
     <p>
-      Vendor side (unaffected by this step, already present):
-      <code>vendor/alliance/services/car/audiocontrol/oemcaraudioservices/.../OemCarAudioVolumeServiceImpl.addAudioGainListener()</code>
-      → <code>VolumeInteractions.addAudioGainListener()</code>, which runs the plugin's own
-      <code>com.alliance.car.oem.audiogain.AudioGainMonitor</code> and re-dispatches through the standard
-      <code>OemCarAudioGainChangedListener</code> interface back into <code>CarAudioService</code>. Both
-      callbacks converge on <code>CarAudioZone.onAudioGainChanged(reasons, gains)</code>.
+      A second gain-event path alongside AOSP's stock HAL-direct one, through the standard
+      <code>CarOemProxyService</code>/<code>OemCarAudioVolumeService.addAudioGainListener()</code> API
+      (that API is already present, unmodified, in <code>a17full</code> — only Nissan's <em>use</em> of it
+      for gain events is missing). Both paths converge on <code>CarAudioZone.onAudioGainChanged()</code>.
     </p>
-
-    <h3><code style="background:transparent;border:none;color:inherit;padding:0">CarAudioGainCallbackHandler.java</code> — full content, read directly from <code style="background:transparent;border:none;color:inherit;padding:0">a14full</code></h3>
-    <pre><code>class CarAudioGainCallbackHandler {
-    static final String TAG = TAG_AUDIO + ".CarAudioGainCallbackHandler";
-    private static final int INVALID_INFO = -1;
-    @NonNull private final CarAudioService mCarAudioService;
-    private final CarVolumeInfoWrapper mCarVolumeInfoWrapper;
-    @NonNull private final SparseArray&lt;CarAudioZone&gt; mCarAudioZones;
-
-    @VisibleForTesting
-    CarAudioGainCallbackHandler(CarAudioService carAudioService,
-            CarVolumeInfoWrapper carVolumeInfoWrapper, SparseArray&lt;CarAudioZone&gt; carAudioZones) {
-        mCarAudioService = Objects.requireNonNull(carAudioService, ...);
-        mCarVolumeInfoWrapper = Objects.requireNonNull(carVolumeInfoWrapper, ...);
-        mCarAudioZones = Objects.requireNonNull(carAudioZones, ...);
-    }
-
-    public void reset() {
-        // TODO (b/224885748): handle specific logic on IAudioControl service died event
-    }
-
-    private final OemCarAudioGainChangedListener mOemCarAudioGainChangedListener =
-        new OemCarAudioGainChangedListener() {
-            @Override
-            public void onAudioGainChanged(List&lt;Integer&gt; halReasons,
-                    List&lt;OemCarAudioGainConfigInfo&gt; gains) {
-                // converts OemCarAudioGainConfigInfo -> CarAudioGainConfigInfo, then:
-                mCarAudioService.onAudioGainChanged(halReasons, carGainInfos);
-            }
-        };
-
-    void startListeningForAudioGainChanges() {
-        CarLocalServices.getService(CarOemProxyService.class)
-                .getCarOemAudioVolumeService()
-                .addAudioGainListener(mOemCarAudioGainChangedListener);
-    }
-
-    // Called from CarAudioService.onAudioGainChanged(); groups gains by zone, calls
-    // CarAudioZone.onAudioGainChanged(reasons, gains) per zone, collects CarVolumeGroupEvents,
-    // then mCarVolumeInfoWrapper.onVolumeGroupEvent(events).
-    void handleAudioGainChanged(List&lt;Integer&gt; reasons, List&lt;CarAudioGainConfigInfo&gt; gains) { ... }
-}</code></pre>
-    <p>
-      Full chain: OEM plugin → <code>OemCarAudioGainChangedListener.onAudioGainChanged()</code> → converts
-      to <code>CarAudioGainConfigInfo</code> → calls <code>CarAudioService.onAudioGainChanged(reasons, gains)</code>
-      → dispatches to <code>mCarAudioGainCallbackHandler.handleAudioGainChanged(...)</code> → groups by
-      zone → <code>CarAudioZone.onAudioGainChanged(...)</code> per zone → collects
-      <code>CarVolumeGroupEvent</code>s → <code>mCarVolumeInfoWrapper.onVolumeGroupEvent(events)</code>.
-    </p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><strong>Add</strong> <code>CarAudioGainCallbackHandler.java</code> (content above). Reuse the exact <code>new CarVolumeInfoWrapper(this)</code> pattern already used in <code>setupHalAudioGainCallbackLocked()</code>.</li>
-      <li><strong>Modify</strong> <code>CarAudioService.java</code>: add <code>setupOemAudioGainListener()</code>, activated once <code>onOemServiceReady()</code> fires and <code>proxy.isOemServiceEnabled()</code> is true — reuse the exact readiness gate already referenced for the focus/volume/ducking OEM service check.</li>
-      <li>Add an <code>onAudioGainChanged(List&lt;Integer&gt; reasons, List&lt;CarAudioGainConfigInfo&gt; gains)</code> entry point that forwards to <code>mCarAudioGainCallbackHandler.handleAudioGainChanged(...)</code>.</li>
-      <li><strong>No change needed</strong> to <code>CarAudioZone.onAudioGainChanged(...)</code> — both paths converge there already.</li>
-    </ul>
-
-    <h3>Risk</h3>
-    <p>Low — pure addition, no AOSP code to reconcile against, since Google never touched this area in A15-A17.</p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li><code>adb logcat</code> filtered on the Alliance plugin's gain-callback path; confirm events arrive via the OEM path, not just HAL-direct.</li>
-      <li>Confirm no duplicate/double-application of a single gain change.</li>
-      <li>Confirm the listener registers only after <code>onOemServiceReady()</code> — no crash/NPE if the OEM proxy service isn't ready yet.</li>
-    </ul>
+    <pre><code>void startListeningForAudioGainChanges() {
+    CarLocalServices.getService(CarOemProxyService.class)
+            .getCarOemAudioVolumeService()
+            .addAudioGainListener(mOemCarAudioGainChangedListener);
+}
+// mOemCarAudioGainChangedListener.onAudioGainChanged(halReasons, gains) converts types
+// and calls CarAudioService.onAudioGainChanged(halReasons, carGainInfos), which forwards
+// to CarAudioGainCallbackHandler.handleAudioGainChanged() -> per-zone dispatch.</code></pre>
+    <p><strong>Change:</strong> add <code>CarAudioGainCallbackHandler.java</code> (new class); add <code>setupOemAudioGainListener()</code> and an <code>onAudioGainChanged()</code> entry point to <code>CarAudioService.java</code>, gated on the existing OEM-service-ready check.</p>
+    <p><strong>Verify:</strong> gain events arrive via the OEM path, not just HAL-direct; no double-application of a single event.</p>
   </div>
 
-  <!-- STEP 4 -->
-  <div class="section" id="step4">
-    <div class="section-header">
-      <span class="sec-pill add">§4 · Low risk</span>
-      <h2><code style="background:transparent;border:none;color:inherit;padding:0">ZoneAudioPlaybackCallback</code> hardening — verify-then-port</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <h3>What it is</h3>
-    <p>
-      The two-tier <code>CarAudioPlaybackCallback</code> / <code>ZoneAudioPlaybackCallback</code> split
-      itself is <strong>stock upstream AOSP</strong>, already present unmodified in <code>a17full</code>.
-      Only the accumulated bugfixes on top of it are Nissan/Alliance-authored:
-    </p>
-    <ol>
-      <li>Null-<code>AudioDeviceInfo</code> guard.</li>
-      <li>Shutdown-state guard on <code>onPlaybackConfigChanged</code>.</li>
-      <li><strong>ANR/main-thread fix</strong> — the important one, detailed below.</li>
-    </ol>
-
-    <h3>The ANR fix — confirmed real, and precisely sourced</h3>
-    <p><code>git show 429afe45ba0</code> (<code>a14full</code>'s local Car repo), read in full:</p>
-    <pre><code>commit 429afe45ba06f8be2dea33d3a1cbc74de74a8cf9
-Author: Bassem Boubaker &lt;bassem.boubaker-extern@renault.com&gt;
-Date:   Wed Jul 8 12:03:13 2026 +0200
-
-    [AUDIO][AOSP_IMPR] fix: main thread ANR/reboot on native maps guidance after sleep-wake
-
-    [ISSUE Tracker] CCSEXT-241726, CCSEXT-242114
-    [DESC] Watchdog killed com.android.car (triggering a system reboot and loss of
-    active Google Maps guidance) because CarAudioPlaybackCallback was registered
-    with a null Handler, so AudioManager delivered onPlaybackConfigChanged() on
-    the main thread. That callback path can call into AudioManager
-    (getDeviceForPortId -> listAudioDevicePorts -> updateAudioPortCache), making a
-    synchronous native IPC to audioserver that can take several seconds under
-    load, stalling the main thread long enough for the car watchdog to kill it.
-
-    Thread 1 (main thread)
-            at android.media.AudioManager.updateAudioPortCache(AudioManager.java:7445)
-            - locked &lt;0x0c8e6714&gt; (a java.lang.Object)
-            at android.media.AudioManager.listAudioDevicePorts(AudioManager.java:7255)
-            at com.android.car.audio.CarAudioZone.findActiveAudioAttributesFromPlaybackConfigurations
-            at com.android.car.audio.ZoneAudioPlaybackCallback.startTimersForContextThatBecameInactiveLocked
-            at com.android.car.audio.ZoneAudioPlaybackCallback.onPlaybackConfigChanged
-            - locked &lt;0x09822bbd&gt; (a java.lang.Object)
-            at com.android.car.audio.CarAudioPlaybackCallback.onPlaybackConfigChanged
-
-    fix: register CarAudioPlaybackCallback on CarAudioService's dedicated worker
-    Handler instead of the main Looper, and narrow ZoneAudioPlaybackCallback's
-    lock scope so the AudioManager lookup is never made while mLock is held.</code></pre>
+  <!-- ITEM 4 -->
+  <div class="section" id="item4">
+    <div class="section-header"><span class="sec-pill add">4 · Low risk</span><h2>ANR fix on playback callback</h2></div>
     <div class="card critical">
       <p style="margin-bottom:0">
-        <strong>This is a real bug with a real symptom you'd recognize in the field</strong>: a full system
-        reboot, triggered by the watchdog killing <code>com.android.car</code> while Google Maps native
-        guidance is active, typically right after a sleep-wake cycle or a projection→native-navigation
-        switch. This exact signature (watchdog kill, main-thread stack trace through
-        <code>AudioManager.listAudioDevicePorts</code>) is diagnostic — flag loudly to whoever triages field
-        reboots.
+        Watchdog killed <code>com.android.car</code> (full reboot, loss of active Maps guidance) because
+        <code>CarAudioPlaybackCallback</code> was registered with a <code>null</code> Handler, so a
+        synchronous native IPC to audioserver ran on the main thread and stalled it long enough to trip the
+        watchdog. Confirmed present, unfixed, in both <code>a14full</code> and <code>a17full</code> today.
       </p>
     </div>
+    <pre><code>// CarAudioService.java
+-mAudioManager.registerAudioPlaybackCallback(mCarAudioPlaybackCallback, null);
++mAudioManager.registerAudioPlaybackCallback(mCarAudioPlaybackCallback, mHandler);
 
-    <h3>The actual patch (both files, complete)</h3>
-    <pre><code>--- a/service/src/com/android/car/audio/CarAudioService.java
-+++ b/service/src/com/android/car/audio/CarAudioService.java
-@@ private void setupAudioConfigurationCallbackLocked() {
-         mCarAudioPlaybackCallback =
-                 new CarAudioPlaybackCallback(mCarAudioZones, mClock, mKeyEventTimeoutMs);
--        mAudioManager.registerAudioPlaybackCallback(mCarAudioPlaybackCallback, null);
-+        mAudioManager.registerAudioPlaybackCallback(mCarAudioPlaybackCallback, mHandler);
-     }
-
---- a/service/src/com/android/car/audio/ZoneAudioPlaybackCallback.java
-+++ b/service/src/com/android/car/audio/ZoneAudioPlaybackCallback.java
-@@ onPlaybackConfigChanged(...) {
-+        List&lt;AudioPlaybackConfiguration&gt; newlyInactiveConfigurations;
-         synchronized (mLock) {
--            List&lt;AudioPlaybackConfiguration&gt; newlyInactiveConfigurations =
--                    getNewlyInactiveConfigurationsLocked(newActiveConfigs);
-+            newlyInactiveConfigurations = getNewlyInactiveConfigurationsLocked(newActiveConfigs);
-             mLastActiveConfigs.clear();
-             mLastActiveConfigs.putAll(newActiveConfigs);
--            startTimersForContextThatBecameInactiveLocked(newlyInactiveConfigurations);
-         }
-+        startTimersForContextThatBecameInactive(newlyInactiveConfigurations);
-     }
-
--    @GuardedBy("mLock")
--    private void startTimersForContextThatBecameInactiveLocked(
-+    private void startTimersForContextThatBecameInactive(
-             List&lt;AudioPlaybackConfiguration&gt; inactiveConfigs) {
-         List&lt;AudioAttributes&gt; activeAttributes = mCarAudioZone
-                 .findActiveAudioAttributesFromPlaybackConfigurations(inactiveConfigs);
--        for (int index = 0; index &lt; activeAttributes.size(); index++) {
--            mAudioAttributesStartTime.put(activeAttributes.get(index), mClock.uptimeMillis());
-+        synchronized (mLock) {
-+            for (int index = 0; index &lt; activeAttributes.size(); index++) {
-+                mAudioAttributesStartTime.put(activeAttributes.get(index), mClock.uptimeMillis());
-+            }
-         }
-     }</code></pre>
+// ZoneAudioPlaybackCallback.java — snapshot before unlocking, run the AudioManager
+// call fully unlocked, only lock briefly for the final map mutation:
+List&lt;AudioPlaybackConfiguration&gt; newlyInactiveConfigurations;
+synchronized (mLock) {
+    newlyInactiveConfigurations = getNewlyInactiveConfigurationsLocked(newActiveConfigs);
+    mLastActiveConfigs.clear();
+    mLastActiveConfigs.putAll(newActiveConfigs);
+}
+startTimersForContextThatBecameInactive(newlyInactiveConfigurations); // no longer @GuardedBy</code></pre>
     <p>
-      The shape is exactly what you'd want: cheap in-memory mutation stays under <code>mLock</code>; the
-      result is captured into a local variable <em>before</em> releasing the lock; the
-      <code>AudioManager</code>-touching call runs <strong>fully unlocked</strong>; only the final
-      <code>put()</code> loop re-acquires <code>mLock</code> briefly.
+      <strong>Source note:</strong> the fix commit (<code>429afe45ba0</code>) is <strong>not</strong> on
+      Nissan's <code>nissan_u_ccs2_release</code> branch — it exists only on a sibling
+      <code>alliance_u_release</code> branch family. Confirm that branch is authoritative before pulling
+      the fix from it.
     </p>
-
-    <h3>Important: this fix is not on <code style="background:transparent;border:none;color:inherit;padding:0">nissan_u_ccs2_release</code> — a genuine cross-branch gap</h3>
-    <p>
-      <code>git merge-base --is-ancestor 429afe45ba0 HEAD</code> returns <strong>false</strong>.
-      <code>git branch -a --contains 429afe45ba0</code> shows it only on a sibling branch family:
-      <code>alliance_u_26w30_260720</code>/<code>260722</code>/<code>260724</code> and
-      <code>alliance_u_release</code>. This is not a reconstruction artifact — it's a real fix that landed
-      on the shared Alliance branch and <strong>never got merged into the Nissan branch at all</strong>, in
-      A14 or A17.
-    </p>
-
-    <h3>Confirmed state of <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code> — has the same bug, unfixed</h3>
-    <ul>
-      <li><code>CarAudioService.java:2479</code> still calls <code>registerAudioPlaybackCallback(mCarAudioPlaybackCallback, null)</code>.</li>
-      <li><code>ZoneAudioPlaybackCallback.java:68-93</code> still calls the lock-suffixed method inside <code>synchronized (mLock)</code>, with the synchronous native-IPC call still made while holding the lock.</li>
-    </ul>
-    <p><strong>Fix 1 (null-guard)</strong> — likely not reproducible as-is: <code>getAudioDeviceAddressFromConfig()</code> already re-reads the device once, deriving both the check and the address from the same loop variable. Re-test the original NPE repro before porting.</p>
-    <p><strong>Fix 2 (shutdown guard)</strong> — not yet checked; needs Step 0's exact original ticket to test against.</p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><code>CarAudioService.java</code>: one-line change to pass <code>mHandler</code> instead of <code>null</code>.</li>
-      <li><code>ZoneAudioPlaybackCallback.java</code>: apply the exact restructuring above.</li>
-      <li>Fixes 1 and 2: port only if testing confirms they're still reproducible.</li>
-    </ul>
-
-    <h3>Risk</h3>
-    <p>Low mechanically, but a real concurrency correctness fix — test carefully. Preserve the snapshot-before-unlock ordering exactly.</p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Reproduce the original trigger: active native Maps guidance, sleep-wake cycle or projection→native-nav switch, under load. Confirm no watchdog kill/reboot.</li>
-      <li>Confirm callbacks are no longer observed running with <code>mLock</code> held during the <code>AudioManager</code> call.</li>
-      <li>Re-test the null-guard and shutdown-guard repro steps; only port if still reproducible.</li>
-      <li>Confirm no regression to volume-key routing / "still active" timeout behavior.</li>
-    </ul>
+    <p><strong>Verify:</strong> reproduce sleep-wake + native Maps guidance under load; confirm no watchdog kill/reboot, and no lock held during the <code>AudioManager</code> call.</p>
   </div>
 
-  <!-- STEP 5 -->
-  <div class="section" id="step5">
-    <div class="section-header">
-      <span class="sec-pill add">§5 · Low risk</span>
-      <h2>BT voice-call double-focus-request block</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <h3>What it is</h3>
-    <p>
-      <code>CarAudioFocus</code>'s focus-request evaluation path rejects <code>AUDIOFOCUS_REQUEST</code> for
-      <code>USAGE_VOICE_COMMUNICATION</code> originating from the Bluetooth package, to avoid double focus
-      requests for voice calls. Cherry-picked in the A14 fork from a Nissan A12 change, ticket
-      <code>C2BST-26777</code>. Found incidentally while investigating Audio Off — not one of the originally
-      requested features, but worth carrying forward since it fixes a real double-request bug.
-    </p>
-
-    <h3>Exact source, read directly from <code style="background:transparent;border:none;color:inherit;padding:0">a14full</code></h3>
+  <!-- ITEM 5 -->
+  <div class="section" id="item5">
+    <div class="section-header"><span class="sec-pill add">5 · Low risk</span><h2>BT voice-call duplicate-focus-request block</h2></div>
+    <p>Rejects <code>AUDIOFOCUS_REQUEST</code> for <code>USAGE_VOICE_COMMUNICATION</code> from the Bluetooth package, working around a known AOSP Bluetooth-stack double-request bug (focus is already handled by <code>com.android.server.telecom</code>).</p>
     <pre><code>private static final String BT_PACKAGE = "com.android.bluetooth";
 ...
-/**
- * Fixed (b/C2BST-26777): Prevent request audio focus for voice call from BT package
- * Added: Reject request audio focus for USAGE_VOICE_COMMUNICATION from com.android.bluetooth
- * Reason: Cherry-pick from Nissan A12 commit
- * http://gerritaivi.lge.com/c/platform/vendor/alliance/services/car/audiocontrol/+/39383
- */
 if (afi.getPackageName().equals(BT_PACKAGE)
         &amp;&amp; afi.getAttributes().getUsage() == AudioAttributes.USAGE_VOICE_COMMUNICATION) {
-    // https://android-review.googlesource.com/c/platform/packages/apps/Bluetooth/+/676254
-    // introduced a double request of focus for voice call in automotive products.
-    // focus request is already handled by com.android.server.telecom.
-    // This WA is intended to be removed until @todo (b/XXX) is solved
     return AudioManager.AUDIOFOCUS_REQUEST_FAILED;
 }</code></pre>
-    <p>
-      This sits right at the top of <code>evaluateFocusRequestLocked(AudioFocusInfo afi)</code>, before any
-      normal focus-arbitration logic — a hard early return. The comment documents the reason precisely: a
-      known AOSP Bluetooth-stack change introduced a double focus request for BT voice calls in automotive
-      builds, and this is a workaround pending a real upstream fix. Worth checking whether that AOSP
-      Bluetooth-side bug is still present in the A17-era Bluetooth stack — but porting as-is is the safe
-      default.
-    </p>
-
-    <h3>Confirmed integration point in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <p>
-      <code>CarAudioFocus.java:243</code> — <code>evaluateFocusRequestLocked(AudioFocusInfo afi)</code>
-      still exists under this name, confirmed by direct read. No BT-package guard present anywhere today.
-      Note A17's broader <code>evaluateRequest()</code> now takes <code>int requestedUsage</code> instead of
-      <code>@AudioContext int</code> — read the whole request-evaluation chain first (multiple overloads
-      exist) before picking the insertion point.
-    </p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <p>
-      <code>CarAudioFocus.java</code> — add the same BT-package + <code>USAGE_VOICE_COMMUNICATION</code>
-      rejection guard at the equivalent point. Preserve the original ticket reference (<code>C2BST-26777</code>)
-      in a short comment.
-    </p>
-
-    <h3>Risk</h3>
-    <p>Low — small, isolated, no dependency on other steps, no known interaction with Google's fade-manager dispatch.</p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Place a BT-initiated voice call; confirm only one focus request is granted/dispatched.</li>
-      <li>Place a non-BT <code>USAGE_VOICE_COMMUNICATION</code> request; confirm it's <strong>not</strong> affected.</li>
-    </ul>
+    <p><strong>Change:</strong> <code>CarAudioFocus.java</code> — add this guard at the top of the current focus-request evaluation method (A17's overload takes <code>int requestedUsage</code>).</p>
+    <p><strong>Verify:</strong> a BT-initiated voice call gets exactly one granted focus request; non-BT voice-communication requests are unaffected.</p>
   </div>
 
-  <!-- STEP 6 -->
-  <div class="section" id="step6">
-    <div class="section-header">
-      <span class="sec-pill risk">§6 · High risk — do late</span>
-      <h2>Audio Off mode + master-mute callback conflation</h2>
-      <span class="depends">Depends on §0, §2</span>
-    </div>
-    <div class="card major">
-      <p style="margin-bottom:0">
-        <strong>Revision note:</strong> the content below was corrected after direct, on-disk verification
-        against the currently-checked-out <code>a14full</code> tree (not <code>git show</code>
-        reconstruction). The prior draft included a <code>SettingsObserver.java</code> trigger and
-        per-<code>FocusEntry</code> mute tracking, both based on a research agent's reconstruction of
-        commits reachable via <code>git show</code> on refs not actually checked out. Reading the real
-        files on disk shows a <strong>simpler, already-implemented mechanism</strong> with neither of those
-        pieces.
-      </p>
-    </div>
-
-    <h3>What it is</h3>
+  <!-- ITEM 6 -->
+  <div class="section" id="item6">
+    <div class="section-header"><span class="sec-pill risk">6 · Do late</span><h2>Audio Off mode</h2></div>
     <p>
-      "Audio Off" is implemented as a <strong>MEDIA-volume-group-mute proxy</strong> — no independent mode
-      flag, state machine, or dedicated Settings observer. Some other component (Nissan HMI app or physical
-      switch) calls the ordinary public <code>CarAudioManager.setVolumeGroupMute(zoneId, groupId, mute, flags)</code>
-      API against the primary zone's MEDIA group. <code>CarAudioService</code>'s existing
-      <code>handleMuteChanged()</code> special-cases that group to additionally block/unblock entertainment
-      focus, which is what turns a plain group mute into "Audio Off" behavior.
+      Implemented as a <strong>MEDIA-volume-group-mute proxy</strong> — no independent mode flag or
+      Settings observer. Whatever mutes the primary zone's MEDIA group (an app calling the standard
+      <code>CarAudioManager.setVolumeGroupMute()</code>, an HMI control) flows through the ordinary mute
+      path; <code>handleMuteChanged()</code>'s media-group branch is the entire hook.
     </p>
-
-    <h3><code style="background:transparent;border:none;color:inherit;padding:0">CarAudioService.handleMuteChanged()</code> — read directly from <code style="background:transparent;border:none;color:inherit;padding:0">a14full</code></h3>
-    <pre><code>private void handleMuteChanged(int zoneId, int groupId, int flags) {
-    if (!mUseCarVolumeGroupMuting) {
-        return;
-    }
-
-    // Handle AudioOFF change state
-    if(groupId == getVolumeGroupIdForUsage(PRIMARY_AUDIO_ZONE,USAGE_MEDIA))
-    {
+    <pre><code>// CarAudioService.handleMuteChanged()
+private void handleMuteChanged(int zoneId, int groupId, int flags) {
+    if (!mUseCarVolumeGroupMuting) { return; }
+    if (groupId == getVolumeGroupIdForUsage(PRIMARY_AUDIO_ZONE, USAGE_MEDIA)) {
         CarVolumeGroup group_media = getCarVolumeGroupLocked(zoneId, groupId);
         mFocusHandler.applyUserMuteAudioFocusPolicy(zoneId, group_media.isMuted());
     }
-
     callbackGroupMuteChanged(zoneId, groupId, flags);
-    callbackMasterMuteChange(zoneId, flags);
+    callbackMasterMuteChange(zoneId, flags);   // <- master-mute callback conflation
     mCarVolumeGroupMuting.carMuteChanged();
-}</code></pre>
-    <p>
-      There is <strong>no separate trigger file</strong> — <code>handleMuteChanged</code> is called from the
-      existing mute/volume-change call sites already in <code>CarAudioService.java</code> (the same places
-      A17 stock already calls it from). Confirmed current A17-stock form, for comparison:
-    </p>
-    <pre><code>private void handleMuteChanged(int zoneId, int groupId, int flags) {
-    if (!useCarVolumeGroupMuting()) {
-        return;
-    }
-    callbackGroupMuteChanged(zoneId, groupId, flags);
-    mCarVolumeGroupMuting.carMuteChanged();
-}</code></pre>
-    <p>
-      <code>callbackGroupMuteChanged()</code> only calls <code>onGroupMuteChange(...)</code>;
-      <code>callbackMasterMuteChange()</code> is called <strong>only</strong> from <code>setMasterMute()</code>
-      today. The Nissan delta is exactly the two things visible above: the media-group
-      <code>applyUserMuteAudioFocusPolicy</code> call, and the extra <code>callbackMasterMuteChange</code>
-      call (the "master-mute callback conflation").
-    </p>
+}
 
-    <h3>Fan-out: <code style="background:transparent;border:none;color:inherit;padding:0">CarZonesAudioFocus.applyUserMuteAudioFocusPolicy()</code></h3>
-    <pre><code>void applyUserMuteAudioFocusPolicy(int zoneId, boolean muted) {
-    CarAudioFocus focus = mFocusZones.get(zoneId);
-    if (focus != null) {
-        focus.applyUserMuteAudioFocusPolicy(muted);
-    }
-}</code></pre>
+// CarAudioFocus.java — a single per-zone boolean, not per-FocusEntry state
+private boolean mUserMuted = false;
 
-    <h3>Enforcement: <code style="background:transparent;border:none;color:inherit;padding:0">CarAudioFocus.java</code> — read directly, in full</h3>
-    <ul>
-      <li><code>private boolean mUserMuted = false;</code> — a single per-zone boolean, <strong>not</strong> per-<code>FocusEntry</code> state.</li>
-    </ul>
-    <pre><code>void applyUserMuteAudioFocusPolicy(boolean userMuted) {
-    Slogf.i(TAG, "applyUserMuteAudioFocusPolicy muted=" + userMuted);
+void applyUserMuteAudioFocusPolicy(boolean userMuted) {
     synchronized (mLock) {
         mUserMuted = userMuted;
-        if (userMuted) {
-            return;
-        }
-        Slogf.i(TAG, "applyUserMuteAudioFocusPolicy unmute &amp; unblocking user mutable losers");
+        if (userMuted) { return; }
         removeBlockerAndRestoreUnblockedFocusLosersLocked(null);
     }
-}</code></pre>
-    <p>Turning on just sets the flag and returns (existing entertainment holders keep playing — only future regain is affected). Turning off re-runs the blocker-restoration sweep, passing <code>null</code> as the "dead entry" since nothing actually died.</p>
-    <ul>
-      <li><code>isEntertainmentSource(FocusEntry entry)</code> — null-safe; true iff usage is <code>USAGE_MEDIA</code> or <code>USAGE_GAME</code>.</li>
-    </ul>
-    <pre><code>if (deadEntry != null) {
-    entry.removeBlocker(deadEntry);
 }
-if (entry.isUnblocked() &amp;&amp; !(mUserMuted &amp;&amp; isEntertainmentSource(entry))) {
-    // ... restore: it.remove(); entry.setDucked(false); mFocusHolders.put(...);
-    // dispatchFocusGainedLocked(entry.getAudioFocusInfo());
-}</code></pre>
 
-    <h3><code style="background:transparent;border:none;color:inherit;padding:0">FocusInteraction.AUDIO_OFF_MODE_ENABLED</code> — confirmed dead code</h3>
-    <p><code>FocusInteraction.java:78</code> declares this constant but it's confirmed never referenced anywhere else. Leftover from an earlier iteration. <strong>Do not port.</strong></p>
-
-    <h3>What was in the previous draft and is now removed</h3>
-    <ul>
-      <li><s><code>SettingsObserver.java</code> watching <code>Settings.Global</code> key <code>CAR_AUDIO_OFF_MODE_ENABLED</code></s> — no such file exists; if a real external trigger exists it's outside <code>car/audio/</code> and just calls the standard <code>setVolumeGroupMute</code> API.</li>
-      <li><s><code>FocusEntry.isMuted()</code>/<code>setMuted(boolean)</code>, per-entry mute tracking</s> — not present; the real mechanism uses a single <code>mUserMuted</code> boolean on <code>CarAudioFocus</code>.</li>
-    </ul>
-
-    <h3>New integration risk not present in A14</h3>
-    <p>
-      A17's <code>CarAudioFocus</code> already has Google's own fade-manager dispatch
-      (<code>sendFocusLossLocked(..., shouldFade, transientFadeManagerConfig)</code>), currently
-      <strong>inert</strong> since <code>audioUseFadeManagerConfiguration=false</code>. The Audio-Off
-      restoration guard must compose with this, not fight it, if fade is ever turned on later — documented
-      risk, not a blocker.
-    </p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><strong>Modify</strong> <code>CarAudioService.java</code>: <code>handleMuteChanged()</code> — add the media-group check and the extra <code>callbackMasterMuteChange</code> call.</li>
-      <li><strong>Modify</strong> <code>CarZonesAudioFocus.java</code>: add <code>applyUserMuteAudioFocusPolicy(zoneId, muted)</code>.</li>
-      <li><strong>Modify</strong> <code>CarAudioFocus.java</code>: add <code>mUserMuted</code>, <code>isEntertainmentSource()</code>, <code>applyUserMuteAudioFocusPolicy()</code>; modify the restoration guard.</li>
-      <li><strong>No change</strong> to <code>FocusEntry.java</code> or <code>FocusInteraction.java</code>.</li>
-    </ul>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Call <code>CarAudioManager.setVolumeGroupMute()</code> on the primary zone's MEDIA group; confirm it mutes.</li>
-      <li>With that mute active, confirm a losing entertainment source does <strong>not</strong> auto-resume once unblocked.</li>
-      <li>Unmute; confirm previously-blocked entertainment focus is restored.</li>
-      <li>Confirm <code>ICarVolumeCallback.onMasterMuteChanged</code> fires on MEDIA-group mute specifically.</li>
-      <li>Reboot with the group muted; confirm persistence per §2's sysprop/secure-setting logic.</li>
-      <li>Confirm non-entertainment sources are unaffected.</li>
-    </ul>
+// restoration guard: entertainment focus losers stay parked while muted
+if (entry.isUnblocked() &amp;&amp; !(mUserMuted &amp;&amp; isEntertainmentSource(entry))) { /* restore */ }</code></pre>
+    <p><strong>Change:</strong> <code>CarAudioService.java</code> (<code>handleMuteChanged</code>), <code>CarZonesAudioFocus.java</code> (new <code>applyUserMuteAudioFocusPolicy</code> fan-out), <code>CarAudioFocus.java</code> (<code>mUserMuted</code>, <code>isEntertainmentSource()</code>, the guard above). No change to <code>FocusEntry.java</code>.</p>
+    <blockquote>A17's fade-manager focus-loss dispatch is currently inert (<code>audioUseFadeManagerConfiguration=false</code>); if it's ever enabled later, re-test this guard composes with it correctly.</blockquote>
+    <p><strong>Verify:</strong> muting MEDIA blocks entertainment auto-resume; unmuting restores it; <code>onMasterMuteChanged</code> fires on MEDIA-group mute specifically; persists across reboot per item 2's sysprop.</p>
   </div>
 
-  <!-- STEP 7 -->
-  <div class="section" id="step7">
-    <div class="section-header">
-      <span class="sec-pill">§7 · Final gate</span>
-      <h2>Full regression pass</h2>
-      <span class="depends">Depends on §0-6, §8-10</span>
-    </div>
-    <blockquote>
-      This step was originally the final gate after Steps 1-6. Steps 8-10 were added later and should be
-      implemented <strong>before</strong> this regression pass runs, not after — treat this as the true
-      final step regardless of file-name ordering.
-    </blockquote>
-    <h3>Goal</h3>
-    <p>Confirm all 9 features implemented in Steps 1-6 and 8-10 compose correctly with each other and with the AOSP A17 baseline, and that the Nissan device config layer now drives real behavior instead of silently falling back to stock AOSP.</p>
+  <!-- ITEM 7 -->
+  <div class="section" id="item7">
+    <div class="section-header"><span class="sec-pill warn">7 · Low-Med risk</span><h2>Gain-callback context enrichment</h2></div>
+    <p><strong>7a — NAV_DUCKING exposure to the OEM plugin.</strong> Raw HAL-reason state (not the software attenuation index, which user volume keys reset), threaded from the HAL callback through to the Alliance plugin's volume-request API:</p>
+    <pre><code>// CarAudioZoneConfig.java: mLastHalReasons tracked unconditionally per HAL callback
+boolean isNavDuckingActive() { return mLastHalReasons.contains(Reasons.NAV_DUCKING); }
 
-    <h3>Build and boot</h3>
-    <ul>
-      <li>Rebuild both Nissan device targets: <code>aivi2_n_full</code> and <code>aasp_n</code>.</li>
-      <li>Boot each; confirm no boot loop, no crash in <code>com.android.car</code> / <code>system_server</code>.</li>
-    </ul>
-
-    <h3>System-level checks</h3>
-    <ul>
-      <li><code>dumpsys car_service</code> (audio section): no config-parse errors; zones/groups/policies match the existing v3 XML.</li>
-      <li><code>dumpsys audio</code>: no unexpected policy registration failures across the 4 split <code>AudioPolicy</code> instances.</li>
-      <li>Confirm the RRO overlay flags already <code>true</code> now drive the newly-added Nissan logic instead of stock fallback.</li>
-    </ul>
-
-    <h3>Cross-feature composition checks</h3>
-    <ul>
-      <li>MaxVolumeStartup (§1) + Settings.Global persistence (§2): fresh boot clamps correctly; later boot with persisted value doesn't re-clamp.</li>
-      <li>Audio Off (§6) + master-mute callback: toggling one doesn't interfere with the other.</li>
-      <li>OEM gain callback (§3) doesn't double-apply gain changes alongside the HAL-direct path.</li>
-      <li><code>ZoneAudioPlaybackCallback</code> hardening (§4) holds up under the load Audio Off's focus-loser restoration (§6) generates.</li>
-    </ul>
-    <div class="card major">
-      <p style="margin-bottom:0">
-        <strong>Steps 8, 9, and 10 all touch the same gain-callback code paths, plus §6's mute path — test
-        them as one cluster, not independently:</strong> suspend/wake (§9) while a shared device port exists
-        between a media and non-media group (§8); forced-mute/cyber block (§10) while NAV_DUCKING is active
-        (§8); confirm none of §8-10's changes broke Audio Off's media-group mute detection (§6).
-      </p>
-    </div>
-
-    <h3>Standard regression</h3>
-    <ul>
-      <li>Volume keys across all zones.</li>
-      <li>Focus arbitration including the BT voice-call guard (§5).</li>
-      <li>Ducking behavior, including NAV_DUCKING exposure to the OEM plugin (§8).</li>
-      <li>ANC — unrelated, confirm no regression.</li>
-      <li>Guest profile switch and general multi-user switching (§2).</li>
-      <li>Suspend/hibernation/wake cycles generally (§9) — not just volume-limit behavior, but boot time and other power-state-dependent behavior.</li>
-      <li>Explicit volume-set requests under normal conditions (§10) — no measurable latency or false-positive blocking.</li>
-    </ul>
-
-    <h3>Sign-off</h3>
-    <p>Once all of the above pass on both <code>aivi2_n_full</code> and <code>aasp_n</code>, this migration is complete. Re-check the "Out of scope" list in the index only if something breaks in an area it claims is unaffected stock AOSP behavior.</p>
-  </div>
-
-  <!-- STEP 8 -->
-  <div class="section" id="step8">
-    <div class="section-header">
-      <span class="sec-pill warn">§8 · Low-Med risk</span>
-      <h2>Gain-callback context enrichment</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <div class="card new">
-      <p style="margin-bottom:0">
-        <strong>Provenance:</strong> unlike Steps 1-7, this feature was not found by the earlier A14-fork
-        research — it surfaced from <code>diffs_nissan_vs_google/packages_services_Car.diff</code>, a real
-        <code>git diff</code> between Nissan's actual branch and Google's actual <code>android14-release</code>
-        tag. Confirmed missing from <code>a17full</code> by direct grep (zero hits for
-        <code>isNavDuckingActive</code>, <code>isVolumeGroupActive</code>, <code>setNavDucking</code>,
-        <code>isGroupActive</code>).
-      </p>
-    </div>
-
-    <h3>8a. NAV_DUCKING raw-HAL-state exposure to the OEM plugin</h3>
-    <p>
-      A read-only chain exposing whether the AudioControl HAL currently reports an active
-      <code>NAV_DUCKING</code> reason for a zone — distinct from the software attenuation index (reset by
-      user volume key presses). Confirmed doc comment from <code>CarAudioZone.java</code>:
-    </p>
-    <pre><code>/**
- * Returns true if the current zone configuration has an active
- * NAV_DUCKING reason from the Audio HAL. This reflects raw HAL gain reason state and
- * is not cleared by user volume key presses (unlike the software attenuation index).
- */
-boolean isNavDuckingActive() {
-    return getCurrentCarAudioZoneConfig().isNavDuckingActive();
-}</code></pre>
-    <p>Chain, confirmed via diff:</p>
-    <ul>
-      <li><code>CarAudioZoneConfig.java</code>: new field <code>mLastHalReasons</code>, updated unconditionally at the top of <code>onAudioGainChanged()</code>; new <code>isNavDuckingActive()</code>.</li>
-      <li><code>CarAudioZone.java</code>: delegates to the current zone config.</li>
-      <li><code>CarAudioService.java</code>: <code>isNavDuckingActiveForZone(int zoneId)</code>.</li>
-      <li><code>CarVolumeInfoWrapper.java</code>: pass-through.</li>
-      <li>
-        <code>CarAudioPolicyVolumeCallback.java</code>: threads it into the OEM volume-request builder:
-        <pre><code>boolean navDucking = mCarVolumeInfo.isNavDuckingActiveForZone(zoneId);
-return new OemCarAudioVolumeRequest.Builder(zoneId)
-        .setCarVolumeGroupInfos(infos)
-        .setActivePlaybackAttributes(activeAudioAttributes)
-        .setCallState(mCarVolumeInfo.getCallStateForZone(zoneId))
-        .setNavDucking(navDucking)
-        .build();</code></pre>
-      </li>
-      <li><code>car-lib/.../oem/OemCarAudioVolumeRequest.java</code>: full public API addition — field, getter, builder method, equals/hashCode/parcel plumbing. <strong>This is a public car-lib API surface change</strong> the Alliance OEM plugin can consume — check whether the plugin actually reads <code>isNavDucking()</code> today.</li>
-    </ul>
-
-    <h3>8b. Shared-device-port gain-active disambiguation</h3>
-    <p>
-      Fixes a real correctness bug: several volume groups can share one physical device port (traffic
-      announcement and media both on <code>BUS00_MEDIA</code>). A gain-change report for that port
-      previously risked being adopted by whichever group's code ran last. Confirmed comment:
-    </p>
-    <pre><code>/**
- * @param volumeInfo used to resolve whether a volume group sharing a device port with
- *                   another group is the one actually active on it ...
- *                   production callers always pass a non-null instance.
- */</code></pre>
-    <ul>
-      <li><code>CarAudioService.java</code>: <code>isVolumeGroupActive(zoneId, groupId)</code> — reads cached playback activity (not live), safe from a HAL callback.</li>
-      <li>
-        <code>CarAudioZoneConfig.onAudioGainChanged()</code>: computes <code>isGroupActive</code> per group, passes it to <code>CarVolumeGroup.onAudioGainChanged(halReasons, gainInfo, isGroupActive)</code>:
-        <pre><code>if (CarAudioGainMonitor.shouldUpdateVolumeIndex(halReasons)
+// CarAudioPolicyVolumeCallback.java
+boolean navDucking = mCarVolumeInfo.isNavDuckingActiveForZone(zoneId);
+new OemCarAudioVolumeRequest.Builder(zoneId)... .setNavDucking(navDucking).build();</code></pre>
+    <p><strong>7b — shared-device-port gain-active disambiguation.</strong> Two volume groups can share one physical port (e.g. traffic announcement + media on the same bus). A gain report for that port must only update the group actually rendering:</p>
+    <pre><code>// CarVolumeGroup.onAudioGainChanged() gains an isGroupActive parameter
+if (CarAudioGainMonitor.shouldUpdateVolumeIndex(halReasons)
         &amp;&amp; isGroupActive
         &amp;&amp; (halIndex != getRestrictedGainForIndexLocked(mCurrentGainIndex))) {
     mCurrentGainIndex = halIndex;
-    eventType |= EVENT_TYPE_VOLUME_GAIN_INDEX_CHANGED;
 }</code></pre>
-      </li>
-      <li><code>CarAudioGainMonitor.java</code>: threads <code>mCarVolumeInfoWrapper</code> through the call into <code>CarAudioZone.onAudioGainChanged</code>.</li>
-    </ul>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><code>CarAudioZoneConfig.java</code>: <code>mLastHalReasons</code> + <code>isNavDuckingActive()</code>; <code>onAudioGainChanged()</code> gains <code>@Nullable CarVolumeInfoWrapper</code>.</li>
-      <li><code>CarAudioZone.java</code>: <code>isNavDuckingActive()</code>; thread <code>volumeInfo</code> through.</li>
-      <li><code>CarVolumeGroup.java</code>: <code>onAudioGainChanged()</code> gains <code>isGroupActive</code>.</li>
-      <li><code>CarAudioGainMonitor.java</code>: thread <code>mCarVolumeInfoWrapper</code> through.</li>
-      <li><code>CarAudioService.java</code>: <code>isVolumeGroupActive()</code>, <code>isNavDuckingActiveForZone()</code>.</li>
-      <li><code>CarVolumeInfoWrapper.java</code>: matching pass-throughs.</li>
-      <li><code>CarAudioPolicyVolumeCallback.java</code>: read + call <code>setNavDucking()</code>.</li>
-      <li><code>car-lib/.../OemCarAudioVolumeRequest.java</code>: full API addition — check API-lint/current.txt impact.</li>
-    </ul>
-    <blockquote>
-      §3's <code>CarAudioGainCallbackHandler.java</code> also calls into this chain — when implementing §3,
-      thread <code>CarVolumeInfoWrapper</code> through the OEM path consistently too, or 8b's
-      disambiguation only works for one of the two entry points.
-    </blockquote>
-
-    <h3>Risk</h3>
-    <p>Low-medium. 8a is purely additive. 8b changes real gain-application logic in a method already touched by §6's callers — test carefully for zones without shared ports (should be a pure no-op there).</p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Trigger a gain change on a shared port; confirm only the actually-active group's index updates.</li>
-      <li>Confirm NAV_DUCKING reporting reflects raw HAL state, not cleared by volume key presses.</li>
-      <li>If the Alliance plugin consumes <code>isNavDucking()</code>, confirm its behavior with the flag now populated.</li>
-    </ul>
+    <p><strong>Change:</strong> <code>CarAudioZoneConfig.java</code>, <code>CarAudioZone.java</code>, <code>CarVolumeGroup.java</code>, <code>CarAudioGainMonitor.java</code>, <code>CarAudioService.java</code>, <code>CarVolumeInfoWrapper.java</code>, <code>CarAudioPolicyVolumeCallback.java</code>, and car-lib's <code>OemCarAudioVolumeRequest.java</code> (public API surface change — check API-lint impact). Implement alongside item 3 so the OEM gain path threads <code>CarVolumeInfoWrapper</code> too, or 7b only works for one entry point.</p>
+    <p><strong>Verify:</strong> shared-port gain change only updates the active group's index; NAV_DUCKING reporting reflects raw HAL state, not cleared by volume keys.</p>
   </div>
 
-  <!-- STEP 9 -->
-  <div class="section" id="step9">
-    <div class="section-header">
-      <span class="sec-pill warn">§9 · Low-Med risk</span>
-      <h2>Suspend-exit volume-limit scoping + power-state limit reset</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <div class="card new">
-      <p style="margin-bottom:0">
-        <strong>Provenance:</strong> same as §8 — found via the authoritative diff, not the earlier
-        research. Confirmed missing from <code>a17full</code>: zero hits for
-        <code>CarPowerManagementService</code>, <code>subscribePowerManagementService</code>,
-        <code>isSuspendReason</code>. <code>a17full</code> does have <code>CarAudioPowerListener.java</code>,
-        but it's unrelated — it listens to <code>ICarPowerPolicyListener</code>/<code>CarPowerPolicy</code>
-        (whether the AUDIO power <em>component</em> is enabled), not raw power <em>state</em> transitions.
-        No collision; this is a genuinely separate mechanism.
-      </p>
-    </div>
-
-    <h3>9a. <code style="background:transparent;border:none;color:inherit;padding:0">SUSPEND_EXIT_VOL_LIMITATION</code> scoped to media groups only</h3>
-    <p>
-      The HAL reports this reason on wake, targeting a specific bus ("HAL sets BUS00_MEDIA only"). Nissan's
-      fix prevents it being wrongly applied to non-media groups sharing the same bus:
-    </p>
-    <pre><code>boolean hasMediaUsage = getAllSupportedUsagesForAddress(gain.getDeviceAddress())
-        .contains(AudioAttributes.USAGE_MEDIA);
-...
-boolean shouldLimit = CarAudioGainMonitor.shouldLimitVolume(halReasons);
-// SUSPEND_EXIT_VOL_LIMITATION targets only media groups (HAL sets BUS00_MEDIA only).
-// Non-media groups sharing the same bus address must not inherit the media limit.
-if (shouldLimit &amp;&amp; CarAudioGainMonitor.isSuspendReason(halReasons) &amp;&amp; !hasMediaUsage) {
+  <!-- ITEM 8 -->
+  <div class="section" id="item8">
+    <div class="section-header"><span class="sec-pill warn">8 · Low-Med risk</span><h2>Suspend-exit volume limiting</h2></div>
+    <p><strong>8a.</strong> The HAL's <code>SUSPEND_EXIT_VOL_LIMITATION</code> reason targets one bus (media) — scope it so non-media groups sharing that bus don't inherit the limit, and clamp stale pre-suspend volume down to the HAL-reported ceiling:</p>
+    <pre><code>if (shouldLimit &amp;&amp; CarAudioGainMonitor.isSuspendReason(halReasons) &amp;&amp; !hasMediaUsage) {
     shouldLimit = false;
-}</code></pre>
-    <p>Plus an explicit clamp — if the suspend-exit HAL index is lower than the group's current cached index, snap down to it:</p>
-    <pre><code>if (CarAudioGainMonitor.isSuspendReason(halReasons)
-        &amp;&amp; hasMediaUsage
+}
+if (CarAudioGainMonitor.isSuspendReason(halReasons) &amp;&amp; hasMediaUsage
         &amp;&amp; (mCurrentGainIndex &gt; halIndex)) {
     mCurrentGainIndex = halIndex;
 }</code></pre>
-    <p>
-      <code>CarAudioGainMonitor.isSuspendReason(...)</code> exists in <code>a14full</code> but was already
-      independently folded into a lookup table in AOSP's own evolution by A17 — not itself a functional gap,
-      just re-add it as a small helper if it doesn't exist under a different name.
-    </p>
-
-    <h3>9b. Power-state listener — reset all volume-group limits on suspend/hibernation exit</h3>
-    <pre><code>private final ICarPowerStateListener mCarPowerStateListener =
-    new ICarPowerStateListener.Stub() {
-        @Override
-        public void onStateChanged(int state, long expirationTimeMs) {
-            CarPowerManagementService powerService =
-                    CarLocalServices.getService(CarPowerManagementService.class);
-            if (powerService == null) {
-                Slogf.w(TAG, "Cannot get CarPowerManagementService");
-                return;
-            }
-            handlePowerState(powerService.getPowerState());
-        }
-    };
-
-private void subscribePowerManagementService() {
-    CarPowerManagementService powerService =
-            CarLocalServices.getService(CarPowerManagementService.class);
-    if (powerService == null) { return; }
-    powerService.registerListener(mCarPowerStateListener);
-}
-
-private void handlePowerState(int powerState) {
+    <p><strong>8b.</strong> A broader safety net — reset every primary-zone group's limit state on suspend/hibernation exit:</p>
+    <pre><code>private void handlePowerState(int powerState) {
     CarVolumeGroup[] groups = getCarAudioZoneLocked(PRIMARY_AUDIO_ZONE).getCurrentVolumeGroups();
     switch (powerState) {
         case CarPowerManager.STATE_SUSPEND_EXIT:
         case CarPowerManager.STATE_HIBERNATION_EXIT:
-            for (int i = 0; i &lt; groups.length; i++) {
-                groups[i].resetLimitLocked();
-            }
+            for (int i = 0; i &lt; groups.length; i++) { groups[i].resetLimitLocked(); }
             break;
-        default:
-            break;
+        default: break;
     }
 }</code></pre>
-    <p>
-      Called once, alongside §3's <code>setupOemAudioGainListener()</code>, in <code>init()</code>.
-      <code>CarVolumeGroup.resetLimitLocked()</code> itself <strong>already exists in <code>a17full</code></strong>
-      as a general-purpose primitive — only the suspend/hibernation-exit trigger wiring is missing.
-    </p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><code>CarAudioGainMonitor.java</code>: confirm/re-add <code>isSuspendReason</code>-equivalent check.</li>
-      <li><code>CarVolumeGroup.java</code>: in <code>onAudioGainChanged()</code>, add the <code>hasMediaUsage</code> scoping guard and clamp — sits right next to §8's <code>isGroupActive</code> change in the same method, implement together.</li>
-      <li><code>CarAudioService.java</code>: add the listener, <code>subscribePowerManagementService()</code>, <code>handlePowerState()</code>; call from <code>init()</code> alongside §3.</li>
-    </ul>
-
-    <h3>Risk</h3>
-    <p>Low-medium. 9a touches the same method as §8 — implement together to avoid merge friction. 9b is additive with a narrow, well-defined trigger.</p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Suspend then wake; confirm media volume on a shared bus doesn't get stuck limited or too loud; non-media groups on the same bus are unaffected.</li>
-      <li>Confirm the reset fires specifically on <code>STATE_SUSPEND_EXIT</code>/<code>STATE_HIBERNATION_EXIT</code>, not other transitions.</li>
-      <li>Confirm no crash/NPE if <code>CarPowerManagementService</code> isn't available yet during <code>init()</code>.</li>
-    </ul>
+    <p><strong>Change:</strong> <code>CarVolumeGroup.java</code> (8a, same method as item 7 — implement together), <code>CarAudioService.java</code> (8b — new <code>ICarPowerStateListener</code>, registered in <code>init()</code> alongside item 3). <code>resetLimitLocked()</code> itself already exists in <code>a17full</code>; only the trigger wiring is missing. <code>a17full</code>'s existing <code>CarAudioPowerListener.java</code> is unrelated (power *policy*, not power *state*).</p>
+    <p><strong>Verify:</strong> suspend/wake doesn't leave media stuck limited or too loud; non-media groups on the shared bus unaffected; reset fires only on the two named states.</p>
   </div>
 
-  <!-- STEP 10 -->
-  <div class="section" id="step10">
-    <div class="section-header">
-      <span class="sec-pill add">§10 · Low risk</span>
-      <h2>Block volume-set requests during forced-mute/cyber conditions</h2>
-      <span class="depends">Depends on §0</span>
-    </div>
-    <div class="card critical">
-      <h3 style="margin-top:0">This corrects an earlier wrong conclusion</h3>
-      <p style="margin-bottom:0">
-        <span class="badge badge-wrong">Corrected</span> The index's original "out of scope" list said
-        cyber-mute needed <strong>no work</strong> — reasoning that <code>Reasons.FORCED_MASTER_MUTE</code>'s
-        HAL-reason handling is stock AOSP and already present. <strong>That part is still true</strong> —
-        but Nissan also wires that same check into <code>CarAudioService.setGroupVolume()</code>, so an
-        incoming <strong>explicit volume-set request</strong> is rejected outright while a blocking HAL
-        reason is active, not just gain values reported by the HAL. Confirmed missing from
-        <code>a17full</code>: zero hits for <code>mReasons</code>/<code>shouldBlockVolumeRequest</code> in
-        <code>CarAudioService.java</code> today.
-      </p>
-    </div>
-    <blockquote>
-      Found via the authoritative diff, not the earlier research — that research only checked whether the
-      string "cyber" appeared and whether the HAL-reason primitives existed (both true), but didn't check
-      whether <code>setGroupVolume()</code> itself respected them.
-    </blockquote>
+  <!-- ITEM 9 -->
+  <div class="section" id="item9">
+    <div class="section-header"><span class="sec-pill add">9 · Low risk</span><h2>Block volume-set requests during forced-mute</h2></div>
+    <p>
+      The HAL-reason primitive (<code>shouldBlockVolumeRequest</code>) is stock and already present, but
+      Nissan additionally wires it into <code>setGroupVolume()</code>, so an explicit volume-set request is
+      rejected outright while a forced-mute/TCU-mute/remote-mute HAL condition is active — the "cyber
+      attack" defensive scenario per the AIDL <code>Reasons.aidl</code> doc.
+    </p>
+    <pre><code>private List&lt;Integer&gt; mReasons = new ArrayList&lt;&gt;();  // kept in sync from both gain-callback entry points
 
-    <h3>What it is, confirmed via diff</h3>
-    <p><code>CarAudioService.java</code> gains a <code>mReasons</code> field, kept in sync from both existing gain-callback entry points:</p>
-    <pre><code>private final HalAudioGainCallback mHalAudioGainCallback =
-        new HalAudioGainCallback() {
-            @Override
-            public void onAudioDeviceGainsChanged(
-                    List&lt;Integer&gt; halReasons, List&lt;CarAudioGainConfigInfo&gt; gains) {
-                synchronized (mImplLock) {
-                    mReasons = new ArrayList&lt;&gt;(halReasons);
-                    handleAudioDeviceGainsChangedLocked(halReasons, gains);
-                }
-            }
-        };
-
-void onAudioGainChanged(List&lt;Integer&gt; halReasons, List&lt;CarAudioGainConfigInfo&gt; gains) {
-    synchronized (mImplLock) {
-        mReasons = new ArrayList&lt;&gt;(halReasons);
-        handleonAudioGainChangedLocked(halReasons, gains);
-    }
-}</code></pre>
-    <p>(The second entry point is the OEM-path callback that §3's <code>CarAudioGainCallbackHandler</code> calls into — both paths update the same field.)</p>
-    <p>Then <code>setGroupVolume()</code> checks it before applying any explicit volume-set request:</p>
-    <pre><code>public void setGroupVolume(int zoneId, int groupId, int index, int flags) {
-    enforcePermission(Car.PERMISSION_CAR_CONTROL_AUDIO_VOLUME);
-    callbackGroupVolumeChange(zoneId, groupId, flags);
+public void setGroupVolume(int zoneId, int groupId, int index, int flags) {
     ...
     synchronized (mImplLock) {
         boolean shouldBlock = CarAudioGainMonitor.shouldBlockVolumeRequest(mReasons);
-        if (shouldBlock) {
-            Slogf.d(TAG, "setGroupVolume, volume change is blocked for groupId: %d,", groupId);
-            return;
-        }
+        if (shouldBlock) { return; }
         CarVolumeGroup group = getCarVolumeGroupLocked(zoneId, groupId);
-        wasMute = group.isMuted();
         group.setCurrentGainIndex(index);
         ...
     }
 }</code></pre>
-    <p><code>CarAudioGainMonitor.shouldBlockVolumeRequest(...)</code> already exists, unmodified, in <code>a17full</code> today:</p>
-    <pre><code>static boolean shouldBlockVolumeRequest(List&lt;Integer&gt; reasons) {
-    return reasons.contains(Reasons.FORCED_MASTER_MUTE) || reasons.contains(Reasons.TCU_MUTE)
-            || reasons.contains(Reasons.REMOTE_MUTE);
-}</code></pre>
-    <p>This is the "cyber attack" scenario the AIDL <code>Reasons.aidl</code> doc comment references — the primitive was always there; only the wiring from <code>setGroupVolume()</code>, and the <code>mReasons</code> bookkeeping, were missing.</p>
-
-    <h3>Files to change in <code style="background:transparent;border:none;color:inherit;padding:0">a17full</code></h3>
-    <ul>
-      <li><code>CarAudioService.java</code>: add <code>mReasons</code> field; populate it in both gain-callback entry points; add the <code>shouldBlock</code> check + early return in <code>setGroupVolume()</code>, right before the existing <code>getCarVolumeGroupLocked(...)</code> line.</li>
-    </ul>
-
-    <h3>Risk</h3>
-    <p>
-      Low — small, additive, reuses an existing stock primitive. The only real risk is scope: this blocks
-      <strong>all</strong> explicit volume-set requests while any of the three HAL reasons is active,
-      including legitimate ones from the OEM plugin or system UI — confirm that matches intended product
-      behavior (it matches the defensive intent documented in the AIDL comment).
-    </p>
-
-    <h3>Verify</h3>
-    <ul>
-      <li>Trigger a <code>FORCED_MASTER_MUTE</code>/<code>TCU_MUTE</code>/<code>REMOTE_MUTE</code> HAL reason; confirm a subsequent <code>setGroupVolume()</code> call is silently rejected while active.</li>
-      <li>Confirm volume-set requests succeed again once the HAL clears the reason.</li>
-      <li>Confirm this doesn't interfere with §8's <code>isGroupActive</code>/NAV_DUCKING logic or §9's suspend-exit limiting — test all three together.</li>
-    </ul>
+    <p><strong>Change:</strong> <code>CarAudioService.java</code> — add <code>mReasons</code>, populate it in both gain-callback entry points, add the early-return check in <code>setGroupVolume()</code>.</p>
+    <p><strong>Verify:</strong> a volume-set call is silently rejected while the HAL reason is active, succeeds again once cleared; doesn't interfere with items 7-8's gain-callback changes.</p>
   </div>
 
 </div>
 
 <div class="footer">
-  Migrate Nissan Car-Audio Behavior onto A17 &nbsp;·&nbsp; Car Audio Framework &nbsp;·&nbsp;
-  Companion to the <code>nissan_migration/</code> markdown files (<code>00_README.md</code>, <code>step0</code>–<code>step10</code>)
+  Migrate Nissan Car-Audio Behavior onto A17 &nbsp;·&nbsp; Final state, no speculative items &nbsp;·&nbsp;
+  See <a href="unsure_items.html">unsure_items.html</a> for what was checked but not confirmed &nbsp;·&nbsp;
+  Full detail per item in <code>nissan_migration/step*.md</code>
 </div>
 
 </body>
