@@ -2,26 +2,20 @@
 
 [← back to index](00_README.md) · Depends on: [Step 0](step0_resync_source.md)
 
-## This corrects an earlier wrong conclusion
+## What it is
 
-The [index](00_README.md)'s original "out of scope" list said cyber-mute needed **no work** — reasoning
-that `Reasons.FORCED_MASTER_MUTE`'s HAL-reason handling (`CarAudioGainMonitor.shouldBlockVolumeRequest()`,
-`CarVolumeGroup.onAudioGainChanged()` → `setBlockedLocked()`) is stock AOSP and already present in
-`a17full`. **That part is still true** — but it turns out there's a second, separate piece: Nissan also
+Source: [`packages_services_Car.diff`](../diffs_nissan_vs_google/packages_services_Car.diff). The
+HAL-reason-handling primitive (`Reasons.FORCED_MASTER_MUTE`/`TCU_MUTE`/`REMOTE_MUTE` via
+`CarAudioGainMonitor.shouldBlockVolumeRequest()`, `CarVolumeGroup.onAudioGainChanged()` →
+`setBlockedLocked()`) is stock AOSP, already present in `a17full` — no work needed there. But Nissan also
 wires that same `shouldBlockVolumeRequest()` check into `CarAudioService.setGroupVolume()`, so an incoming
 **explicit volume-set request** (a user turning a physical knob, an app calling
 `CarAudioManager.setGroupVolume()`) is rejected outright while a blocking HAL reason (forced master mute /
 TCU mute / remote mute — "cyber attack" scenarios per the AIDL doc) is active, not just gain values reported
-*by* the HAL. Confirmed missing from `a17full`: zero hits for `mReasons`/`shouldBlockVolumeRequest` in
-`CarAudioService.java` today.
+*by* the HAL. This wiring is confirmed missing from `a17full`: zero hits for
+`mReasons`/`shouldBlockVolumeRequest` in `CarAudioService.java` today.
 
-> **Provenance note:** found via the authoritative `packages_services_Car.diff` (Nissan
-> `nissan_u_ccs2_release` vs Google `android14-release`), not the earlier A14-fork research passes — the
-> earlier research only checked whether the *string* "cyber" appeared in the source and whether the
-> HAL-reason-handling primitives existed, both true, but didn't check whether `setGroupVolume()` itself
-> respected them.
-
-## What it is, confirmed via diff
+## Confirmed via diff
 
 `CarAudioService.java` gains a `private List<Integer> mReasons = new ArrayList<>();` field, kept in sync
 with the **latest HAL gain-change reasons** from both existing entry points:

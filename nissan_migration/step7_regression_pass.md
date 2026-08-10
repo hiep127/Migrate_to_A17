@@ -2,10 +2,8 @@
 
 [← back to index](00_README.md) · Depends on: Steps 0-6, 8-10 complete
 
-> **Note on step numbering**: this step was originally the final gate after Steps 1-6. Steps 8-10 were
-> added later (from the [authoritative Nissan-vs-Google diff](step0_resync_source.md#addendum-a-materially-better-source-became-available))
-> and should be implemented **before** this regression pass runs, not after — treat this as the true final
-> step regardless of file-name ordering.
+This is the final gate — run it only after every other step (0-6, 8-10) is implemented, regardless of
+file-name ordering.
 
 ## Goal
 
@@ -77,6 +75,6 @@ falling back to stock AOSP.
 ## Sign-off
 
 Once all of the above pass on both `aivi2_n_full` and `aasp_n`, this migration is complete. Re-check the
-[Out of scope](00_README.md#out-of-scope--confirmed-stock-aosp-already-or-unconfirmed) list in the index
-only if something breaks in an area that list claims is unaffected stock AOSP behavior — that would mean
-the earlier research missed something and needs re-verification.
+[Out of scope](00_README.md#out-of-scope--confirmed-stock-aosp-already) list in the index only if something
+breaks in an area that list claims is unaffected stock AOSP behavior — that would mean the earlier research
+missed something and needs re-verification.

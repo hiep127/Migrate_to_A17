@@ -2,15 +2,12 @@
 
 [← back to index](00_README.md) · Depends on: [Step 0](step0_resync_source.md)
 
-> **Provenance note:** same as [Step 8](step8_gain_context_enrichment.md) — found via the authoritative
-> `packages_services_Car.diff` (Nissan `nissan_u_ccs2_release` vs Google `android14-release`), not the
-> earlier A14-fork research passes. Confirmed missing from `a17full`: zero hits for
-> `CarPowerManagementService`, `subscribePowerManagementService`, `isSuspendReason` anywhere in
-> `car/audio/`. `a17full` does have a `CarAudioPowerListener.java`, but it's an unrelated, pre-existing
-> stock AOSP mechanism — it listens to `ICarPowerPolicyListener`/`CarPowerPolicy` (whether the AUDIO power
-> *component* is enabled), not `ICarPowerStateListener`/power *state* transitions
-> (`STATE_SUSPEND_EXIT`/`STATE_HIBERNATION_EXIT`). No collision; this is a genuinely separate, additional
-> mechanism to add.
+Source: [`packages_services_Car.diff`](../diffs_nissan_vs_google/packages_services_Car.diff). Confirmed
+missing from `a17full`: zero hits for `CarPowerManagementService`, `subscribePowerManagementService`,
+`isSuspendReason` anywhere in `car/audio/`. `a17full` does have a `CarAudioPowerListener.java`, but it's an
+unrelated, pre-existing stock AOSP mechanism — it listens to `ICarPowerPolicyListener`/`CarPowerPolicy`
+(whether the AUDIO power *component* is enabled), not `ICarPowerStateListener`/power *state* transitions
+(`STATE_SUSPEND_EXIT`/`STATE_HIBERNATION_EXIT`). No collision; this is a separate, additional mechanism.
 
 ## What it is
 

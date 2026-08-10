@@ -5,14 +5,6 @@
 **Do this step last**, after Steps 1-5 are stable. This is the largest, most structurally entangled item in
 the whole migration.
 
-> **Revision note:** the content below was corrected after direct, on-disk verification against the
-> currently-checked-out `a14full` tree (not `git show` reconstruction). The prior draft of this file
-> included a `SettingsObserver.java` trigger and per-`FocusEntry` mute tracking, both based on a research
-> agent's reconstruction of commits reachable via `git show` on refs not actually checked out. Reading the
-> real files on disk shows a **simpler, already-implemented mechanism** with neither of those pieces. Trust
-> this version; the removed claims are noted below in case the true final commit (post [Step 0](step0_resync_source.md)
-> resync) turns out to differ.
-
 ## What it is
 
 "Audio Off" is implemented as a **MEDIA-volume-group-mute proxy** — there is no independent mode flag,
@@ -128,22 +120,11 @@ Reboot persistence of the MEDIA-group mute (and thus of Audio Off) goes through
 `CarAudioSettings.isPersistVolumeGroupMuteEnabled()` — also confirmed present verbatim in the current
 `a14full` `CarAudioSettings.java`.
 
-## What was in the previous draft and is now removed
-
-- ~~`SettingsObserver.java` watching `Settings.Global` key `CAR_AUDIO_OFF_MODE_ENABLED`~~ — no such file
-  exists in `a14full`; `CAR_AUDIO_OFF_MODE_ENABLED` only appears as the dead `FocusInteraction` constant
-  above. If a real external-trigger component exists, it lives outside `car/audio/` (the HMI app itself) and
-  simply calls the standard `setVolumeGroupMute` API — nothing to port on the `car/audio` side for the
-  trigger.
-- ~~`FocusEntry.isMuted()`/`setMuted(boolean)`, per-entry mute tracking~~ — not present; the real
-  mechanism uses a single `mUserMuted` boolean on `CarAudioFocus`, checked inline in the restoration guard.
-  Simpler than previously described — do not add mute state to `FocusEntry.java`.
-
-Both of these were part of a research agent's reconstruction from `git show` on commits not present in the
-checked-out working tree, describing what may be a *later, unmerged* iteration. [Step 0](step0_resync_source.md)
-should confirm whether that later iteration is real and authoritative, or whether the on-disk mechanism
-documented above (which is simpler and directly verified) is in fact what should be ported. Given it's
-simpler and directly confirmed, **default to porting this version** unless Step 0 turns up something newer.
+If an external trigger component exists (Nissan HMI app or a physical switch), it lives outside
+`car/audio/` and simply calls the standard `setVolumeGroupMute` API — there's nothing to port on the
+`car/audio` side for the trigger itself. There is no per-`FocusEntry` mute tracking; the mechanism uses a
+single `mUserMuted` boolean on `CarAudioFocus`, checked inline in the restoration guard — do not add mute
+state to `FocusEntry.java`.
 
 ## New integration risk not present in A14
 

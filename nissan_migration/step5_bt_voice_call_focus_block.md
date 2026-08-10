@@ -8,10 +8,7 @@
 `USAGE_VOICE_COMMUNICATION` originating from the Bluetooth package (`BT_PACKAGE`), to avoid double focus
 requests for voice calls. This was cherry-picked in the A14 fork from a Nissan A12 change — comment in the
 A14 source cites "Cherry-pick from Nissan A12 commit
-http://gerritaivi.lge.com/.../39383" and ticket `C2BST-26777`. Found incidentally during the
-[Step 0](step0_resync_source.md) research pass while investigating Audio Off, not one of the originally
-requested features, but audio-focus-adjacent and worth carrying forward since it fixes a real double-request
-bug.
+http://gerritaivi.lge.com/.../39383" and ticket `C2BST-26777`.
 
 ## Exact source, read directly from `a14full` `CarAudioFocus.java`
 

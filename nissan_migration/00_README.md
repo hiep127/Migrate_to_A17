@@ -14,31 +14,21 @@ pointed at Nissan behavior that the Java layer doesn't implement yet.
 
 This folder is the re-implementation project that closes that gap.
 
-## Two research passes, two levels of confidence
+## Sources
 
-**Steps 1-7** came from three parallel deep-dive research passes over the actual A14 fork, cross-diffed
-against the A17 stock baseline in `a17full` to positively confirm what's genuinely Nissan vs. stock AOSP.
-That method mixes two kinds of change (AOSP's own A14→A17 evolution, and Nissan's A14 customization) and
-relies on knowing the right method/class names to grep for — real, but imperfect.
+Steps 1-7 are sourced from direct, on-disk reading of the `a14full` checkout (`nissan_u_ccs2_release`),
+cross-diffed against `a17full`'s stock baseline to confirm what's genuinely Nissan vs. already-stock AOSP.
 
-**Steps 8-10** came from a materially stronger source added later:
+Steps 8-10 are sourced from
 [`../diffs_nissan_vs_google/packages_services_Car.diff`](../diffs_nissan_vs_google/packages_services_Car.diff),
-a real `git diff` between Nissan's actual `nissan_u_ccs2_release` branch and Google's actual
-`android14-release` tag — **both on Android 14**, so it isolates pure Nissan customization with zero
-AOSP-version noise. Reviewing that diff surfaced three real, substantial Nissan features Steps 1-7's
-research missed entirely (gain-callback context enrichment, suspend-wake volume limiting, and — importantly
-— a real gap in what the "cyber-mute" out-of-scope entry below originally claimed). It also **confirmed**
-that most of Steps 1-7 were right, and **corrected** the occupant-zone/mirror-handling conclusion below.
-Recommendation: if more budget exists, re-run Steps 1-7's research using this same
-diff-against-real-Google-tag method instead of the original A14-fork/A17-diff method — it's a strictly
-better signal.
+a real `git diff` between Nissan's `nissan_u_ccs2_release` branch and Google's `android14-release` tag —
+both on Android 14, so it isolates pure Nissan customization with zero AOSP-version noise. If more budget
+exists, re-running Steps 1-7 against this same diff (instead of the `a14full`/`a17full` comparison) is worth
+doing — it's a strictly better signal and is how Steps 8-10 were found in the first place.
 
-**Important caveat surfaced by the original research:** the currently-checked-out `a14full` working tree
-(`nissan_u_ccs2_release`, HEAD `dbe12bde8d8`) is largely fine (later re-verified — see
-[Step 0](step0_resync_source.md)), but one real gap was found: the
-[Step 4](step4_zone_playback_callback_hardening.md) ANR fix exists only on a sibling `alliance_u_release`
-branch family, never merged into the Nissan line. [Step 0](step0_resync_source.md) has the full, corrected
-account.
+One cross-branch gap: the [Step 4](step4_zone_playback_callback_hardening.md) ANR fix exists only on the
+sibling `alliance_u_release` branch family, never merged into the Nissan line — see
+[Step 0](step0_resync_source.md).
 
 ## Steps
 
@@ -60,39 +50,24 @@ Steps 8-10 touch the same `CarVolumeGroup.onAudioGainChanged()`/`CarAudioService
 as each other and as parts of Step 6 — implement and test them together rather than in strict isolation,
 and do all of them (plus Step 6) before the final [Step 7](step7_regression_pass.md) regression pass.
 
-## Out of scope — confirmed stock AOSP already, or unconfirmed
+## Out of scope — confirmed stock AOSP already
 
 Do **not** spend effort on these; re-verify only if something breaks during Step 7:
 
-- **Occupant-zone filter / mirror-request cleanup on user reassignment** — **correction**: this *was* a
-  real, substantial Nissan A14 feature (`CarAudioService.removePrimaryZoneRequestForOccupantLocked()` +
-  `removeAudioMirrorForZoneId()`, called from `updateUserForOccupantZoneLocked()`; `MediaRequestHandler
-  .getAssignedRequestIdForOccupantZoneId()`), confirmed via the authoritative Nissan-vs-Google diff — the
-  earlier "not found, matches stock" conclusion was based on the A14-fork research not knowing the right
-  method names to check. However, direct grep against `a17full` today shows **all of this logic is already
-  present**, wired at `CarAudioService.java:4024-4026` and in `MediaRequestHandler.java:244`. Likely
-  explanation: AOSP itself adopted equivalent logic by A17, independent of Nissan. Net effect is the same
-  as originally concluded — **no work needed** — but for the correct reason.
-- **Mirror handling patches (routing/HAL-command logic itself)** — still confirmed unmodified stock AOSP,
-  no correction needed here.
-- **Cyber-mute** — **partially corrected**. The HAL-reason-handling primitive itself
-  (`Reasons.FORCED_MASTER_MUTE`/`TCU_MUTE`/`REMOTE_MUTE` via `CarAudioGainMonitor.shouldBlockVolumeRequest()`)
-  is genuinely stock AOSP, unmodified, already in `a17full` — that part of the original conclusion holds.
-  But the authoritative diff found a second piece the original research missed: Nissan wires that same check
-  into `CarAudioService.setGroupVolume()` to reject explicit volume-set requests during a blocking HAL
-  condition, which is **not** present in `a17full`. See [Step 10](step10_forced_mute_volume_blocking.md) —
-  this is real work, not out of scope.
-- **Restore volume on unmute** — still confirmed: `CarVolumeGroup`/`CoreAudioVolumeGroup` mute/unmute design
-  never overwrites the underlying gain index; restoration is inherent to stock AOSP, byte-identical in both
-  trees.
-- **Siri / E-call volume fix** — still unconfirmed. Exhaustive search (Car project-wide, plus a scan of the
-  authoritative diff's `CarAudioFocus.java`/`FocusInteraction.java` sections) found no feature matching this
-  description. The closest adjacent code is `canSwapCallOrRingerClientRequest()` in `CarAudioFocus.java`
-  (already present in `a17full`, used in the focus-holders matching path; the authoritative diff shows
-  Nissan also applies it in the *blocked/pending-request* matching path, one call site A17 may or may not
-  already have — low priority, spot-check during [Step 5](step5_bt_voice_call_focus_block.md) or
-  [Step 6](step6_audio_off_mode.md) implementation rather than as a standalone step). Recommend getting the
-  actual ticket/CR number for "Siri/E-call volume" before assuming further work is needed.
-- **`CarAudioContextInfo.equals()`/`hashCode()`** — a small Nissan-only addition (proper value-equality,
-  likely needed for `Set`/`Map` usage or test assertions elsewhere). Minor; add only if something that
-  depends on it surfaces during implementation of the other steps — not worth a standalone step.
+- **Occupant-zone filter / mirror-request cleanup on user reassignment** — was a real Nissan A14 feature
+  (`CarAudioService.removePrimaryZoneRequestForOccupantLocked()` + `removeAudioMirrorForZoneId()`, called
+  from `updateUserForOccupantZoneLocked()`; `MediaRequestHandler.getAssignedRequestIdForOccupantZoneId()`),
+  but this logic is **already present** in `a17full` today, wired at `CarAudioService.java:4024-4026` and
+  `MediaRequestHandler.java:244` — AOSP independently adopted equivalent logic by A17. No work needed.
+- **Mirror handling patches (routing/HAL-command logic itself)** — unmodified stock AOSP.
+- **Restore volume on unmute** — `CarVolumeGroup`/`CoreAudioVolumeGroup` mute/unmute design never overwrites
+  the underlying gain index; restoration is inherent to stock AOSP, byte-identical in both trees.
+
+Cyber-mute's HAL-reason-handling primitive (`Reasons.FORCED_MASTER_MUTE`/`TCU_MUTE`/`REMOTE_MUTE` via
+`CarAudioGainMonitor.shouldBlockVolumeRequest()`) is also stock AOSP already in `a17full` — but wiring that
+primitive into `CarAudioService.setGroupVolume()` is **not**, and is real work: see
+[Step 10](step10_forced_mute_volume_blocking.md).
+
+See [unsure_items.md](unsure_items.md) for items investigated but not confirmed enough to include as work
+items: the "Siri/E-call volume" fix, `canSwapCallOrRingerClientRequest()`'s second call site, and
+`CarAudioContextInfo.equals()`/`hashCode()`.

@@ -2,13 +2,9 @@
 
 [← back to index](00_README.md) · Depends on: [Step 0](step0_resync_source.md)
 
-> **Provenance note:** unlike Steps 1-7, this feature was not found by the earlier A14-fork research passes
-> — it was missed entirely. It surfaced from a genuinely authoritative source:
-> `doc/Migrate_to_A17/diffs_nissan_vs_google/packages_services_Car.diff`, a real `git diff` between Nissan's
-> `nissan_u_ccs2_release` branch and Google's actual `android14-release` tag (both on Android 14, so the
-> diff isolates pure Nissan customization with zero AOSP-version noise — a materially stronger signal than
-> the earlier `a14full` vs `a17full` comparisons used for Steps 1-7). Confirmed missing from `a17full` by
-> direct grep (zero hits for `isNavDuckingActive`, `isVolumeGroupActive`, `setNavDucking`, `isGroupActive`).
+Source: [`packages_services_Car.diff`](../diffs_nissan_vs_google/packages_services_Car.diff) (Nissan
+`nissan_u_ccs2_release` vs Google `android14-release`). Confirmed missing from `a17full` by direct grep —
+zero hits for `isNavDuckingActive`, `isVolumeGroupActive`, `setNavDucking`, `isGroupActive`.
 
 ## What it is
 
